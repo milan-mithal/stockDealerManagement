@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use App\Enums\UserStatusEnums;
+use App\Enums\UserRolesEnums;
 
 class LoginRegisterController extends Controller
 {
@@ -47,7 +49,9 @@ class LoginRegisterController extends Controller
         User::create([
             'name' => $request->name,
             'email' => $request->email,
-            'password' => Hash::make($request->password)
+            'password' => Hash::make($request->password),
+            'role' => UserRolesEnums::Admin,
+            'status' => UserStatusEnums::Active
         ]);
 
         $credentials = $request->only('email', 'password');
@@ -102,7 +106,7 @@ class LoginRegisterController extends Controller
     {
         if(Auth::check())
         {
-            return view('auth.dashboard');
+            return view('dashboard.view');
         }
         
         return redirect()->route('login')

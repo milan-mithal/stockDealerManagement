@@ -42,7 +42,7 @@
 				    <!-- CONTAINER OPEN -->
 					<div class="col col-login mx-auto text-center">
 						<a href="index.html" class="text-center">
-							<img src="{{url('/assets/images/brand/logo.png')}}" class="header-brand-img" alt="">
+							<img src="{{url('/assets/images/brand/shamsnaturals-logo.jpg')}}" class="header-brand-img" alt="">
 						</a>
 					</div>
 					<div class="container-login100">
