@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginRegisterController;
 use App\Http\Controllers\Product\ProductController;
-
+use App\Http\Controllers\Stock\StockController;
 
 /*
 |--------------------------------------------------------------------------
@@ -33,6 +33,20 @@ Route::controller(LoginRegisterController::class)->group(function() {
 // Product Routes
 Route::controller(ProductController::class)->group(function() {
     Route::get('/product/list', 'index')->name('product.index');
+    Route::get('/product/create', 'create')->name('product.create');
+    Route::post('/product/store', 'store')->name('product.store');
+    Route::get('/product/edit/{id}', 'edit')->name('product.edit');
+    Route::post('/product/update/{id}', 'update')->name('product.update');
+    Route::get('/product/destroy/{id}', 'destroy')->name('product.destroy');
+});
+
+// Product Routes
+Route::controller(StockController::class)->group(function() {
+    Route::get('/stock/list', 'index')->name('stock.index');
+    Route::get('/stock/create', 'create')->name('stock.create');
+    Route::post('/stock/store', 'store')->name('stock.store');
+    Route::get('/stock/edit/{id}', 'edit')->name('stock.edit');
+    Route::post('/stock/update/{id}', 'update')->name('stock.update');
 });
 
 

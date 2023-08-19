@@ -4,15 +4,21 @@ namespace App\Http\Controllers\Stock;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Models\Stock;
 
 class StockController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        //
+        $stockList = Stock::productList();
+        return view('stock.view',  ['allStockList' => $stockList]);
     }
 
     /**
@@ -20,7 +26,7 @@ class StockController extends Controller
      */
     public function create()
     {
-        //
+        return view('stock.add');
     }
 
     /**
@@ -28,7 +34,35 @@ class StockController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'product_code' => 'required|exists:products,product_code|unique:stocks,product_code',
+            'stock_qty' => 'required|min:1|numeric',
+            'stock_sold_qty' => 'required|min:0|numeric',
+            'stock_min_qty' => 'required|min:1|numeric',   
+        ], [
+            'product_code.required' => 'Please enter product code.',
+            'product_code.exists' => 'Product code does not exists.',
+            'product_code.unique' => 'Stock for this product code already exists.',
+            'stock_qty.required' => 'Please enter stock quantity.',
+            'stock_qty.min' => 'Stock quantity cannot be less than 1.',
+            'stock_qty.numeric' => 'Stock quantity should be numeric.',
+            'stock_sold_qty.required' => 'Please enter stock sold quantity.',
+            'stock_sold_qty.min' => 'Stock sold quantity cannot be less than 0.',
+            'stock_sold_qty.numeric' => 'Stock sold quantity should be numeric.',
+            'stock_min_qty.required' => 'Please enter stock Minimum quantity alert.',
+            'stock_min_qty.min' => 'Stock Minimum quantity cannot be less than 1.',
+            'stock_min_qty.numeric' => 'Stock Minimum quantity should be numeric.',
+        ]);
+        
+        // Insert data into the database
+        $insertData = new Stock();
+        $insertData->product_code = $request->product_code;
+        $insertData->stock_qty = $request->stock_qty;
+        $insertData->stock_sold_qty = $request->stock_sold_qty;
+        $insertData->stock_min_qty = $request->stock_min_qty;
+        $insertData->save();
+    
+        return redirect()->route('stock.create')->with('success', 'Stock added successfully.');
     }
 
     /**
@@ -44,7 +78,8 @@ class StockController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $stockDetail = Stock::findOrFail($id);
+        return view('stock.edit', compact('stockDetail'));
     }
 
     /**
@@ -52,7 +87,25 @@ class StockController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $request->validate([
+            'stock_qty' => 'required|min:1|numeric',
+            'stock_min_qty' => 'required|min:1|numeric',   
+        ], [
+            'stock_qty.required' => 'Please enter stock quantity.',
+            'stock_qty.min' => 'Stock quantity cannot be less than 1.',
+            'stock_qty.numeric' => 'Stock quantity should be numeric.',
+            'stock_min_qty.required' => 'Please enter stock Minimum quantity alert.',
+            'stock_min_qty.min' => 'Stock Minimum quantity cannot be less than 1.',
+            'stock_min_qty.numeric' => 'Stock Minimum quantity should be numeric.',
+        ]);
+        
+        // Insert data into the database
+        $updateData = Stock::findOrFail($id);
+        $updateData->stock_qty += $request->stock_qty;
+        $updateData->stock_min_qty = $request->stock_min_qty;
+        $updateData->save();
+    
+        return redirect()->route('stock.index')->with('success', 'Stock updated successfully.');
     }
 
     /**

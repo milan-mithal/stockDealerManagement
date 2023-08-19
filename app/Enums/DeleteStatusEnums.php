@@ -2,9 +2,8 @@
 
 namespace App\Enums;
  
-enum CommonStatusEnums:string {
-    case Active = 'active';
-    case Inactive = 'inactive';
+enum DeleteStatusEnums:string {
+    case Deleted = 'deleted';
 
     public static function values(): array
     {

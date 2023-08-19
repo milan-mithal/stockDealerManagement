@@ -5,8 +5,8 @@
             <a aria-label="Hide Sidebar" class="app-sidebar__toggle" data-bs-toggle="sidebar" href="#"></a>
             <!-- sidebar-toggle-->
             <a class="logo-horizontal " href="index.html">
-                <img src="../assets/images/brand/logo.png" class="header-brand-img desktop-logo" alt="logo">
-                <img src="../assets/images/brand/logo-3.png" class="header-brand-img light-logo1"
+                <img src="{{ url('assets/images/brand/logo.png')}}" class="header-brand-img desktop-logo" alt="logo">
+                <img src="{{ url('assets/images/brand/logo-3.png')}}" class="header-brand-img light-logo1"
                     alt="logo">
             </a>
             <!-- LOGO -->
@@ -382,7 +382,7 @@
                             <div class="dropdown d-md-flex profile-1">
                                 <a href="#" data-bs-toggle="dropdown" class="nav-link pe-2 leading-none d-flex animate">
                                     <span>
-                                        <img src="../assets/images/faces/6.jpg" alt="profile-user"
+                                        <img src="{{ url('assets/images/faces/6.jpg')}}" alt="profile-user"
                                             class="avatar  profile-user brround cover-image">
                                     </span>
                                     <div class="text-center p-1 d-flex d-lg-none-max">
