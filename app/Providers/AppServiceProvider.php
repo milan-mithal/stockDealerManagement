@@ -24,9 +24,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        $getTotalProductAdded = 0;
-
         view()->composer('*', function ($view) {
+            $getTotalProductAdded = 0;
             if (Auth::check()) {
                 $currentuserid = Auth::id();
                 $getTotalProductAdded = Dealer::where('user_id',$currentuserid)->count();

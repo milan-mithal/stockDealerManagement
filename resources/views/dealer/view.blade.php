@@ -70,9 +70,9 @@
 															<td><img class="hpx-100" src="{{ url($productDetails->product_image)}}" /></td>
 															<td>{{$productDetails->product_size}}</td>
 															<td>{{$productDetails->product_price}}</td>
-                                                            <td>{{$productDetails->total_stock_qty}}</td>
+                                                            <td>{{$productDetails->total_stock_qty - $productDetails->total_stock_sold_qty}}</td>
                                                             <td><input type="number" class="wp-50" id="order_qty_{{ $productDetails->id }}" value="{{$productDetails->ordered_qty}}" placeholder="0">
-                                                                <button type="button" class="btn btn-icon  btn-primary" data-bs-placement="top" data-bs-toggle="tooltip" data-bs-original-title="Add To Cart" id="addToCart_{{ $productDetails->id }}" data-qty="{{$productDetails->total_stock_qty}}" data-url="{{ route('dealerorder.store') }}" onClick="addToCart({{ $productDetails->id }})"><i class="fe fe-check"></i></button>
+                                                                <button type="button" class="btn btn-icon  btn-primary" data-bs-placement="top" data-bs-toggle="tooltip" data-bs-original-title="Add To Cart" id="addToCart_{{ $productDetails->id }}" data-qty="{{$productDetails->total_stock_qty - $productDetails->total_stock_sold_qty}}" data-url="{{ route('dealerorder.store') }}" onClick="addToCart({{ $productDetails->id }})"><i class="fe fe-check"></i></button>
                                                                 
                                                                 <button type="button" class="btn btn-icon  btn-danger" data-bs-placement="top" data-bs-toggle="tooltip" data-bs-original-title="Remove From Cart" id="removeFromCart_{{ $productDetails->id }}" data-url="{{ route('dealerorder.destroy') }}" onClick="removeFromCart({{ $productDetails->id }})"><i class="fe fe-x"></i></button>
 

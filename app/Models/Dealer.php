@@ -28,7 +28,7 @@ class Dealer extends Model
                 $join->on('products.id', '=', 'temp_order_list.product_id')
                      ->where('temp_order_list.user_id', '=', $currentuserid);
             })
-            ->select('products.*','stocks.stock_qty as total_stock_qty', 'temp_order_list.order_quantity as ordered_qty')
+            ->select('products.*','stocks.stock_qty as total_stock_qty', 'stocks.stock_sold_qty as total_stock_sold_qty', 'temp_order_list.order_quantity as ordered_qty')
             ->where('products.status', CommonStatusEnums::Active)
             ->get();
 
