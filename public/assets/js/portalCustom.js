@@ -6,3 +6,95 @@ function confirmDelete() {
     location.href = deleteUrl;
 }
 
+
+/**
+ * Add To Cart
+ */
+
+const addToCart = (id) => {
+    const orderProductId = $.trim(id);
+    const orderProductQty = parseInt($('#order_qty_'+orderProductId).val());
+    const addToCartUrl = $('#addToCart_'+orderProductId).attr('data-url');
+    const productStockQty = parseInt($('#addToCart_'+orderProductId).attr('data-qty'));
+
+    $('#successCart_'+orderProductId).html('');
+    $('#errorCart_'+orderProductId).html('');
+
+    if ($.trim(orderProductQty)== '' || $.trim(orderProductQty) == null || $.trim(orderProductQty) <= 0) {
+        $('#order_qty_'+orderProductId).focus();
+        $('#errorCart_'+orderProductId).html('Order quantity cannot be less than 1.');
+        return false;
+    }
+
+    if (orderProductQty > productStockQty) {
+        $('#errorCart_'+orderProductId).html('Order quantity cannot be greater than Total stock available.');
+        return false;
+    }
+
+    var request = $.ajax({
+      url: addToCartUrl,
+      type: "post",
+      data: {product_id : orderProductId, order_quantity: orderProductQty},
+      dataType: "json",
+      headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+    });
+    
+    request.done(function(msg) {
+      /**
+       * Show in Cart
+       */
+      $('#orderCartNo').html(msg);
+      $('#successCart_'+orderProductId).html('Product added to order list.');
+    });
+    
+    request.fail(function(jqXHR, textStatus) {
+      alert( "Request failed: " + textStatus );
+    });
+}
+
+/**
+ * Remove From Cart
+ */
+
+const removeFromCart = (id) => {
+
+    const orderProductId = $.trim(id);
+    const removeFromCartUrl = $('#removeFromCart_'+orderProductId).attr('data-url');
+    const orderProductQty = $('#order_qty_'+orderProductId).val();
+
+    if ($.trim(orderProductQty)== '' || $.trim(orderProductQty) == null || $.trim(orderProductQty) <= 0) {
+        return false;
+    }
+
+    var request = $.ajax({
+      url: removeFromCartUrl,
+      type: "post",
+      data: {product_id : orderProductId},
+      dataType: "json",
+      headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+    });
+    
+    request.done(function(msg) {
+        if (msg == 'notfound') {
+            $('#order_qty_'+orderProductId).val('');
+            return true;
+        }
+      /**
+       * Show in Cart
+       */
+      $('#orderCartNo').html(msg);
+      $('#order_qty_'+orderProductId).val('');
+      $('#successCart_'+orderProductId).html('Product removed from order list.');
+    });
+    
+    request.fail(function(jqXHR, textStatus) {
+      alert( "Request failed: " + textStatus );
+    });
+
+}
+
+

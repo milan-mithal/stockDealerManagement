@@ -4,6 +4,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginRegisterController;
 use App\Http\Controllers\Product\ProductController;
 use App\Http\Controllers\Stock\StockController;
+use App\Http\Controllers\Dealer\DealerController;
+use App\Http\Controllers\Dealer\DealerOrderController;
 
 /*
 |--------------------------------------------------------------------------
@@ -40,7 +42,7 @@ Route::controller(ProductController::class)->group(function() {
     Route::get('/product/destroy/{id}', 'destroy')->name('product.destroy');
 });
 
-// Product Routes
+// Stock Routes
 Route::controller(StockController::class)->group(function() {
     Route::get('/stock/list', 'index')->name('stock.index');
     Route::get('/stock/create', 'create')->name('stock.create');
@@ -48,6 +50,18 @@ Route::controller(StockController::class)->group(function() {
     Route::get('/stock/edit/{id}', 'edit')->name('stock.edit');
     Route::post('/stock/update/{id}', 'update')->name('stock.update');
 });
+
+// Dealer Routes
+Route::controller(DealerController::class)->group(function() {
+    Route::get('/dealer/list', 'index')->name('dealer.index');
+});
+
+// Dealer Order Routes
+Route::controller(DealerOrderController::class)->group(function() {
+    Route::post('/dealerorder/store', 'store')->name('dealerorder.store');
+    Route::post('/dealerorder/destroy', 'destroy')->name('dealerorder.destroy');
+});
+
 
 
 
