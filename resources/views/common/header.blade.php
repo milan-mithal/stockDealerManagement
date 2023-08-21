@@ -69,92 +69,11 @@
                             </div>
                             <!-- FULL-SCREEN -->
                             <div class="dropdown  d-flex shopping-cart">
-                                <a href="javascript:void(0);" class="nav-link icon text-center"  data-bs-toggle="dropdown" aria-expanded="false">
+                                <a href="{{ route('dealerorder.index') }}" class="nav-link icon text-center">
                                     <svg xmlns="http://www.w3.org/2000/svg" enable-background="new 0 0 24 24" viewBox="0 0 24 24"><path d="M9,18c-1.1045532,0-2,0.8954468-2,2s0.8954468,2,2,2c1.1040039-0.0014038,1.9985962-0.8959961,2-2C11,18.8954468,10.1045532,18,9,18z M9,21c-0.5523071,0-1-0.4476929-1-1s0.4476929-1,1-1c0.552124,0.0003662,0.9996338,0.447876,1,1C10,20.5523071,9.5523071,21,9,21z M17,18c-1.1045532,0-2,0.8954468-2,2s0.8954468,2,2,2c1.1040039-0.0014038,1.9985962-0.8959961,2-2C19,18.8954468,18.1045532,18,17,18z M17,21c-0.5523071,0-1-0.4476929-1-1s0.4476929-1,1-1c0.552124,0.0003662,0.9996338,0.447876,1,1C18,20.5523071,17.5523071,21,17,21z M19.4985352,12.0502319l1.9848633-7.4213257c0.0111694-0.0419312,0.0167847-0.085083,0.0167847-0.128479C21.5002441,4.2241211,21.2763062,4.000061,21,4H5.9198608L5.4835205,2.371582C5.4249268,2.1530151,5.2268677,2.0009766,5.0005493,2.0009766H3.5048218C3.5031128,2.0009766,3.501709,2,3.5,2C3.223877,2,3,2.223877,3,2.5S3.223877,3,3.5,3v0.0009766L4.6162109,3l2.579834,9.6288452C7.2546387,12.8477783,7.453064,13,7.6796875,13H11h6.8603516H19c0.8284302,0,1.5,0.6715698,1.5,1.5S19.8284302,16,19,16H5c-0.276123,0-0.5,0.223877-0.5,0.5S4.723877,17,5,17h14c1.3807373,0,2.5-1.1192627,2.5-2.5C21.5,13.2900391,20.6403809,12.2813721,19.4985352,12.0502319z M18.4761963,12h-0.6158447H11H8.0634766L6.1878052,5h14.1608276L18.4761963,12z"/></svg>
-                                    <span class="badge bg-info header-badge" id="orderCartNo">{{ $totalCartCount }}</span>
+                                    <span class="badge bg-danger header-badge" id="orderCartNo">{{ $totalCartCount }}</span>
                                 </a>
-                                <div class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-                                    <div class="drop-heading border-bottom">
-                                        <div class="d-flex">
-                                            <h6 class="mt-1 mb-0 fs-15 text-dark">Shopping Cart</h6>
-                                            <div class="ms-auto">
-                                                <span class="xm-title badge bg-secondary text-white fw-normal fs-11 badge-pill"> <a href="javascript:void(0);" class="showall-text text-white">Remove All</a> </span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="header-dropdown-list cart-menu ps4 overflow-hidden">
-                                        <a class="dropdown-item d-flex p-4" href="cart.html">
-                                            <span class="avatar avatar-lg br-5 me-3 align-self-center cover-image" data-bs-image-src="../assets/images/ecommerce/1.jpg"></span>
-                                            <div class="wp-60 cart-desc mt-1">
-                                                <p class="fs-13 mb-0 lh-1 mb-1 text-dark fw-500">TrueBasket Metal Single Pot</p>
-                                                <p class="fs-12 fw-300 lh-1 mb-0">Status: <span class="text-green">In Stock</span></p>
-                                                <span class="fs-12 fw-300 lh-1 mb-0">Quantity: 01</span>
-                                            </div>
-                                            <div class="ms-auto text-end d-flex fs-16">
-                                                <span class="fs-16 text-dark d-none d-sm-block fw-semibold">
-                                                    $129
-                                                </span>
-                                            </div>
-                                        </a>
-                                        <a class="dropdown-item d-flex p-4" href="cart.html">
-                                            <span class="avatar avatar-lg br-5 me-3 align-self-center cover-image" data-bs-image-src="../assets/images/ecommerce/2.jpg"></span>
-                                            <div class="wp-60 cart-desc mt-1">
-                                                <p class="fs-13 mb-0 lh-1 mb-1 text-dark fw-500">Authentic chair with Canopy</p>
-                                                <p class="fs-12 fw-300 lh-1 mb-0">Status: <span class="text-green">In Stock</span></p>
-                                                <span class="fs-12 fw-300 lh-1 mb-0">Quantity: 03</span>
-                                            </div>
-                                            <div class="ms-auto text-end d-flex fs-16">
-                                                <span class="fs-16 text-dark d-none d-sm-block fw-semibold">
-                                                    $99
-                                                </span>
-                                            </div>
-                                        </a>
-                                        <a class="dropdown-item d-flex p-4" href="cart.html">
-                                            <span class="avatar avatar-lg br-5 me-3 align-self-center cover-image" data-bs-image-src="../assets/images/ecommerce/3.jpg"></span>
-                                            <div class="wp-60 cart-desc mt-1">
-                                                <p class="fs-13 mb-0 lh-1 mb-1 text-dark fw-500">Casual Sneakers Canvas</p>
-                                                <p class="fs-12 fw-300 lh-1 mb-0">Status: <span class="text-green">In Stock</span></p>
-                                                <span class="fs-12 fw-300 lh-1 mb-0">Quantity: 03</span>
-                                            </div>
-                                            <div class="ms-auto text-end d-flex fs-16">
-                                                <span class="fs-16 text-dark d-none d-sm-block fw-semibold">
-                                                    $299
-                                                </span>
-                                            </div>
-                                        </a>
-                                        <a class="dropdown-item d-flex p-4" href="cart.html">
-                                            <span class="avatar avatar-lg br-5 me-3 align-self-center cover-image" data-bs-image-src="../assets/images/ecommerce/4.jpg"></span>
-                                            <div class="wp-60 cart-desc mt-1">
-                                                <p class="fs-13 mb-0 lh-1 mb-1 text-dark fw-500">Branded Head Phones</p>
-                                                <p class="fs-12 fw-300 lh-1 mb-0">Status: <span class="text-danger">No Stock</span></p>
-                                                <span class="fs-12 fw-300 lh-1 mb-0">Quantity: 01</span>
-                                            </div>
-                                            <div class="ms-auto text-end d-flex fs-16">
-                                                <span class="fs-16 text-dark d-none d-sm-block fw-semibold">
-                                                    $249
-                                                </span>
-                                            </div>
-                                        </a>
-                                        <a class="dropdown-item d-flex p-4" href="cart.html">
-                                            <span class="avatar avatar-lg br-5 me-3 align-self-center cover-image" data-bs-image-src="../assets/images/ecommerce/5.jpg"></span>
-                                            <div class="wp-60 cart-desc mt-1">
-                                                <p class="fs-13 mb-0 lh-1 mb-1 text-dark fw-500">camera lens (16mm f/1.4)</p>
-                                                <p class="fs-12 fw-300 lh-1 mb-0">Status: <span class="text-green">In Stock</span></p>
-                                                <span class="fs-12 fw-300 lh-1 mb-0">Quantity: 02</span>
-                                            </div>
-                                            <div class="ms-auto text-end d-flex fs-16">
-                                                <span class="fs-16 text-dark d-none d-sm-block fw-semibold">
-                                                    $1,279
-                                                </span>
-                                            </div>
-                                        </a>
-                                    </div>
-                                    <div class="dropdown-divider m-0"></div>
-                                    <div class="text-center p-3">
-                                        <a class="btn btn-primary">Checkout</a>
-                                    </div>
-                                 </div>
-                            </div>
+                           </div>
                             <!-- CART -->
                             <div class="dropdown d-md-flex message">
                                 <a href="javascript:void(0);" class="nav-link icon text-center" data-bs-toggle="dropdown" aria-expanded="false">

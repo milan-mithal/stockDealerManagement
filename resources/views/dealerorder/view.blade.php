@@ -10,12 +10,12 @@
             <!-- PAGE-HEADER -->
             <div class="page-header">
                 <div>
-                    <h1 class="page-title">View/Order Products</h1>
+                    <h1 class="page-title">Order List</h1>
                 </div>
                 <div class="ms-auto pageheader-btn">
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item"><a href="javascript:void(0);">Dealer</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">View</li>
+                        <li class="breadcrumb-item active" aria-current="page">Order List</li>
                     </ol>
                 </div>
             </div>
@@ -49,36 +49,25 @@
 										<div class="card-body">
 											<div class="table-responsive">
 												<table class="table editable-table table-bordered text-nowrap border-bottom" id="basic-datatable">
+                                                    <button id="button" class="btn btn-primary-gradient mb-4 data-table-btn" 
+                                                    onClick="location.href = '{{ route('dealerorder.create') }}'">Place Order</button>
 													<thead>
 														<tr>
 															<th class="wd-10p border-bottom-0">Code</th>
-															<th class="wd-10p border-bottom-0">Category</th>
                                                             <th class="wd-10p border-bottom-0">Product Name</th>
 															<th class="wd-10p border-bottom-0">Image</th>
-															<th class="wd-10p border-bottom-0">Size</th>
 															<th class="wd-10p border-bottom-0">Price (AED)</th>
-                                                            <th class="wd-10p border-bottom-0">Total Stock Available</th>
                                                             <th class="wd-10p border-bottom-0">Order Stock</th>
 														</tr>
 													</thead>
 													<tbody>
-                                                        @foreach ($allProductList as $productDetails)
+                                                        @foreach ($allCartList as $productDetails)
 														<tr>
 															<td>{{$productDetails->product_code}}</td>
-                                                            <td>{{$productDetails->product_category}}</td>
 															<td>{{$productDetails->product_name}}</td>
 															<td><img class="hpx-100" src="{{ url($productDetails->product_image)}}" /></td>
-															<td>{{$productDetails->product_size}}</td>
 															<td>{{$productDetails->product_price}}</td>
-                                                            <td>{{$productDetails->total_stock_qty}}</td>
-                                                            <td><input type="number" class="wp-50" id="order_qty_{{ $productDetails->id }}" value="{{$productDetails->ordered_qty}}" placeholder="0">
-                                                                <button type="button" class="btn btn-icon  btn-primary" data-bs-placement="top" data-bs-toggle="tooltip" data-bs-original-title="Add To Cart" id="addToCart_{{ $productDetails->id }}" data-qty="{{$productDetails->total_stock_qty - $productDetails->total_stock_sold_qty}}" data-url="{{ route('dealerorder.store') }}" onClick="addToCart({{ $productDetails->id }})"><i class="fe fe-check"></i></button>
-                                                                
-                                                                <button type="button" class="btn btn-icon  btn-danger" data-bs-placement="top" data-bs-toggle="tooltip" data-bs-original-title="Remove From Cart" id="removeFromCart_{{ $productDetails->id }}" data-url="{{ route('dealerorder.destroy') }}" onClick="removeFromCart({{ $productDetails->id }})"><i class="fe fe-x"></i></button>
-
-                                                                <div class="valid-feedback block text-bold mb-2" id="successCart_{{ $productDetails->id }}"></div>
-                                                                <div class="invalid-feedback block text-bold mb-2" id="errorCart_{{ $productDetails->id }}"></div>
-                                                            </td>
+                                                            <td>{{$productDetails->order_quantity}}</td>
 														</tr>
                                                         @endforeach
 													</tbody>

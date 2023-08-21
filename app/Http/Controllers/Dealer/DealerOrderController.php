@@ -4,8 +4,11 @@ namespace App\Http\Controllers\Dealer;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\Dealer;
+use Haruncpi\LaravelIdGenerator\IdGenerator;
 use Auth;
+use App\Models\Dealer;
+use App\Models\Order;
+use App\Models\OrderList;
 
 class DealerOrderController extends Controller
 {
@@ -18,15 +21,24 @@ class DealerOrderController extends Controller
      */
     public function index()
     {
-        //
+        $cartList = Dealer::userCartProductList();
+        return view('dealerorder.view',  ['allCartList' => $cartList]);
     }
 
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(Request $request)
     {
-        //
+        $currentuserid = Auth::user()->id;
+        $prefix = "SN-".date("my")."-";  
+        $order_id = IdGenerator::generate(['table' => 'orders','field'=>'order_id' ,'length' => 15, 'prefix' =>$prefix]);
+        $placeOrderId = Dealer::orderPlace($order_id);
+        if ($placeOrderId) {
+            Dealer::where('user_id', $currentuserid)->delete();
+        }
+        
+        return redirect()->route('dealerorder.show')->with('success', 'Order has been placed successfully.');
     }
 
     /**
@@ -76,9 +88,12 @@ class DealerOrderController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show()
     {
-        //
+        $currentuserid = Auth::user()->id;
+        $allOrderList = Order::where('user_id','=',$currentuserid)->get();
+
+        return view('dealerorder.orderview',  ['allOrderList' => $allOrderList]);
     }
 
     /**

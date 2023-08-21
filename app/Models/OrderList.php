@@ -7,17 +7,13 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use Auth;
 
-class Order extends Model
+class OrderList extends Model
 {
     use HasFactory;
 
-    protected $table = 'orders';
+    protected $table = 'order_list';
 
     protected $fillable = [
-        'id', 'order_id', 'user_id', 'total_amount', 'order_status', 'order_remarks', 'order_date'
+        'id', 'order_id', 'product_code', 'product_name', 'product_category', 'product_size', 'product_price', 'order_quantity', 'order_status'
     ];
-
-
-
-    
 }

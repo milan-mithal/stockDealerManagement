@@ -6,6 +6,7 @@ use App\Http\Controllers\Product\ProductController;
 use App\Http\Controllers\Stock\StockController;
 use App\Http\Controllers\Dealer\DealerController;
 use App\Http\Controllers\Dealer\DealerOrderController;
+use App\Http\Controllers\Order\OrderController;
 
 /*
 |--------------------------------------------------------------------------
@@ -60,6 +61,14 @@ Route::controller(DealerController::class)->group(function() {
 Route::controller(DealerOrderController::class)->group(function() {
     Route::post('/dealerorder/store', 'store')->name('dealerorder.store');
     Route::post('/dealerorder/destroy', 'destroy')->name('dealerorder.destroy');
+    Route::get('/dealerorder/orderlist', 'index')->name('dealerorder.index');
+    Route::get('/dealerorder/placeorder', 'create')->name('dealerorder.create');
+    Route::get('/dealerorder/allorderslist', 'show')->name('dealerorder.show');
+});
+
+// Order Routes
+Route::controller(OrderController::class)->group(function() {
+    Route::post('/order/store', 'store')->name('order.store');
 });
 
 
