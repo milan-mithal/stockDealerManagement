@@ -133,6 +133,8 @@
 	<script src="{{url('/assets/js/custom.js')}}"></script>
 	<script src="{{url('/assets/js/portalCustom.js')}}"></script>
 
+	@yield('script')
+
 </body>
 
 </html>

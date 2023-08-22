@@ -68,7 +68,9 @@ Route::controller(DealerOrderController::class)->group(function() {
 
 // Order Routes
 Route::controller(OrderController::class)->group(function() {
-    Route::post('/order/store', 'store')->name('order.store');
+    Route::get('/order/list', 'index')->name('order.index');
+    Route::get('/order/orderdetails/{id}', 'show')->name('order.show');
+    Route::post('/order/update/{id}', 'update')->name('order.update');
 });
 
 

@@ -16,4 +16,5 @@ class OrderList extends Model
     protected $fillable = [
         'id', 'order_id', 'product_code', 'product_name', 'product_category', 'product_size', 'product_price', 'order_quantity', 'order_status'
     ];
+
 }

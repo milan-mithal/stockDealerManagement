@@ -96,20 +96,4 @@ class Dealer extends Model
 
         return $orderPlaceId;
     }
-
-    // public static function allProductList() {
-    //     $currentuserid = Auth::user()->id;
-    //     $data = DB::table('orders')
-    //             ->join('order_list', 'orders.order_id', '=' , 'order_list.order_id')
-    //             ->select('orders.order_id as product_name', 'products.product_code as product_code', 'products.product_image as product_image', 'product_price as product_price', 'temp_order_list.id as temp_order_id' ,'temp_order_list.order_quantity as order_quantity')
-    //             ->where('temp_order_list.user_id', '=', $currentuserid)
-    //             ->get();
-
-    //     return $data;
-    // }
-
-    
-
-
-
 }
