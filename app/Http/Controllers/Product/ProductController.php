@@ -24,7 +24,7 @@ class ProductController extends Controller
      * Display a listing of the resource.
      */
     public function index()
-    {
+    {  
         $productList = Product::where('status', '!=', DeleteStatusEnums::Deleted)->get();
         return view('product.view',  ['allProductList' => $productList]);
     }

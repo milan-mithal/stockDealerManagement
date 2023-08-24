@@ -14,6 +14,10 @@ use Auth;
 
 class OrderController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
 
     
     /**
@@ -21,7 +25,7 @@ class OrderController extends Controller
      */
     public function index()
     {
-        $allOrderList = Order::all()->sortByDesc("order_id");
+        $allOrderList = Order::allOrderDetails();
 
         return view('order.view',  ['allOrderList' => $allOrderList]); 
     }

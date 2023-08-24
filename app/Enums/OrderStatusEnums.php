@@ -3,10 +3,9 @@
 namespace App\Enums;
  
 enum OrderStatusEnums:string {
-    case Placed = 'placed';
-    case Received = 'received';
+    case Accepted = 'accepted';
     case Packed = 'packed';
-    case Ready = 'ready';
+    case Dispatched = 'dispatched';
 
     public static function values(): array
     {

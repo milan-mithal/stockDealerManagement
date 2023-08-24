@@ -31,8 +31,8 @@ class DealerOrderController extends Controller
     public function create(Request $request)
     {
         $currentuserid = Auth::user()->id;
-        $prefix = "SN-".date("my")."-";  
-        $order_id = IdGenerator::generate(['table' => 'orders','field'=>'order_id' ,'length' => 15, 'prefix' =>$prefix]);
+        $prefix = "SN-";  
+        $order_id = IdGenerator::generate(['table' => 'orders','field'=>'order_id' ,'length' => 10, 'prefix' => $prefix]);
         $placeOrderId = Dealer::orderPlace($order_id);
         if ($placeOrderId) {
             Dealer::where('user_id', $currentuserid)->delete();
@@ -91,7 +91,7 @@ class DealerOrderController extends Controller
     public function show()
     {
         $currentuserid = Auth::user()->id;
-        $allOrderList = Order::where('user_id','=',$currentuserid)->get();
+        $allOrderList = Order::where('user_id','=',$currentuserid)->orderByDesc('order_id')->get();
 
         return view('dealerorder.orderview',  ['allOrderList' => $allOrderList]);
     }
@@ -99,9 +99,13 @@ class DealerOrderController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function ordershow(string $id)
     {
-        //
+        $order_id = strip_tags($id);
+        $orderDetails = Order::orderDetails($order_id);
+        $allorderProductList = OrderList::where('order_id', '=' , $order_id)->get();
+
+        return view('dealerorder.vieworder',  ['orderDetails' => $orderDetails, 'allorderProductList' => $allorderProductList]); 
     }
 
     /**

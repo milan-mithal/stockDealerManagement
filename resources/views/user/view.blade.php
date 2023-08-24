@@ -10,11 +10,11 @@
             <!-- PAGE-HEADER -->
             <div class="page-header">
                 <div>
-                    <h1 class="page-title">View/Order Products</h1>
+                    <h1 class="page-title">Manage Products</h1>
                 </div>
                 <div class="ms-auto pageheader-btn">
                     <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="javascript:void(0);">Dealer</a></li>
+                        <li class="breadcrumb-item"><a href="javascript:void(0);">Product</a></li>
                         <li class="breadcrumb-item active" aria-current="page">View</li>
                     </ol>
                 </div>
@@ -48,17 +48,16 @@
                                                 @endif
 										<div class="card-body">
 											<div class="table-responsive">
-												<table class="table editable-table table-bordered text-nowrap border-bottom" id="basic-datatable">
+												<table class="table table-bordered text-nowrap border-bottom" id="basic-datatable">
 													<thead>
 														<tr>
-															<th class="wd-10p border-bottom-0">Code</th>
-															<th class="wd-10p border-bottom-0">Category</th>
-                                                            <th class="wd-10p border-bottom-0">Product Name</th>
-															<th class="wd-10p border-bottom-0">Image</th>
-															<th class="wd-10p border-bottom-0">Size</th>
-															<th class="wd-10p border-bottom-0">Price (AED)</th>
-                                                            <th class="wd-10p border-bottom-0">Total Stock Available</th>
-                                                            <th class="wd-10p border-bottom-0">Order Stock</th>
+															<th class="wd-15p border-bottom-0">Code</th>
+															<th class="wd-15p border-bottom-0">Category</th>
+                                                            <th class="wd-15p border-bottom-0">Product Name</th>
+															<th class="wd-20p border-bottom-0">Image</th>
+															<th class="wd-15p border-bottom-0">Size</th>
+															<th class="wd-25p border-bottom-0">Price (AED)</th>
+                                                            <th class="wd-25p border-bottom-0">Action</th>
 														</tr>
 													</thead>
 													<tbody>
@@ -70,14 +69,16 @@
 															<td><img class="hpx-100" src="{{ url($productDetails->product_image)}}" /></td>
 															<td>{{$productDetails->product_size}}</td>
 															<td>{{$productDetails->product_price}}</td>
-                                                            <td>{{$productDetails->total_stock_qty}}</td>
-                                                            <td><input type="number" class="wp-50" id="order_qty_{{ $productDetails->id }}" value="{{$productDetails->ordered_qty}}" placeholder="0">
-                                                                <button type="button" class="btn btn-icon  btn-primary" data-bs-placement="top" data-bs-toggle="tooltip" data-bs-original-title="Add To Cart" id="addToCart_{{ $productDetails->id }}" data-qty="{{$productDetails->total_stock_qty}}" data-url="{{ route('dealerorder.store') }}" onClick="addToCart({{ $productDetails->id }})"><i class="fe fe-check"></i></button>
-                                                                
-                                                                <button type="button" class="btn btn-icon  btn-danger" data-bs-placement="top" data-bs-toggle="tooltip" data-bs-original-title="Remove From Cart" id="removeFromCart_{{ $productDetails->id }}" data-url="{{ route('dealerorder.destroy') }}" onClick="removeFromCart({{ $productDetails->id }})"><i class="fe fe-x"></i></button>
+                                                            <td>
+                                                                @if ($productDetails->status == 'active')
+                                                                <a href="javascript:void(0)" class="btn btn-primary-gradient">Active</a>
+                                                                @endif
+                                                                @if ($productDetails->status == 'inactive')
+                                                                <a href="javascript:void(0)" class="btn btn-danger-gradient">Blocked</a>
+                                                                @endif
 
-                                                                <div class="valid-feedback block text-bold mb-2" id="successCart_{{ $productDetails->id }}"></div>
-                                                                <div class="invalid-feedback block text-bold mb-2" id="errorCart_{{ $productDetails->id }}"></div>
+                                                                <a href="{{ route('product.edit', $productDetails->id) }}"><button type="button" class="btn btn-icon  btn-primary"><i class="fe fe-edit"></i></button></a>
+                                                                <a class="deleteUrl" data-url="{{ route('product.destroy', $productDetails->id) }}"><button type="button" class="btn btn-icon  btn-danger" data-bs-toggle="modal" data-bs-target="#largemodal"><i class="fe fe-trash"></i></button></a>
                                                             </td>
 														</tr>
                                                         @endforeach

@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginRegisterController;
+use App\Http\Controllers\User\UserController;
 use App\Http\Controllers\Product\ProductController;
 use App\Http\Controllers\Stock\StockController;
 use App\Http\Controllers\Dealer\DealerController;
@@ -31,6 +32,16 @@ Route::controller(LoginRegisterController::class)->group(function() {
     Route::post('/authenticate', 'authenticate')->name('authenticate');
     Route::get('/dashboard', 'dashboard')->name('dashboard');
     Route::post('/logout', 'logout')->name('logout');
+});
+
+// User Authentication Routes
+Route::controller(UserController::class)->group(function() {
+    Route::get('/user/list', 'index')->name('user.index');
+    Route::get('/user/create', 'create')->name('user.create');
+    Route::post('/user/store', 'store')->name('user.store');
+    Route::get('/user/edit/{id}', 'edit')->name('user.edit');
+    Route::post('/user/update/{id}', 'update')->name('user.update');
+    Route::get('/user/destroy/{id}', 'destroy')->name('user.destroy');
 });
 
 // Product Routes
@@ -64,6 +75,8 @@ Route::controller(DealerOrderController::class)->group(function() {
     Route::get('/dealerorder/orderlist', 'index')->name('dealerorder.index');
     Route::get('/dealerorder/placeorder', 'create')->name('dealerorder.create');
     Route::get('/dealerorder/allorderslist', 'show')->name('dealerorder.show');
+    Route::get('/dealerorder/orderdetails/{id}', 'ordershow')->name('dealerorder.ordershow');
+    
 });
 
 // Order Routes
