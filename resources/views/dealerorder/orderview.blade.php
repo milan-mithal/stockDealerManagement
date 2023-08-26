@@ -53,7 +53,7 @@
 														<tr>
                                                             <th class="wd-10p border-bottom-0">S.No</th>
 															<th class="wd-10p border-bottom-0">Order Id</th>
-                                                            <th class="wd-10p border-bottom-0">Total Amount</th>
+                                                            <th class="wd-10p border-bottom-0">Total Amount (AED)</th>
 															<th class="wd-10p border-bottom-0">Order Status</th>
 															<th class="wd-10p border-bottom-0">Order Remarks</th>
                                                             <th class="wd-10p border-bottom-0">Order Date</th>
@@ -62,14 +62,26 @@
 													<tbody>
                                                         
                                                         @foreach ($allOrderList as $orderList)
-
+                                                          @php $class='' @endphp
+                                                          @if ($orderList->order_status == 'Order Placed')
+                                                          @php $class='btn btn-info-gradient' @endphp
+                                                          @endif 
+                                                          @if ($orderList->order_status == 'accepted')
+                                                          @php $class='btn btn-secondary-gradient' @endphp
+                                                          @endif 
+                                                          @if ($orderList->order_status == 'packed')
+                                                          @php $class='btn btn-warning-gradient' @endphp
+                                                          @endif 
+                                                          @if ($orderList->order_status == 'dispatched')
+                                                          @php $class='btn btn-primary-gradient' @endphp
+                                                          @endif 
 														<tr>
                                                             <td>{{$loop->iteration}}</td>
-															<td>{{$orderList->order_id}}</td>
+															<td class="text-14"><a href="{{ route('dealerorder.ordershow',$orderList->order_id) }}">{{$orderList->order_id}}</a></td>
 															<td>{{$orderList->total_amount}}</td>
-															<td>{{$orderList->order_status}}</td>
+															<td class="text-center"><button class="{{ $class }} btn-w-lg">{{ ucfirst($orderList->order_status) }}</button></td>
 															<td>{{$orderList->order_remarks}}</td>
-                                                            <td>{{$orderList->order_date}}</td>
+                                                            <td>{{ \Carbon\Carbon::parse($orderList->order_date)->format('d-m-Y') }}</td>
 														</tr>
                                                         @endforeach
 													</tbody>

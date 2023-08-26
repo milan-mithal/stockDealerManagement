@@ -9,6 +9,8 @@ use Auth;
 use App\Models\Dealer;
 use App\Models\Order;
 use App\Models\OrderList;
+use Mail;
+use App\Mail\Dealer\OrderMail;
 
 class DealerOrderController extends Controller
 {
@@ -31,12 +33,19 @@ class DealerOrderController extends Controller
     public function create(Request $request)
     {
         $currentuserid = Auth::user()->id;
-        $prefix = "SN-".date("my")."-";  
-        $order_id = IdGenerator::generate(['table' => 'orders','field'=>'order_id' ,'length' => 15, 'prefix' =>$prefix]);
+        $prefix = "SN-";  
+        $order_id = IdGenerator::generate(['table' => 'orders','field'=>'order_id' ,'length' => 10, 'prefix' => $prefix]);
         $placeOrderId = Dealer::orderPlace($order_id);
         if ($placeOrderId) {
             Dealer::where('user_id', $currentuserid)->delete();
         }
+
+        $mailData = [
+            'order_id' => $order_id,
+            'dealer_name' => Auth::user()->dealer_name
+        ];
+
+        Mail::to('milan.mithal@gmail.com')->send(new OrderMail($mailData));
         
         return redirect()->route('dealerorder.show')->with('success', 'Order has been placed successfully.');
     }
@@ -91,7 +100,7 @@ class DealerOrderController extends Controller
     public function show()
     {
         $currentuserid = Auth::user()->id;
-        $allOrderList = Order::where('user_id','=',$currentuserid)->get();
+        $allOrderList = Order::where('user_id','=',$currentuserid)->orderByDesc('order_id')->get();
 
         return view('dealerorder.orderview',  ['allOrderList' => $allOrderList]);
     }
@@ -99,9 +108,13 @@ class DealerOrderController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function ordershow(string $id)
     {
-        //
+        $order_id = strip_tags($id);
+        $orderDetails = Order::orderDetails($order_id);
+        $allorderProductList = OrderList::where('order_id', '=' , $order_id)->get();
+
+        return view('dealerorder.vieworder',  ['orderDetails' => $orderDetails, 'allorderProductList' => $allorderProductList]); 
     }
 
     /**

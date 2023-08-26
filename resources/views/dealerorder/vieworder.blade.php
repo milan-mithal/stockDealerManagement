@@ -65,7 +65,6 @@
                                 <div class="col-lg-6 ">
                                     <p class="h3">Order Form:</p>
                                     <address>
-                                        {{ $orderDetails->user_code }}<br>
                                         {{ $orderDetails->user_name }}<br>
                                         {{ $orderDetails->dealer_name }}<br>
                                         {{ $orderDetails->address }}<br>
@@ -115,7 +114,6 @@
                             </div>
                         </div>
                         <div class="card-footer text-end">
-                            <a class="btn btn-primary-gradient" data-bs-target="#modalInput" data-bs-toggle="modal" href="javascript:void(0)">Order Status</a>
                             <button type="button" class="btn btn-info-gradient" onclick="javascript:window.print();"><i class="si si-printer"></i> Print Order Details</button>
                         </div>
                     </div>

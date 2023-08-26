@@ -51,7 +51,7 @@
                                                 @endif
 												<p class="text-muted">Here you can edit stock for product</p>
                                                 <div class="valid-feedback block text-bold mb-2">Current Stock Available: {{ $stockDetail->stock_qty }}</div>
-                                                <div class="invalid-feedback block text-bold mb-2">New stock quanity will be added to existing stock quanity</div>
+                                                <div class="invalid-feedback block text-bold mb-2">New stock quantity will get updated</div>
 												<div class="d-flex flex-column">
                                                     <form method="post" name="frm" id="frm" action="{{ route('stock.update', $stockDetail->id) }}" enctype="multipart/form-data">
                                                         @csrf

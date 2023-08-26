@@ -6,6 +6,26 @@
 									<span class="login100-form-title">
 										Login
 									</span>
+									@if(Session::has('success'))
+                                                <div class="card-header border-bottom">
+                                                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                                        {{ Session::get('success') }}
+                                                        @php
+                                                            Session::forget('success');
+                                                        @endphp
+                                                    </div>
+                                                </div>
+                                                @endif
+                                                @if(Session::has('error'))
+                                                <div class="card-header border-bottom">
+                                                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                                        {{ Session::get('error') }}
+                                                        @php
+                                                            Session::forget('error');
+                                                        @endphp
+                                                    </div>
+                                                </div>
+                                                @endif
 									<div class="wrap-input100 validate-input" data-bs-validate = "Valid email is required: ex@abc.xyz">
 										<input class="input100 @error('email') is-invalid state-invalid @enderror" type="text" name="email" placeholder="Email" value="{{ old('email') }}">
 										<span class="symbol-input100">

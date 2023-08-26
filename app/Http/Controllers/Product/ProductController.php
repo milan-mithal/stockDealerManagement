@@ -18,13 +18,15 @@ class ProductController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
+        $this->middleware('checkrole');
+        
     }
 
     /**
      * Display a listing of the resource.
      */
     public function index()
-    {
+    {  
         $productList = Product::where('status', '!=', DeleteStatusEnums::Deleted)->get();
         return view('product.view',  ['allProductList' => $productList]);
     }

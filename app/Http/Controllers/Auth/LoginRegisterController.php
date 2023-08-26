@@ -81,7 +81,7 @@ class LoginRegisterController extends Controller
     {
         $credentials = $request->validate([
             'email' => 'required|email',
-            'password' => 'required'
+            'password' => 'required',
         ]);
 
         if(Auth::attempt($credentials))

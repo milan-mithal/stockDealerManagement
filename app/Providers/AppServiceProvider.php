@@ -33,6 +33,8 @@ class AppServiceProvider extends ServiceProvider
             } else {
                 $view->with('totalCartCount' , $getTotalProductAdded);
             }
+
+
         });
     }
 }
