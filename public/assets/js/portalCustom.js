@@ -97,4 +97,74 @@ const removeFromCart = (id) => {
 
 }
 
+/**
+ * SHOW NEW ORDER
+ */
+
+const showNewOrders = () => {
+
+  var request = $.ajax({
+    url: '/common/allneworders',
+    type: "get",
+    dataType: "json",
+    headers: {
+      'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      },
+  });
+  
+  request.done(function(data) {
+    var orderCountNotification = $('#orderNotification');
+    var orderList = $('#orderMessages');
+    var content ='';
+    if (data.newOrderCount === 0) {
+        content += '<a class="dropdown-item d-flex" href="/order/list/">';
+        content += '<div class="wd-90p">';
+        content += '<div class="d-flex">';
+        content += '<h5 class="mb-1">No New Orders</h5>';
+        content += '</div>';
+        content += '</div>';
+        content += '</a>';
+        orderList.html(content);
+        orderCountNotification.removeAttr("class");
+    } else {
+      $.each(data.newOrders, function(index, newOrders) {
+        content += '<a class="dropdown-item d-flex" href="/order/orderdetails/'+newOrders.order_id+'">';
+        content += '<div class="wd-90p">';
+        content += '<div class="d-flex">';
+        content += '<h5 class="mb-1">'+newOrders.order_id+'</h5>';
+        content += '<small class="text-muted ms-auto text-end">'+newOrders.user_code+'</small>';
+        content += '</div>';
+        content += '<span class="fs-12 text-muted">'+newOrders.dealer_name+'</span>';
+        content += '</div>';
+        content += '</a>';
+      }); 
+        orderList.html(content);
+        orderCountNotification.attr("class","pulse-danger");
+    }
+  });
+  
+  request.fail(function(jqXHR, textStatus) {
+    alert( "Request failed: " + textStatus );
+  });
+
+}
+
+const checkOutOfStock = () => {
+  $.ajax({
+    url: '/common/checkoutofstock', // Route URL for fetching users
+    method: 'GET',
+    dataType: 'json',
+    success: function(data) {
+      
+    },
+    error: function(xhr, status, error) {
+        console.error(error);
+    }
+  });
+}
+
+$(document).ready(function() {
+  setInterval('showNewOrders()', 30000);
+});
+
 

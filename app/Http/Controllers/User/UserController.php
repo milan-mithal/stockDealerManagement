@@ -21,13 +21,14 @@ class UserController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
+        $this->middleware('checkrole');
     }
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $userList = User::where('status', '!=', DeleteStatusEnums::Deleted)->get();
+        $userList = User::where('id', '!=', 1)->get();
         return view('user.view',  ['allUserList' => $userList]);
     }
 
@@ -90,9 +91,9 @@ class UserController extends Controller
         $insertData->save();
 
         $mailData = [
-            'title' => 'Please find your Dealer Login Details.',
-            'body' => 'Email id : '. $request->email . '<br/>
-                       Password : '. $password .'<br/>'
+            'name' => $request->name,
+            'useremail' => $request->email,
+            'password' => $password
         ];
          
         Mail::to($request->email)->send(new UserRegisterMail($mailData));
@@ -113,7 +114,8 @@ class UserController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $userDetails = User::findOrFail($id);
+        return view('user.edit', compact('userDetails'));
     }
 
     /**
@@ -121,7 +123,45 @@ class UserController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $request->validate([
+            'name' => 'required|string|max:250',
+            'email' => 'required|email|max:250|unique:users,email,'.$id,
+            'dealer_name' => 'required|string|max:250',
+            'address' => 'required|string|max:250',
+            'phone_no' => 'required|string|max:250',
+            'region' => 'required|string|max:40',
+            'community' => 'required|string|max:40',
+            'role' => ['required', new Enum(UserRolesEnums::class)],
+            'status' => ['required', new Enum(UserStatusEnums::class)]
+        ], [
+            'name.required' => 'Please enter name.',
+            'email.required' => 'Please enter email id.',
+            'email.email' => 'Please enter valid email id.',
+            'email.max' => 'Maximum 250 characters allowed.',
+            'email.unique' => 'Email id already exists. Please use another email id.',
+            'dealer_name.required' => 'Please enter user company name.',
+            'dealer_name.required' => 'Please enter user company name.',
+            'address.required' => 'Please enter user company address name.',
+            'phone_no.required' => 'Please enter user phone no.',
+            'region.required' => 'Please enter user region.',
+            'community.required' => 'Please enter user community.',
+            'role.required' => 'Please select user role.',
+            'status.required' => 'Please select user status.'
+        ]);
+
+        $insertData = User::findOrFail($id);
+        $insertData->name = $request->name;
+        $insertData->email = $request->email;
+        $insertData->dealer_name = $request->dealer_name;
+        $insertData->address = $request->address;
+        $insertData->phone_no = $request->phone_no;
+        $insertData->region = $request->region;
+        $insertData->community = $request->community;
+        $insertData->role = $request->role;
+        $insertData->status = $request->status;
+        $insertData->save();
+    
+        return redirect()->route('user.index')->with('success', 'User updated successfully.');
     }
 
     /**

@@ -53,6 +53,7 @@
 														<tr>
                                                             <th class="wd-10p border-bottom-0">S.No</th>
 															<th class="wd-10p border-bottom-0">Order Id</th>
+                                                            <th class="wd-10p border-bottom-0">Dealer Code</th>
                                                             <th class="wd-10p border-bottom-0">Dealer</th>
                                                             <th class="wd-10p border-bottom-0">Dealer Region/Commuity</th>
                                                             <th class="wd-10p border-bottom-0">Total Amount (AED)</th>
@@ -81,6 +82,7 @@
 														<tr>
                                                             <td>{{$loop->iteration}}</td>
 															<td class="text-14"><a href="{{ route('order.show',$orderList->order_id) }}">{{$orderList->order_id}}</a></td>
+                                                            <td>{{$orderList->user_code}}</td>
                                                             <td>{{$orderList->dealer_name}}</td>
                                                             <td>{{$orderList->region}}/{{$orderList->community}}</td>
 															<td>{{$orderList->total_amount}}</td>

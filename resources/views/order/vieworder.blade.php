@@ -65,6 +65,7 @@
                                 <div class="col-lg-6 ">
                                     <p class="h3">Order Form:</p>
                                     <address>
+                                        {{ $orderDetails->user_code }}<br>
                                         {{ $orderDetails->user_name }}<br>
                                         {{ $orderDetails->dealer_name }}<br>
                                         {{ $orderDetails->address }}<br>

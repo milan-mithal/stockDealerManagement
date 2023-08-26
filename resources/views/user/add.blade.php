@@ -55,7 +55,7 @@
                                                     <form method="post" name="frm" id="frm" action="{{ route('user.store') }}" enctype="multipart/form-data">
                                                         @csrf
                                                         <div class="form-group">
-                                                            <label for="formFile" class="form-label">Email Id</label>
+                                                            <label for="formFile" class="form-label">Name</label>
                                                             <input class="form-control" type="text" name="name" id="name" value="{{ old('name') }}">
                                                             @error('name')
                                                               <div class="invalid-feedback block">{{ $message }}</div>

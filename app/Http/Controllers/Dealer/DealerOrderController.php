@@ -9,6 +9,8 @@ use Auth;
 use App\Models\Dealer;
 use App\Models\Order;
 use App\Models\OrderList;
+use Mail;
+use App\Mail\Dealer\OrderMail;
 
 class DealerOrderController extends Controller
 {
@@ -37,6 +39,13 @@ class DealerOrderController extends Controller
         if ($placeOrderId) {
             Dealer::where('user_id', $currentuserid)->delete();
         }
+
+        $mailData = [
+            'order_id' => $order_id,
+            'dealer_name' => Auth::user()->dealer_name
+        ];
+
+        Mail::to('milan.mithal@gmail.com')->send(new OrderMail($mailData));
         
         return redirect()->route('dealerorder.show')->with('success', 'Order has been placed successfully.');
     }

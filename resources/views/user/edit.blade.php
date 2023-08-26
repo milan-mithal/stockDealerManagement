@@ -10,11 +10,11 @@
 							<!-- PAGE-HEADER -->
 							<div class="page-header">
 								<div>
-									<h1 class="page-title">Edit Product</h1>
+									<h1 class="page-title">Edit User</h1>
 								</div>
 								<div class="ms-auto pageheader-btn">
 									<ol class="breadcrumb">
-										<li class="breadcrumb-item"><a href="javascript:void(0);">Product</a></li>
+										<li class="breadcrumb-item"><a href="javascript:void(0);">User</a></li>
 										<li class="breadcrumb-item active" aria-current="page">Edit</li>
 									</ol>
 								</div>
@@ -49,67 +49,78 @@
                                                     </div>
                                                 </div>
                                                 @endif
-												<p class="text-muted">Here you can edit product</p>
+												<p class="text-muted">Here you can edit user</p>
                                                 
 												<div class="d-flex flex-column">
-                                                    <form method="post" name="frm" id="frm" action="{{ route('product.update', $productDetail->id) }}" enctype="multipart/form-data">
+                                                    <form method="post" name="frm" id="frm" action="{{ route('user.update', $userDetails->id) }}" enctype="multipart/form-data">
                                                         @csrf
                                                         <div class="form-group">
-                                                            <label for="formFile" class="form-label">Product Category</label>
-                                                            <select class="form-control" name="product_category" id="product_category">
-                                                                <option value="">Choose Product Category </option>
-                                                                <option value="Jute Bag" @selected(old('product_category', $productDetail->product_category) == 'Jute Bag')>Jute bag</option>
-                                                                <option value="Cotton Bag" @selected(old('product_category', $productDetail->product_category) == 'Cotton Bag')>Cotton bag</option>
-                                                              </select>
-                                                              @error('product_category')
-                                                              <div class="invalid-feedback block">{{ $message }}</div>
-                                                              @enderror
-                                                        </div>
-                                                        <div class="form-group">
-                                                            <label for="formFile" class="form-label">Product Code</label>
-                                                            <input class="form-control" type="text" name="product_code" id="product_code" value="{{ old('product_code', $productDetail->product_code) }}">
-                                                            @error('product_code')
+                                                            <label for="formFile" class="form-label">Name</label>
+                                                            <input class="form-control" type="text" name="name" id="name" value="{{ old('name', $userDetails->name) }}">
+                                                            @error('name')
                                                               <div class="invalid-feedback block">{{ $message }}</div>
                                                             @enderror
                                                         </div>
                                                         <div class="form-group">
-                                                            <label for="formFile" class="form-label">Product Name</label>
-                                                            <input class="form-control" type="text" name="product_name" id="product_name" value="{{ old('product_name', $productDetail->product_name) }}">
-                                                            @error('product_name')
+                                                            <label for="formFile" class="form-label">User Email Id</label>
+                                                            <input class="form-control" type="text" name="email" id="email" value="{{ old('email', $userDetails->email) }}">
+                                                            @error('email')
                                                               <div class="invalid-feedback block">{{ $message }}</div>
                                                             @enderror
                                                         </div>
                                                         <div class="form-group">
-                                                            <label for="formFile" class="form-label">Product Image</label>
-                                                            <input class="form-control file-input" type="file" id="product_image" name="product_image">
-                                                            <input type="hidden" id="old_product_image" name="old_product_image" value="{{ $productDetail->product_image }}" />
-                                                            @if($productDetail->product_image)
-                                                            <img class="hpx-100" src="{{ url($productDetail->product_image)}}" />
-                                                            @endif
-                                                            @error('product_image')
+                                                            <label for="formFile" class="form-label">User Company Name</label>
+                                                            <input class="form-control" type="text" name="dealer_name" id="dealer_name" value="{{ old('dealer_name', $userDetails->dealer_name) }}">
+                                                            @error('dealer_name')
                                                               <div class="invalid-feedback block">{{ $message }}</div>
                                                             @enderror
                                                         </div>
                                                         <div class="form-group">
-                                                            <label for="formFile" class="form-label">Product Size</label>
-                                                            <input class="form-control" type="text" name="product_size" id="product_size" value="{{ old('product_size', $productDetail->product_size) }}">
-                                                            @error('product_size')
+                                                            <label for="formFile" class="form-label">User Company Address</label>
+                                                            <textarea class="form-control" type="text" name="address" id="address">{{ old('address', $userDetails->address) }}</textarea>
+                                                            @error('address')
                                                               <div class="invalid-feedback block">{{ $message }}</div>
                                                             @enderror
                                                         </div>
                                                         <div class="form-group">
-                                                            <label for="formFile" class="form-label">Product Price (AED)</label>
-                                                            <input class="form-control" type="text" name="product_price" id="product_price" value="{{ old('product_price', $productDetail->product_price) }}">
-                                                            @error('product_price')
+                                                            <label for="formFile" class="form-label">User Phone No.</label>
+                                                            <input class="form-control" type="text" name="phone_no" id="phone_no" value="{{ old('phone_no', $userDetails->phone_no) }}">
+                                                            @error('phone_no')
                                                             <div class="invalid-feedback block">{{ $message }}</div>
                                                             @enderror
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label for="formFile" class="form-label">User Region</label>
+                                                            <input class="form-control" type="text" name="region" id="region" value="{{ old('region', $userDetails->region) }}">
+                                                            @error('region')
+                                                            <div class="invalid-feedback block">{{ $message }}</div>
+                                                            @enderror
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label for="formFile" class="form-label">User Community</label>
+                                                            <input class="form-control" type="text" name="community" id="community" value="{{ old('community', $userDetails->community) }}">
+                                                            @error('community')
+                                                            <div class="invalid-feedback block">{{ $message }}</div>
+                                                            @enderror
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label for="formFile" class="form-label">Role</label>
+                                                            <select class="form-control" name="role" id="role">
+                                                                <option value="">Choose Role</option>
+                                                                @foreach(App\Enums\UserRolesEnums::values() as $key=>$value)
+                                                                    <option value="{{ $key }}" @selected(old('role', $userDetails->role) == $key)>{{ $value }}</option>
+                                                                @endforeach
+                                                              </select>
+                                                              @error('role')
+                                                              <div class="invalid-feedback block">{{ $message }}</div>
+                                                              @enderror
                                                         </div>
                                                         <div class="form-group">
                                                             <label for="formFile" class="form-label">Status</label>
                                                             <select class="form-control" name="status" id="status">
                                                                 <option value="">Choose Status</option>
-                                                                @foreach(App\Enums\CommonStatusEnums::values() as $key=>$value)
-                                                                    <option value="{{ $key }}" @selected(old('status', $productDetail->status) == $key)>{{ $value }}</option>
+                                                                @foreach(App\Enums\UserStatusEnums::values() as $key=>$value)
+                                                                    <option value="{{ $key }}" @selected(old('status',$userDetails->status) == $key)>{{ $value }}</option>
                                                                 @endforeach
                                                               </select>
                                                               @error('status')
