@@ -133,6 +133,13 @@
 	<script src="{{url('/assets/js/custom.js')}}"></script>
 	<script src="{{url('/assets/js/portalCustom.js')}}"></script>
 
+	@if (Auth::check() && Auth::user()->role == 'admin')
+	<script>
+		$(document).ready(function() {
+			setInterval('showNewOrders()', 30000);
+		});
+	</script>
+	@endif
 	@yield('script')
 
 </body>

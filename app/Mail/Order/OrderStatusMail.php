@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Mail\Dealer;
+namespace App\Mail\Order;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -9,7 +9,7 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class OrderMail extends Mailable
+class OrderStatusMail extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -21,6 +21,7 @@ class OrderMail extends Mailable
     public function __construct($mailData)
     {
         $this->mailData = $mailData;
+        $this->order_id = $mailData['order_id'];
     }
 
     /**
@@ -29,7 +30,7 @@ class OrderMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Shams Natural New Order Received',
+            subject: 'Shams Natural Order Update Status: '. $this->order_id,
         );
     }
 
@@ -39,7 +40,7 @@ class OrderMail extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'emails.dealerOrderMail',
+            view: 'emails.orderStatusMail',
         );
     }
 

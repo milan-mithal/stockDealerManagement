@@ -2,13 +2,21 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Models\User;
+
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
+use Mail;
 use App\Enums\UserStatusEnums;
 use App\Enums\UserRolesEnums;
+use App\Mail\User\ForgotPasswordMail;
+use App\Models\Dealer;
+use App\Models\User;
+use App\Models\Order;
+use App\Models\Product;
+use App\Models\Stock;
 
 class LoginRegisterController extends Controller
 {
@@ -23,13 +31,13 @@ class LoginRegisterController extends Controller
     }
 
     /**
-     * Display a registration form.
+     * Display a forgotpassword form.
      *
      * @return \Illuminate\Http\Response
      */
-    public function register()
+    public function forgotpassword()
     {
-        return view('auth.register');
+        return view('auth.forgotpassword');
     }
 
     /**
@@ -38,28 +46,46 @@ class LoginRegisterController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function forgotpasswordauthenticate(Request $request)
     {
-        $request->validate([
-            'name' => 'required|string|max:250',
-            'email' => 'required|email|max:250|unique:users',
-            'password' => 'required|min:8|confirmed'
+        $credentials = $request->validate([
+            'email' => 'required|email|max:250|exists:users',
+        ], [
+            
+            'email.required' => 'Please enter email id.',
+            'email.email' => 'Please enter valid email id.',
+            'email.max' => 'Maximum 250 characters allowed.',
+            'email.exists' => 'Invalid email id'
         ]);
 
-        User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-            'role' => UserRolesEnums::Admin,
-            'status' => UserStatusEnums::Active
-        ]);
+        $emailId = $request->email;
+        $password = Str::password(10);
+        $hasdedPassword = Hash::make($password);
 
-        $credentials = $request->only('email', 'password');
-        Auth::attempt($credentials);
-        $request->session()->regenerate();
-        return redirect()->route('dashboard')
-        ->withSuccess('You have successfully registered & logged in!');
-    }
+        $getDetails = User::where('email',$emailId)->first();
+        if ($getDetails) {
+            $userId = $getDetails->id;
+    
+            $updateData = User::findOrFail($userId);
+            $updateData->password = $hasdedPassword;
+            $updateData->save();
+    
+            $mailData = [
+                'name' => $getDetails->name,
+                'useremail' => $getDetails->email,
+                'password' => $password
+            ];
+    
+    
+             
+            Mail::to($request->email)->send(new ForgotPasswordMail($mailData));
+            return redirect()->route('login')->with('success', 'Password updated successfully. Kindly check your email & login here.');
+        }
+
+        return redirect()->route('forgotpassword')->with('error', 'Some error occured.');
+
+
+    } 
 
     /**
      * Display a login form.
@@ -104,9 +130,59 @@ class LoginRegisterController extends Controller
      */
     public function dashboard()
     {
-        if(Auth::check())
+        if(Auth::check() && Auth::user()->role == 'admin')
         {
-            return view('dashboard.view');
+            $totalDealers = 0;
+            $totalDealers = User::where([['role','dealer'],['status', '=', 'active']])->count();
+
+            $totalOrders = 0;
+            $totalOrders = Order::all()->count();
+
+            $totalProducts = 0;
+            $totalProducts = Product::all()->count();
+
+            $totalDealerAddedCurrentMonth = 0;
+            $totalDealerAddedCurrentMonth = User::where([['role','dealer'],['status', '=', 'active']])
+                ->whereMonth('created_at', date('m'))
+                ->whereYear('created_at', date('Y'))
+                ->count();
+
+            $totalOrderAddedCurrentMonth = 0;
+            $totalOrderAddedCurrentMonth = Order::whereMonth('created_at', date('m'))
+                ->whereYear('created_at', date('Y'))
+                ->count();
+            
+            $totalAmountOrder = 0;
+            $totalAmountOrder = Order::whereMonth('created_at', date('m'))
+            ->whereYear('created_at', date('Y'))
+            ->sum('total_amount');
+
+            $allOutOfStockProducts = [];
+            $allOutOfStockProducts = Stock::select('product_code','stock_qty')
+            ->whereColumn('stock_qty', '<=', 'stock_min_qty')
+            ->get();
+
+            $allOrderList = [];
+            $allOrderList = Order::recentOrders();
+
+            return view('dashboard.admin',[
+                'totalDealers' => $totalDealers,
+                'totalOrders' => $totalOrders,
+                'totalProducts' => $totalProducts,
+                'totalDealerAddedCurrentMonth' => $totalDealerAddedCurrentMonth,
+                'totalOrderAddedCurrentMonth' => $totalOrderAddedCurrentMonth,
+                'totalAmountOrder' => $totalAmountOrder,
+                'allOutOfStockProducts' => $allOutOfStockProducts,
+                'allOrderList' => $allOrderList
+        ]);
+        }  
+        if(Auth::check() && Auth::user()->role == 'dealer') {
+            $currentuserid = Auth::user()->id;
+            $allOrderList = Order::where('user_id','=',$currentuserid)->orderByDesc('order_id')->get();
+
+            return view('dashboard.dealer',[
+                'allOrderList' => $allOrderList
+        ]);
         }
         
         return redirect()->route('login')
