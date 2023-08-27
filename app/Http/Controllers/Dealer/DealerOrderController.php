@@ -9,6 +9,8 @@ use Auth;
 use App\Models\Dealer;
 use App\Models\Order;
 use App\Models\OrderList;
+use App\Models\Product;
+use App\Models\Stock;
 use Mail;
 use App\Mail\Dealer\OrderMail;
 
@@ -67,6 +69,13 @@ class DealerOrderController extends Controller
         ]);
         
         $currentuserid = Auth::user()->id;
+
+        $checkActualQty = Product::join('stocks', 'products.product_code', '=' , 'stocks.product_code')
+                          ->select('stocks.stock_qty')
+                          ->where('products.id', '=', $request->product_id)->first();
+        if ($request->order_quantity > $checkActualQty->stock_qty) {
+            exit();
+        }
 
         $getTempOrderData = Dealer::where([
             ['user_id',$currentuserid],
