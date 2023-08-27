@@ -63,6 +63,7 @@
 													</thead>
 													<tbody>
                                                         @foreach ($allProductList as $productDetails)
+                                                          
 														<tr>
 															<td>{{$productDetails->product_code}}</td>
                                                             <td>{{$productDetails->product_category}}</td>
@@ -71,6 +72,7 @@
 															<td>{{$productDetails->product_size}}</td>
 															<td>{{$productDetails->product_price}}</td>
                                                             <td>{{$productDetails->total_stock_qty}}</td>
+                                                            @if ($productDetails->total_stock_qty > 0)
                                                             <td><input type="number" class="wp-50" id="order_qty_{{ $productDetails->id }}" value="{{$productDetails->ordered_qty}}" placeholder="0">
                                                                 <button type="button" class="btn btn-icon  btn-primary" data-bs-placement="top" data-bs-toggle="tooltip" data-bs-original-title="Add To Cart" id="addToCart_{{ $productDetails->id }}" data-qty="{{$productDetails->total_stock_qty}}" data-url="{{ route('dealerorder.store') }}" onClick="addToCart({{ $productDetails->id }})"><i class="fe fe-check"></i></button>
                                                                 
@@ -79,6 +81,11 @@
                                                                 <div class="valid-feedback block text-bold mb-2" id="successCart_{{ $productDetails->id }}"></div>
                                                                 <div class="invalid-feedback block text-bold mb-2" id="errorCart_{{ $productDetails->id }}"></div>
                                                             </td>
+                                                            @else
+                                                            <td>
+                                                                <a href="javascript:void(0)" class="btn btn-danger-gradient">Out Of Stock</a>
+                                                            </td>
+                                                            @endif
 														</tr>
                                                         @endforeach
 													</tbody>
