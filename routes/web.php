@@ -27,7 +27,8 @@ use App\Http\Controllers\Common\CommonController;
 
 // User Authentication Routes
 Route::controller(LoginRegisterController::class)->group(function() {
-    Route::get('/register', 'register')->name('register');
+    Route::get('/forgotpassword', 'forgotpassword')->name('forgotpassword');
+    Route::post('/forgotpasswordauthenticate', 'forgotpasswordauthenticate')->name('forgotpasswordauthenticate');
     Route::post('/store', 'store')->name('store');
     Route::get('/', 'login')->name('login');
     Route::post('/authenticate', 'authenticate')->name('authenticate');

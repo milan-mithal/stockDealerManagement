@@ -163,8 +163,3 @@ const checkOutOfStock = () => {
   });
 }
 
-$(document).ready(function() {
-  setInterval('showNewOrders()', 30000);
-});
-
-

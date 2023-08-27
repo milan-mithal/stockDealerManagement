@@ -48,8 +48,9 @@ class CommonController extends Controller
             $mailData = [
                 'allOutOfStockProducts' => $allOutOfStockProducts,
             ];
-    
-            Mail::to('milan.mithal@gmail.com')->send(new StockMail($mailData));
+
+            $mail_to = env('MAIL_TO');
+            Mail::to($mail_to)->send(new StockMail($mailData));
         }
     }
 

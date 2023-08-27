@@ -10,6 +10,9 @@ use App\Models\Order;
 use App\Models\OrderList;
 use App\Enums\OrderStatusEnums;
 use Auth;
+use Mail;
+use App\Models\User;
+use App\Mail\Order\OrderStatusMail;
 
 
 
@@ -81,12 +84,31 @@ class OrderController extends Controller
             'order_status.required' => 'Please choose order status.',
             'order_remarks.required' => 'Please enter order remarks.',
         ]);
+
+        $getOrderDetails = Order::where('id', '=' ,$id)->first();
+        $userId = $getOrderDetails->user_id;
+        $order_id = $getOrderDetails->order_id;
+        $userDetails = User::where('id', '=', $userId)->first();
+        $dealerName = $userDetails->dealer_name;
+        $userEmail = $userDetails->email;
         
 
         $updateData = Order::findOrFail($id);
         $updateData->order_status = $request->order_status;
         $updateData->order_remarks = $request->order_remarks;
         $updateData->save();
+
+        $mailData = [
+            'order_id' => $order_id,
+            'dealer_name' => Auth::user()->dealer_name,
+            'order_remarks' => $request->order_remarks,
+            'order_status' => $request->order_status
+        ];
+
+        Mail::to($userEmail)->send(new OrderStatusMail($mailData));
+
+
+
     
         return redirect()->route('order.index')->with('success', 'Order Status updated successfully.');
     }

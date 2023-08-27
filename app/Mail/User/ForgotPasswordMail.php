@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Mail\Dealer;
+namespace App\Mail\User;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -9,12 +9,12 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class OrderMail extends Mailable
+class ForgotPasswordMail extends Mailable
 {
     use Queueable, SerializesModels;
 
     public $mailData;
-
+  
     /**
      * Create a new message instance.
      */
@@ -29,7 +29,7 @@ class OrderMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Shams Natural New Order Received',
+            subject: 'Shams Naturals Reset Password',
         );
     }
 
@@ -39,7 +39,7 @@ class OrderMail extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'emails.dealerOrderMail',
+            view: 'emails.forgotPasswordMail',
         );
     }
 

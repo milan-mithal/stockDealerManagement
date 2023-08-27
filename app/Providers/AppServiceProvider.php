@@ -5,6 +5,10 @@ namespace App\Providers;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\View;
 use App\Models\Dealer;
+use App\Models\User;
+use App\Models\Order;
+use App\Models\Product;
+use App\Models\Stock;
 use DB;
 use Illuminate\Support\Facades\Auth;
 
@@ -33,8 +37,6 @@ class AppServiceProvider extends ServiceProvider
             } else {
                 $view->with('totalCartCount' , $getTotalProductAdded);
             }
-
-
         });
     }
 }

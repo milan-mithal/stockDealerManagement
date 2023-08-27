@@ -44,8 +44,8 @@ class DealerOrderController extends Controller
             'order_id' => $order_id,
             'dealer_name' => Auth::user()->dealer_name
         ];
-
-        Mail::to('milan.mithal@gmail.com')->send(new OrderMail($mailData));
+        $mail_to = env('MAIL_TO');
+        Mail::to($mail_to)->send(new OrderMail($mailData));
         
         return redirect()->route('dealerorder.show')->with('success', 'Order has been placed successfully.');
     }
