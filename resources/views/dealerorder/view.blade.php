@@ -49,8 +49,7 @@
 										<div class="card-body">
 											<div class="table-responsive">
 												<table class="table editable-table table-bordered text-nowrap border-bottom" id="basic-datatable">
-                                                    <button id="button" class="btn btn-primary-gradient mb-4 data-table-btn" 
-                                                    onClick="location.href = '{{ route('dealerorder.create') }}'">Place Order</button>
+                                                    <button id="button" class="btn btn-primary-gradient mb-4 data-table-btn" data-bs-target="#modalInput" data-bs-toggle="modal" href="javascript:void(0)">Place Order</button>
 													<thead>
 														<tr>
 															<th class="wd-10p border-bottom-0">Code</th>
@@ -85,4 +84,70 @@
     </div>
 </div>
 <!-- CONTAINER CLOSED -->
+
+<!-- INPUT MODAL -->
+<div class="modal fade" id="modalInput">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <form method="post" name="frm" id="frm" action="{{ route('dealerorder.create') }}" enctype="multipart/form-data">
+                    @csrf
+                    <div class="form-group">
+                        <label class="form-label text-muted">Pickup By</label>
+                        <div class="input-group">
+                            <select class="form-control order_status" name="delivery_by" id="delivery_by">
+                                <option value=""> Pickup By</option>
+                                @foreach(App\Enums\DeliveryTypeEnums::values() as $key=>$value)
+                                    <option value="{{ $key }}" @selected(old('delivery_by') == $key)>{{ $value }}</option>
+                                @endforeach
+                            </select>
+                            @error('delivery_by')
+                            <div class="invalid-feedback block">{{ $message }}</div>
+                            @enderror
+                        </div>
+                    </div>
+
+                    <div class="form-group d-none" id="delivery_data">
+                            <label class="form-label text-muted">Third Party Details:</label>
+                            <input type="text" class="form-control" name="third_party_details" id="third_party_details" value="{{ old('third_party_details') }}">
+                            @error('third_party_details')
+                            <div class="invalid-feedback block">{{ $message }}</div>
+                            @enderror
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" name="submit" id="submit" class="btn btn-primary-gradient">Update Status</button>
+                    <a href="javascript:void(0);" class="btn btn-light" data-bs-dismiss="modal">Close</a>
+                </div>
+        </form>
+        </div>
+    </div>
+</div>
+
+@endsection
+
+@section('script')
+@if($errors->any())
+<script>
+    $(window).on('load', function() {
+        $("#modalInput").modal('show');
+    });
+</script>
+@endif
+
+<script>
+    $('.order_status').change(function () {
+        const order_status = this.value;
+        if (order_status == 'third_party') {
+            $('#delivery_data').removeClass('d-none');
+        } else {
+            $('#delivery_data').addClass('d-none');
+        }
+    });
+</script>
+
+
+
+
 @endsection

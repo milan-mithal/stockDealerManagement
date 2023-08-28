@@ -153,7 +153,7 @@
                     <div class="form-group d-none" id="delivery_data">
                         @if ($orderDetails->delivery_type == 'third_party')
                             <label class="form-label text-muted">Third Party Details:</label>
-                            <input type="text" class="form-control" name="third_party_details" id="third_party_details" value="{{ old('awb_number', $orderDetails->third_party_details) }}">
+                            <input type="text" class="form-control" name="third_party_details" id="third_party_details" value="{{ old('third_party_details', $orderDetails->third_party_details) }}">
                             @error('third_party_details')
                             <div class="invalid-feedback block">{{ $message }}</div>
                             @enderror
