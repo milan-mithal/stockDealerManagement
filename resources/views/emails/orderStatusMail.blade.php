@@ -13,11 +13,22 @@
         <p>There is an update on order id <strong>{{ $mailData['order_id']}}</strong>:</p>
         
         <p><strong>Status:</strong> {{ ucfirst($mailData['order_status']) }}</p>
+        
+        @if ($mailData['delivery_type'] == 'third_party')
+        <p><strong>Third Party Details:</strong> {{ ucfirst($mailData['third_party_details']) }}</p>
+        @endif
+       
+        @if ($mailData['delivery_type'] == 'delivery')
+        <p><strong>Courier/Delivery Company:</strong> {{ ucfirst($mailData['courier_company']) }}</p>
+        <p><strong>AWB No.:</strong> {{ ucfirst($mailData['awb_number']) }}</p>
+        @endif
+        
         <p><strong>Remarks:</strong> {{ $mailData['order_remarks'] }}</p>
+        
         
         <p>You can check order details under order section.</p>
         
-        <p>You can log in to your account by visiting our website at: <a href="https://shamsnatural.com/">https://shamsnatural.com/</a></p>
+        <p>You can log in to your account by visiting our website at: <a href="https://shamsnaturals.com/">https://shamsnaturals.com/</a></p>
     
         
         <p>Best regards,<br>

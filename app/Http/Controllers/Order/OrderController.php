@@ -79,9 +79,13 @@ class OrderController extends Controller
     {
         $request->validate([
             'order_status' => ['required', new Enum(OrderStatusEnums::class)],
+            'courier_company' => 'required_if:delivery_type,delivery'
+            'awb_number' => 'required_if:delivery_type,delivery'
             'order_remarks' => 'required',
         ], [
             'order_status.required' => 'Please choose order status.',
+            'courier_company.required' => 'Please enter couries/delivery company name.',
+            'awb_number.required' => 'Please enter AWN number.',
             'order_remarks.required' => 'Please enter order remarks.',
         ]);
 
@@ -92,24 +96,46 @@ class OrderController extends Controller
         $dealerName = $userDetails->dealer_name;
         $userEmail = $userDetails->email;
         
-
+        
         $updateData = Order::findOrFail($id);
         $updateData->order_status = $request->order_status;
         $updateData->order_remarks = $request->order_remarks;
+        if($request->delivery_type == 'delivery') {
+            $updateData->courier_company = $request->courier_company;
+            $updateData->awb_number = $request->awb_number;
+        }
         $updateData->save();
+        
+        $delivery_type = $request->delivery_type;
+        $courier_company = '';
+        $awb_number = '';
+        $third_party_details = '';
+
+        if($request->delivery_type == 'delivery') {
+            $courier_company = $request->courier_company;
+            $awb_number = $request->awb_number;
+        }
+
+        if($request->delivery_type == 'third_party') {
+            $third_party_details = $request->third_party_details;
+        }
+
+
 
         $mailData = [
             'order_id' => $order_id,
             'dealer_name' => Auth::user()->dealer_name,
             'order_remarks' => $request->order_remarks,
-            'order_status' => $request->order_status
+            'order_status' => $request->order_status,
+            'delivery_type' => $delivery_type,
+            'courier_company' => $courier_company,
+            'awb_number' => $awb_number,
+            'third_party_details' => $third_party_details,
+
         ];
 
         Mail::to($userEmail)->send(new OrderStatusMail($mailData));
 
-
-
-    
         return redirect()->route('order.index')->with('success', 'Order Status updated successfully.');
     }
 
