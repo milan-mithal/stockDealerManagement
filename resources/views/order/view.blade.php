@@ -87,7 +87,7 @@
                                                             <td>{{$orderList->dealer_name}}</td>
                                                             <td>{{$orderList->region}}/{{$orderList->community}}</td>
 															<td>{{$orderList->total_amount}}</td>
-                                                            <td>{{$orderList->delivery_type}}</td>
+                                                            <td>{{ ucwords(str_replace("_", " ", $orderList->delivery_type)) }}</td>
 															<td class="text-center"><button class="{{ $class }} btn-w-lg">{{ ucfirst($orderList->order_status) }}</button></td>
 															<td>{{$orderList->order_remarks}}</td>
                                                             <td>{{ \Carbon\Carbon::parse($orderList->order_date)->format('d-m-Y') }}</td>

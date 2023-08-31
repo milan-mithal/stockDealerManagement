@@ -51,6 +51,7 @@
 												<table class="table table-bordered text-nowrap border-bottom" id="basic-datatable">
 													<thead>
 														<tr>
+                                                            <th class="wd-15p border-bottom-0">S.No.</th>
 															<th class="wd-15p border-bottom-0">Code</th>
 															<th class="wd-15p border-bottom-0">Category</th>
                                                             <th class="wd-15p border-bottom-0">Product Name</th>
@@ -63,6 +64,7 @@
 													<tbody>
                                                         @foreach ($allProductList as $productDetails)
 														<tr>
+                                                            <td>{{$loop->iteration}}</td>
 															<td>{{$productDetails->product_code}}</td>
                                                             <td>{{$productDetails->product_category}}</td>
 															<td>{{$productDetails->product_name}}</td>

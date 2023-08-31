@@ -139,7 +139,7 @@ class LoginRegisterController extends Controller
             $totalOrders = Order::all()->count();
 
             $totalProducts = 0;
-            $totalProducts = Product::all()->count();
+            $totalProducts = Product::where('status','!=','deleted')->count();
 
             $totalDealerAddedCurrentMonth = 0;
             $totalDealerAddedCurrentMonth = User::where([['role','dealer'],['status', '=', 'active']])
@@ -184,6 +184,40 @@ class LoginRegisterController extends Controller
                 'allOrderList' => $allOrderList
         ]);
         }
+
+        if(Auth::check() && Auth::user()->role == 'packing')
+        {
+
+            $totalOrders = 0;
+            $totalOrders = Order::all()->count();
+
+            $totalProducts = 0;
+            $totalProducts = Product::all()->count();
+
+
+            $totalOrderAddedCurrentMonth = 0;
+            $totalOrderAddedCurrentMonth = Order::whereMonth('created_at', date('m'))
+                ->whereYear('created_at', date('Y'))
+                ->count();
+            
+
+            $allOutOfStockProducts = [];
+            $allOutOfStockProducts = Stock::select('product_code','stock_qty')
+            ->whereColumn('stock_qty', '<=', 'stock_min_qty')
+            ->get();
+
+            $allOrderList = [];
+            $allOrderList = Order::recentOrders();
+
+            return view('dashboard.packing',[
+                'totalOrders' => $totalOrders,
+                'totalProducts' => $totalProducts,
+                'totalOrderAddedCurrentMonth' => $totalOrderAddedCurrentMonth,
+                'allOutOfStockProducts' => $allOutOfStockProducts,
+                'allOrderList' => $allOrderList
+        ]);
+        }  
+        
         
         return redirect()->route('login')
             ->withErrors([

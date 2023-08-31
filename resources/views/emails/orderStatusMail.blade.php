@@ -21,6 +21,7 @@
         @if ($mailData['delivery_type'] == 'delivery')
         <p><strong>Courier/Delivery Company:</strong> {{ ucfirst($mailData['courier_company']) }}</p>
         <p><strong>AWB No.:</strong> {{ ucfirst($mailData['awb_number']) }}</p>
+        <p><strong>Download AWB Bill: </strong> <a href={{ url($mailData['deliver_bill_upload']) }} target="_Blank">Click here </a></p>
         @endif
         
         <p><strong>Remarks:</strong> {{ $mailData['order_remarks'] }}</p>

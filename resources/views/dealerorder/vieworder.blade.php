@@ -73,15 +73,15 @@
                                     </address>
                                 </div>
 
-                                {{-- <div class="col-lg-6 text-end">
-                                    <p class="h3">Invoice To:</p>
+                                <div class="col-lg-6 text-end">
+                                    <p class="h3">Pickup by:</p>
                                     <address>
-                                        Street Address<br>
-                                        State, City<br>
-                                        Country, Postal Code<br>
-                                        invoice@spruko.com
+                                        {{ ucwords(str_replace("_", " ", $orderDetails->delivery_type)); }}<br>
+                                        {{ $orderDetails->third_party_details }}<br>
+                                        {{ $orderDetails->courier_company }}<br>
+                                        {{ $orderDetails->awb_number }}<br>
                                     </address>
-                                </div> --}}
+                                </div>
                             </div>
                             <div class="table-responsive push">
                                 <table class="table table-bordered table-hover mb-0 text-nowrap border-bottom">

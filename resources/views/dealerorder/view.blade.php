@@ -49,7 +49,7 @@
 										<div class="card-body">
 											<div class="table-responsive">
 												<table class="table editable-table table-bordered text-nowrap border-bottom" id="basic-datatable">
-                                                    <button id="button" class="btn btn-primary-gradient mb-4 data-table-btn" data-bs-target="#modalInput" data-bs-toggle="modal" href="javascript:void(0)">Place Order</button>
+                                                    <button id="button" class="btn btn-primary-gradient mb-4 data-table-btn" data-bs-target="#modalInput" data-bs-toggle="modal" href="javascript:void(0)">Provide Pickup Details</button>
 													<thead>
 														<tr>
 															<th class="wd-10p border-bottom-0">Code</th>
@@ -109,15 +109,23 @@
 
                     <div class="form-group d-none" id="delivery_data">
                             <label class="form-label text-muted">Third Party Details:</label>
-                            <input type="text" class="form-control" name="third_party_details" id="third_party_details" value="{{ old('third_party_details') }}">
+                            <textarea type="text" class="form-control" name="third_party_details" id="third_party_details">{{ old('third_party_details') }}</textarea>
                             @error('third_party_details')
                             <div class="invalid-feedback block">{{ $message }}</div>
                             @enderror
                     </div>
 
+                    <div class="form-group d-none" id="delivery_data_2">
+                        <label class="form-label text-muted">Delivery Details:</label>
+                        <textarea type="text" class="form-control" name="delivery_details" id="delivery_details">{{ old('delivery_details') }}</textarea>
+                        @error('delivery_details')
+                        <div class="invalid-feedback block">{{ $message }}</div>
+                        @enderror
+                </div>
+
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" name="submit" id="submit" class="btn btn-primary-gradient">Update Status</button>
+                    <button type="submit" name="submit" id="submit" class="btn btn-primary-gradient">Place Order</button>
                     <a href="javascript:void(0);" class="btn btn-light" data-bs-dismiss="modal">Close</a>
                 </div>
         </form>
@@ -132,6 +140,10 @@
 <script>
     $(window).on('load', function() {
         $("#modalInput").modal('show');
+        const pickupby = $('#delivery_by').val();
+        if (pickupby == 'third_party') {
+            $('#delivery_data').removeClass('d-none');
+        }
     });
 </script>
 @endif
@@ -143,6 +155,11 @@
             $('#delivery_data').removeClass('d-none');
         } else {
             $('#delivery_data').addClass('d-none');
+        }
+        if (order_status == 'delivery') {
+            $('#delivery_data_2').removeClass('d-none');
+        } else {
+            $('#delivery_data_2').addClass('d-none');
         }
     });
 </script>

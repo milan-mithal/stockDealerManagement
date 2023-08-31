@@ -58,8 +58,17 @@
                                                             <label for="formFile" class="form-label">Product Category</label>
                                                             <select class="form-control" name="product_category" id="product_category">
                                                                 <option value="">Choose Product Category </option>
-                                                                <option value="Jute Bag" @selected(old('product_category', $productDetail->product_category) == 'Jute Bag')>Jute bag</option>
-                                                                <option value="Cotton Bag" @selected(old('product_category', $productDetail->product_category) == 'Cotton Bag')>Cotton bag</option>
+                                                                <option value="Jute Bags" @selected(old('product_category', $productDetail->product_category) == 'Jute Bags')>Jute bags</option>
+                                                                <option value="Juco Bags" @selected(old('product_category', $productDetail->product_category) == 'Juco Bags')>Juco bags</option>
+                                                                <option value="Canvas/Jute Bags" @selected(old('product_category', $productDetail->product_category) == 'Canvas/Jute Bags')>Canvas/Jute bags</option>
+                                                                <option value="Cotton Bags-120 gsm" @selected(old('product_category', $productDetail->product_category) == 'Cotton Bags-120 gsm')>Cotton Bags-120 gsm</option>
+                                                                <option value="Cotton Bags-135 gsm" @selected(old('product_category', $productDetail->product_category) == 'Cotton Bags-135 gsm')>Cotton Bags-135 gsm</option>
+                                                                <option value="Cotton Bags-150 gsm" @selected(old('product_category', $productDetail->product_category) == 'Cotton Bags-150 gsm')>Cotton Bags-150 gsm</option>
+                                                                <option value="Cotton Bags-220 gsm" @selected(old('product_category', $productDetail->product_category) == 'Cotton Bags-220 gsm')>Cotton Bags-220 gsm</option>
+                                                                <option value="600 gsm Canvas Bags" @selected(old('product_category', $productDetail->product_category) == '600 gsm Canvas Bags')>600 gsm Canvas Bags</option>
+                                                                <option value="600 gsm Canvas Leather Combinations" @selected(old('product_category', $productDetail->product_category) == '600 gsm Canvas Leather Combinations')>600 gsm Canvas Leather Combinations</option>
+                                                                <option value="Natural Leather Bags" @selected(old('product_category', $productDetail->product_category) == 'Natural Leather Bags')>Natural Leather Bags</option>
+                                                                <option value="Joolood" @selected(old('product_category', $productDetail->product_category) == 'Joolood')>Joolood</option>
                                                               </select>
                                                               @error('product_category')
                                                               <div class="invalid-feedback block">{{ $message }}</div>

@@ -77,7 +77,8 @@
                                 <div class="col-lg-6 text-end">
                                     <p class="h3">Delivery Type:</p>
                                     <address>
-                                        {{ $orderDetails->delivery_type }}<br>
+                                        {{ ucwords($orderDetails->order_status) }}<br>
+                                        {{ ucwords(str_replace("_", " ", $orderDetails->delivery_type)) }}<br>
                                         {{ $orderDetails->third_party_details }}<br>
                                         {{ $orderDetails->courier_company }}<br>
                                         {{ $orderDetails->awb_number }}<br>
@@ -115,7 +116,9 @@
                             </div>
                         </div>
                         <div class="card-footer text-end">
+                            @if ($orderDetails->order_status != 'dispatched')
                             <a class="btn btn-primary-gradient" data-bs-target="#modalInput" data-bs-toggle="modal" href="javascript:void(0)">Order Status</a>
+                            @endif
                             <button type="button" class="btn btn-info-gradient" onclick="javascript:window.print();"><i class="si si-printer"></i> Print Order Details</button>
                         </div>
                     </div>
@@ -149,11 +152,18 @@
                             @enderror
                         </div>
                     </div>
+                    <div class="form-group">
+                        <label class="form-label text-muted">Delivery Details:</label>
+                        <textarea readonly type="text" class="form-control" name="delivery_details" id="delivery_details">{{ old('delivery_details', $orderDetails->delivery_details) }}</textarea>
+                        @error('delivery_details')
+                        <div class="invalid-feedback block">{{ $message }}</div>
+                        @enderror
+                    </div>
 
                     <div class="form-group d-none" id="delivery_data">
                         @if ($orderDetails->delivery_type == 'third_party')
                             <label class="form-label text-muted">Third Party Details:</label>
-                            <input type="text" class="form-control" name="third_party_details" id="third_party_details" value="{{ old('third_party_details', $orderDetails->third_party_details) }}">
+                            <textarea readonly type="text" class="form-control" name="third_party_details" id="third_party_details">{{ old('third_party_details', $orderDetails->third_party_details) }}</textarea>
                             @error('third_party_details')
                             <div class="invalid-feedback block">{{ $message }}</div>
                             @enderror
@@ -169,8 +179,14 @@
                             @error('awb_number')
                             <div class="invalid-feedback block">{{ $message }}</div>
                             @enderror
+                            <label class="form-label text-muted">Upload courier receipt:</label>
+                            <input class="form-control file-input" type="file" name="deliver_bill_upload" id="deliver_bill_upload">
+                            @error('deliver_bill_upload')
+                            <div class="invalid-feedback block">{{ $message }}</div>
+                            @enderror
                         @endif
                     </div>
+                    
 
                     <div class="form-group">
                         <label class="form-label text-muted">Order Remarks:</label>
@@ -198,6 +214,10 @@
 <script>
     $(window).on('load', function() {
         $("#modalInput").modal('show');
+        const orderStatus = $('#order_status').val();
+        if (orderStatus == 'dispatched') {
+            $('#delivery_data').removeClass('d-none');
+        }
     });
 </script>
 @endif

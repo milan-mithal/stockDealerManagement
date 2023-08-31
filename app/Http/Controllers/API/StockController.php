@@ -1,32 +1,43 @@
 <?php
 
-namespace App\Http\Controllers\Common;
+namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\Order;
+use App\Models\Stock;
+use Mail;
+use App\Mail\Stock\StockMail;
 
-class CommonController extends Controller
+class StockController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('auth');
-    } 
     /**
-     * Display a listing of the resource.
+     * Send Mail for Out of Stock Products
      */
     public function index()
     {
-        $allNewOrders = Order::select('users.dealer_name', 'users.user_code','orders.order_id')
-                        ->join('users', 'users.id', '=', 'orders.user_id')
-                        ->where('orders.order_status', '=', 'Order Placed')
+        $allOutOfStockProducts = Stock::select('product_code','stock_qty')
+                        ->whereColumn('stock_qty', '<=', 'stock_min_qty')
                         ->get();
-        $allNewOrdersCount = $allNewOrders->count();
 
-        return response()->json([
-            'newOrderCount' => $allNewOrdersCount,
-            'newOrders' => $allNewOrders
-        ]);
+        $allOutOfStockProductsCount = $allOutOfStockProducts->count();
+        
+        if($allOutOfStockProductsCount > 0) {
+            $mailData = [
+                'allOutOfStockProducts' => $allOutOfStockProducts,
+            ];
+
+            $mail_to = explode(',', env('MAIL_TO'));
+            
+            Mail::to($mail_to)->send(new StockMail($mailData));
+        }
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     */
+    public function create()
+    {
+        //
     }
 
     /**
