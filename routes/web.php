@@ -48,6 +48,8 @@ Route::middleware('checkstatus')->group(function () {
     Route::controller(CommonController::class)->group(function() {
         Route::get('/common/allneworders', 'index')->name('common.index');
         Route::get('/common/checkoutofstock', 'checkoutofstock')->name('common.checkoutofstock');
+        Route::get('/newpasswordpage', 'newpasswordpage')->name('newpasswordpage');
+        Route::post('/storenewpassword', 'storenewpassword')->name('storenewpassword');
     });
 
 

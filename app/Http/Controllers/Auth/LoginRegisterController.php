@@ -7,8 +7,10 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Str;
 use Mail;
+use DB;
 use App\Enums\UserStatusEnums;
 use App\Enums\UserRolesEnums;
 use App\Mail\User\ForgotPasswordMail;
@@ -25,6 +27,7 @@ class LoginRegisterController extends Controller
      */
     public function __construct()
     {
+        $this->middleware('checknewuser');
         $this->middleware('guest')->except([
             'logout', 'dashboard'
         ]);
@@ -67,6 +70,7 @@ class LoginRegisterController extends Controller
             $userId = $getDetails->id;
     
             $updateData = User::findOrFail($userId);
+            $updateData->new_user = 'forgotpass';
             $updateData->password = $hasdedPassword;
             $updateData->save();
     
@@ -112,10 +116,12 @@ class LoginRegisterController extends Controller
 
         if(Auth::attempt($credentials))
         {
-            $request->session()->regenerate();
-            return redirect()->route('dashboard')
-                ->withSuccess('You have successfully logged in!');
+                $request->session()->regenerate();
+                return redirect()->route('dashboard')
+                    ->withSuccess('You have successfully logged in!');
         }
+
+        
 
         return back()->withErrors([
             'email' => 'Your provided credentials do not match in our records.',
@@ -165,6 +171,12 @@ class LoginRegisterController extends Controller
             $allOrderList = [];
             $allOrderList = Order::recentOrders();
 
+            $totalStockAmount = Stock::join('products', 'stocks.product_code', '=', 'products.product_code')
+                                ->where('products.status', '!=', 'deleted')
+                                ->selectRaw('SUM(stocks.stock_qty) as total_stock_qty, SUM(stocks.stock_qty * products.product_price) as total_stock_price')
+                                ->first();
+            
+
             return view('dashboard.admin',[
                 'totalDealers' => $totalDealers,
                 'totalOrders' => $totalOrders,
@@ -173,20 +185,31 @@ class LoginRegisterController extends Controller
                 'totalOrderAddedCurrentMonth' => $totalOrderAddedCurrentMonth,
                 'totalAmountOrder' => $totalAmountOrder,
                 'allOutOfStockProducts' => $allOutOfStockProducts,
-                'allOrderList' => $allOrderList
+                'allOrderList' => $allOrderList,
+                'totalStockAmount' => $totalStockAmount
         ]);
         }  
         if(Auth::check() && Auth::user()->role == 'dealer') {
             $currentuserid = Auth::user()->id;
             $allOrderList = Order::where('user_id','=',$currentuserid)->orderByDesc('order_id')->get();
+            $totalProducts = 0;
+            $totalProducts = Product::where('status','!=','deleted')->count();
+
+            $totalStockAmount = Stock::join('products', 'stocks.product_code', '=', 'products.product_code')
+                                ->where('products.status', '!=', 'deleted')
+                                ->selectRaw('SUM(stocks.stock_qty) as total_stock_qty, SUM(stocks.stock_qty * products.product_price) as total_stock_price')
+                                ->first();
 
             return view('dashboard.dealer',[
-                'allOrderList' => $allOrderList
+                'allOrderList' => $allOrderList,
+                'totalProducts' => $totalProducts,
+                'totalStockAmount' => $totalStockAmount
         ]);
         }
 
         if(Auth::check() && Auth::user()->role == 'packing')
         {
+
 
             $totalOrders = 0;
             $totalOrders = Order::all()->count();
@@ -238,6 +261,9 @@ class LoginRegisterController extends Controller
         $request->session()->regenerateToken();
         return redirect()->route('login')
             ->withSuccess('You have logged out successfully!');;
-    }    
+    }
+
+    
+
 
 }

@@ -12,6 +12,7 @@ class DealerController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
+        $this->middleware('checknewuser');
     }
     /**
      * Display a listing of the resource.

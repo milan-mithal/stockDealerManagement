@@ -22,6 +22,7 @@ class UserController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
+        $this->middleware('checknewuser');
         $this->middleware('checkrole');
     }
     /**
@@ -91,6 +92,7 @@ class UserController extends Controller
         $insertData->password = $hasdedPassword;
         $insertData->created_by = Auth::user()->id;
         $insertData->modified_by = Auth::user()->id;
+        $insertData->new_user = 'newuser';
         $insertData->save();
 
         $mailData = [

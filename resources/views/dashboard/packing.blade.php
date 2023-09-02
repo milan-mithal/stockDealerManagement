@@ -5,8 +5,29 @@
 				<div class="side-app">
 					 <!-- CONTAINER -->
 					 <div class="main-container container-fluid">
+						@if(Session::has('success'))
+                                                <div class="card-header border-bottom">
+                                                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                                        {{ Session::get('success') }}
+                                                        @php
+                                                            Session::forget('success');
+                                                        @endphp
+                                                    </div>
+                                                </div>
+                                                @endif
+                                                @if(Session::has('error'))
+                                                <div class="card-header border-bottom">
+                                                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                                        {{ Session::get('error') }}
+                                                        @php
+                                                            Session::forget('error');
+                                                        @endphp
+                                                    </div>
+                                                </div>
+                                                @endif
 						<!-- PAGE-HEADER -->
 						<div class="page-header">
+							
 							<div>
 								<h1 class="page-title">Dashboard</h1>
 							</div>
