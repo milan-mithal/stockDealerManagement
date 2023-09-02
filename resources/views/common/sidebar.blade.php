@@ -53,6 +53,8 @@
                         <li><a href="{{ route('product.create') }}" class="slide-item {{ (request()->is('product/create')) ? 'active' : '' }}">Add</a></li>
                     </ul>
                 </li>
+                @endif
+                @if (Auth::user()->role == 'admin' || Auth::user()->role == 'packing' )
                 <li>
                     <h3>Stock Section</h3>
                 </li>
@@ -79,9 +81,9 @@
                         <li><a href="{{ route('order.index') }}" class="slide-item {{ (request()->is('order/list')) ? 'active' : '' }}">View Orders</a></li>
                     </ul>
                 </li>
-                @endif
+                @endif 
 
-                
+                @if (Auth::user()->role == 'dealer')
                 <li>
                     <h3>Dealer Section</h3>
                 </li>
@@ -95,7 +97,7 @@
                         <li><a href="{{ route('dealerorder.show') }}" class="slide-item {{ (request()->is('dealerorder/allorderslist')) ? 'active' : '' }}">View Orders</a></li>
                     </ul>
                 </li>
-                
+                @endif
                 
                
             </ul>

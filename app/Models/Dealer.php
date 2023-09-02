@@ -46,7 +46,7 @@ class Dealer extends Model
         return $data;
     }
 
-    public static function orderPlace($order_id) {
+    public static function orderPlace($order_id,$delivery_type,$third_party_details,$delivery_details) {
         $currentuserid = Auth::user()->id;
         $totalAmount = 0;
         $orderStatus = 'Order Placed';
@@ -90,6 +90,13 @@ class Dealer extends Model
             'order_status' => $orderStatus,
             'order_remarks' => $orderRemarks,
             'order_date' => date('Y-m-d'),
+            'delivery_type' => $delivery_type,
+            'third_party_details' => $third_party_details,
+            'delivery_details' => $delivery_details,
+            'courier_company' => '',
+            'awb_number' => '',
+            'deliver_bill_upload' => '',
+            'modified_by' => 0,
             'created_at' => \Carbon\Carbon::now(),
             'updated_at' => \Carbon\Carbon::now()
         ]);
@@ -101,7 +108,7 @@ class Dealer extends Model
         $data = DB::table('orders')
                 ->join('users', 'orders.user_id', '=' , 'users.id')
                 ->select('users.name as user_name', 'users.email as user_email','users.dealer_name as dealer_name','users.address as address',
-                'users.region as region','users.community as community','users.phone_no as phone_no','orders.id as id', 'orders.order_id as order_id', 'orders.total_amount as total_amount', 'orders.order_status as order_status' ,'orders.order_remarks as order_remarks','orders.order_date as order_date')
+                'users.region as region','users.community as community','users.phone_no as phone_no','orders.id as id', 'orders.order_id as order_id', 'orders.total_amount as total_amount','orders.delivery_type as delivery_type','orders.third_party_details as third_party_details', 'orders.order_status as order_status' ,'orders.order_remarks as order_remarks','orders.order_date as order_date')
                 ->where('orders.order_id', '=', $order_id)
                 ->first();
 

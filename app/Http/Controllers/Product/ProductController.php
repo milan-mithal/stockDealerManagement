@@ -18,6 +18,7 @@ class ProductController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
+        $this->middleware('checknewuser');
         $this->middleware('checkrole');
         
     }
@@ -84,6 +85,8 @@ class ProductController extends Controller
         $insertData->product_price = $request->product_price;
         $insertData->product_size = $request->product_size;
         $insertData->status = $request->status;
+        $insertData->created_by = Auth::user()->id;
+        $insertData->modified_by = Auth::user()->id;
         $insertData->save();
     
         return redirect()->route('product.create')->with('success', 'Product created successfully.');
@@ -153,6 +156,7 @@ class ProductController extends Controller
         $updateData->product_price = $request->product_price;
         $updateData->product_size = $request->product_size;
         $updateData->status = $request->status;
+        $updateData->modified_by = Auth::user()->id;
         $updateData->save();
     
         return redirect()->route('product.index')->with('success', 'Product updated successfully.');
@@ -164,6 +168,7 @@ class ProductController extends Controller
     public function destroy(string $id)
     {
         $deleteData = Product::findOrFail($id);
+        $deleteData->modified_by = Auth::user()->id;
         $deleteData->status = DeleteStatusEnums::Deleted;
         $deleteData->save();
 

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rules\Enum;
+use Illuminate\Support\Facades\Auth;
 use Haruncpi\LaravelIdGenerator\IdGenerator;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
@@ -21,6 +22,7 @@ class UserController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
+        $this->middleware('checknewuser');
         $this->middleware('checkrole');
     }
     /**
@@ -88,6 +90,9 @@ class UserController extends Controller
         $insertData->status = $request->status;
         $insertData->user_code = $user_code;
         $insertData->password = $hasdedPassword;
+        $insertData->created_by = Auth::user()->id;
+        $insertData->modified_by = Auth::user()->id;
+        $insertData->new_user = 'newuser';
         $insertData->save();
 
         $mailData = [
@@ -149,17 +154,18 @@ class UserController extends Controller
             'status.required' => 'Please select user status.'
         ]);
 
-        $insertData = User::findOrFail($id);
-        $insertData->name = $request->name;
-        $insertData->email = $request->email;
-        $insertData->dealer_name = $request->dealer_name;
-        $insertData->address = $request->address;
-        $insertData->phone_no = $request->phone_no;
-        $insertData->region = $request->region;
-        $insertData->community = $request->community;
-        $insertData->role = $request->role;
-        $insertData->status = $request->status;
-        $insertData->save();
+        $updateData = User::findOrFail($id);
+        $updateData->name = $request->name;
+        $updateData->email = $request->email;
+        $updateData->dealer_name = $request->dealer_name;
+        $updateData->address = $request->address;
+        $updateData->phone_no = $request->phone_no;
+        $updateData->region = $request->region;
+        $updateData->community = $request->community;
+        $updateData->role = $request->role;
+        $updateData->status = $request->status;
+        $updateData->modified_by = Auth::user()->id;
+        $updateData->save();
     
         return redirect()->route('user.index')->with('success', 'User updated successfully.');
     }

@@ -11,6 +11,7 @@ use App\Models\OrderList;
 use App\Enums\OrderStatusEnums;
 use Auth;
 use Mail;
+use File;
 use App\Models\User;
 use App\Mail\Order\OrderStatusMail;
 
@@ -21,7 +22,8 @@ class OrderController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
-        $this->middleware('checkrole');
+        $this->middleware('checknewuser');
+        $this->middleware('checkpackingrole');
     }   
 
     
@@ -79,9 +81,18 @@ class OrderController extends Controller
     {
         $request->validate([
             'order_status' => ['required', new Enum(OrderStatusEnums::class)],
+            'courier_company' => 'required_if:delivery_type,delivery',
+            'awb_number' => 'required_if:delivery_type,delivery',
+            'deliver_bill_upload' => 'required_if:delivery_type,delivery|mimes:jpeg,png,jpg,pdf|max:2048',
             'order_remarks' => 'required',
         ], [
             'order_status.required' => 'Please choose order status.',
+            'courier_company.required_if' => 'Please enter couries/delivery company name.',
+            'awb_number.required_if' => 'Please enter AWB number.',
+            'deliver_bill_upload.required_if' => 'Please select an image/pdf file to upload.',
+            'deliver_bill_upload.image' => 'The uploaded file must be an image/pdf.',
+            'deliver_bill_upload.mimes' => 'Only jpeg, png, jpg, and pdf files are allowed.',
+            'deliver_bill_upload.max' => 'The uploaded image must not exceed 2MB.',
             'order_remarks.required' => 'Please enter order remarks.',
         ]);
 
@@ -89,27 +100,59 @@ class OrderController extends Controller
         $userId = $getOrderDetails->user_id;
         $order_id = $getOrderDetails->order_id;
         $userDetails = User::where('id', '=', $userId)->first();
-        $dealerName = $userDetails->dealer_name;
+        $userDealerName = $userDetails->dealer_name;
         $userEmail = $userDetails->email;
         
-
+        $billUploadFilePath = '';
+        if ($request->hasFile('deliver_bill_upload')) {
+            $path = '/uploads/delivery_receipts/';
+            $billUploadFile = time().'.'.$request->deliver_bill_upload->extension();
+            $request->deliver_bill_upload->move(public_path($path), $billUploadFile);
+            $billUploadFilePath = $path.$billUploadFile;
+        }
+        
         $updateData = Order::findOrFail($id);
         $updateData->order_status = $request->order_status;
         $updateData->order_remarks = $request->order_remarks;
+        if($request->delivery_type == 'delivery') {
+            $updateData->courier_company = $request->courier_company;
+            $updateData->awb_number = $request->awb_number;
+            $updateData->deliver_bill_upload = $billUploadFilePath;
+        }
+        $updateData->modified_by = Auth::user()->id;
         $updateData->save();
+        
+        $delivery_type = $request->delivery_type;
+        $courier_company = '';
+        $awb_number = '';
+        $third_party_details = '';
+
+        if($request->delivery_type == 'delivery') {
+            $courier_company = $request->courier_company;
+            $awb_number = $request->awb_number;
+        }
+
+        if($request->delivery_type == 'third_party') {
+            $third_party_details = $request->third_party_details;
+        }
+
+
 
         $mailData = [
             'order_id' => $order_id,
-            'dealer_name' => Auth::user()->dealer_name,
+            'dealer_name' => $userDealerName,
             'order_remarks' => $request->order_remarks,
-            'order_status' => $request->order_status
+            'order_status' => $request->order_status,
+            'delivery_type' => $delivery_type,
+            'courier_company' => $courier_company,
+            'awb_number' => $awb_number,
+            'third_party_details' => $third_party_details,
+            'deliver_bill_upload' => $billUploadFilePath
+
         ];
 
         Mail::to($userEmail)->send(new OrderStatusMail($mailData));
 
-
-
-    
         return redirect()->route('order.index')->with('success', 'Order Status updated successfully.');
     }
 

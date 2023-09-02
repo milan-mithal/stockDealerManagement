@@ -5,13 +5,15 @@ namespace App\Http\Controllers\Stock;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Stock;
+use Auth;
 
 class StockController extends Controller
 {
     public function __construct()
     {
         $this->middleware('auth');
-        $this->middleware('checkrole');
+        $this->middleware('checknewuser');
+        $this->middleware('checkpackingrole');
     }
     /**
      * Display a listing of the resource.
@@ -61,6 +63,8 @@ class StockController extends Controller
         $insertData->stock_qty = $request->stock_qty;
         $insertData->stock_sold_qty = $request->stock_sold_qty;
         $insertData->stock_min_qty = $request->stock_min_qty;
+        $insertData->created_by = Auth::user()->id;
+        $insertData->modified_by = Auth::user()->id;
         $insertData->save();
     
         return redirect()->route('stock.create')->with('success', 'Stock added successfully.');
@@ -104,6 +108,7 @@ class StockController extends Controller
         $updateData = Stock::findOrFail($id);
         $updateData->stock_qty += $request->stock_qty;
         $updateData->stock_min_qty = $request->stock_min_qty;
+        $updateData->modified_by = Auth::user()->id;;
         $updateData->save();
     
         return redirect()->route('stock.index')->with('success', 'Stock updated successfully.');

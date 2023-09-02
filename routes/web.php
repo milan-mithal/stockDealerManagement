@@ -48,6 +48,8 @@ Route::middleware('checkstatus')->group(function () {
     Route::controller(CommonController::class)->group(function() {
         Route::get('/common/allneworders', 'index')->name('common.index');
         Route::get('/common/checkoutofstock', 'checkoutofstock')->name('common.checkoutofstock');
+        Route::get('/newpasswordpage', 'newpasswordpage')->name('newpasswordpage');
+        Route::post('/storenewpassword', 'storenewpassword')->name('storenewpassword');
     });
 
 
@@ -89,7 +91,7 @@ Route::middleware('checkstatus')->group(function () {
         Route::post('/dealerorder/store', 'store')->name('dealerorder.store');
         Route::post('/dealerorder/destroy', 'destroy')->name('dealerorder.destroy');
         Route::get('/dealerorder/orderlist', 'index')->name('dealerorder.index');
-        Route::get('/dealerorder/placeorder', 'create')->name('dealerorder.create');
+        Route::post('/dealerorder/placeorder', 'create')->name('dealerorder.create');
         Route::get('/dealerorder/allorderslist', 'show')->name('dealerorder.show');
         Route::get('/dealerorder/orderdetails/{id}', 'ordershow')->name('dealerorder.ordershow');
         

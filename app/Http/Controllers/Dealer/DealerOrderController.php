@@ -19,6 +19,7 @@ class DealerOrderController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
+        $this->middleware('checknewuser');
     }
     /**
      * Display a listing of the resource.
@@ -34,10 +35,32 @@ class DealerOrderController extends Controller
      */
     public function create(Request $request)
     {
+
+        $request->validate([
+            'delivery_by' => 'required',
+            'third_party_details' => 'required_if:delivery_by,==,third_party', 
+            'delivery_details' => 'required_if:delivery_by,==,delivery', 
+        ], [
+            'delivery_by.required' => 'Please select pickup by.',
+            'third_party_details.required_if' => 'Please enter third party details.',
+            'delivery_details.required_if' => 'Please enter delivery details.'
+        ]);
+
+
         $currentuserid = Auth::user()->id;
+        $delivery_type = $request->delivery_by;
+        $third_party_details = "";
+        if ($request->delivery_by == 'third_party') {
+            $third_party_details = $request->third_party_details;
+        }
+        $delivery_details = "";
+        if ($request->delivery_by == 'delivery') {
+            $delivery_details = $request->delivery_details;
+        }
+
         $prefix = "SN-";  
         $order_id = IdGenerator::generate(['table' => 'orders','field'=>'order_id' ,'length' => 10, 'prefix' => $prefix]);
-        $placeOrderId = Dealer::orderPlace($order_id);
+        $placeOrderId = Dealer::orderPlace($order_id,$delivery_type,$third_party_details,$delivery_details);
         if ($placeOrderId) {
             Dealer::where('user_id', $currentuserid)->delete();
         }
@@ -46,7 +69,7 @@ class DealerOrderController extends Controller
             'order_id' => $order_id,
             'dealer_name' => Auth::user()->dealer_name
         ];
-        $mail_to = env('MAIL_TO');
+        $mail_to = explode(',', env('MAIL_TO'));
         Mail::to($mail_to)->send(new OrderMail($mailData));
         
         return redirect()->route('dealerorder.show')->with('success', 'Order has been placed successfully.');

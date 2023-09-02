@@ -4,17 +4,20 @@ namespace App\Http\Controllers\Common;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Str;
+use DB;
+use App\Models\User;
 use App\Models\Order;
-use App\Models\Stock;
-use Mail;
-use App\Mail\Stock\StockMail;
+
 
 class CommonController extends Controller
 {
     public function __construct()
     {
         $this->middleware('auth');
-        $this->middleware('checkrole');
     } 
     /**
      * Display a listing of the resource.
@@ -33,26 +36,30 @@ class CommonController extends Controller
         ]);
     }
 
-    /**
-     * Check out of stock products
-     */
-    public function checkoutofstock()
-    {
-        $allOutOfStockProducts = Stock::select('product_code','stock_qty')
-                        ->whereColumn('stock_qty', '<=', 'stock_min_qty')
-                        ->get();
-
-        $allOutOfStockProductsCount = $allOutOfStockProducts->count();
-        
-        if($allOutOfStockProductsCount > 0) {
-            $mailData = [
-                'allOutOfStockProducts' => $allOutOfStockProducts,
-            ];
-
-            $mail_to = env('MAIL_TO');
-            Mail::to($mail_to)->send(new StockMail($mailData));
-        }
+    public function newpasswordpage() {
+        return view('auth.newpassword');
     }
+
+
+    public function storenewpassword(Request $request) {
+        $credentials = $request->validate([
+            'password' => 'required|confirmed|min:6',
+            'password_confirmation' => 'required'
+        ]);
+
+
+        $hasdedPassword = Hash::make($request->password);
+        $userId = Auth::user()->id;
+        $updateData = User::findOrFail($userId);
+        $updateData->new_user = 'olduser';
+        $updateData->password = $hasdedPassword;
+        $updateData->save();
+
+        $request->session()->regenerate();
+            return redirect()->route('dashboard')
+                ->withSuccess('Password has been updated.');
+    }
+    
 
     /**
      * Store a newly created resource in storage.

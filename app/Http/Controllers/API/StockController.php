@@ -1,26 +1,35 @@
 <?php
 
-namespace App\Http\Controllers\Dealer;
+namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\Dealer;
-use Auth;
+use App\Models\Stock;
+use Mail;
+use App\Mail\Stock\StockMail;
 
-class DealerController extends Controller
+class StockController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('auth');
-        $this->middleware('checknewuser');
-    }
     /**
-     * Display a listing of the resource.
+     * Send Mail for Out of Stock Products
      */
     public function index()
     {
-        $productList = Dealer::productList();
-        return view('dealer.view',  ['allProductList' => $productList]);
+        $allOutOfStockProducts = Stock::select('product_code','stock_qty')
+                        ->whereColumn('stock_qty', '<=', 'stock_min_qty')
+                        ->get();
+
+        $allOutOfStockProductsCount = $allOutOfStockProducts->count();
+        
+        if($allOutOfStockProductsCount > 0) {
+            $mailData = [
+                'allOutOfStockProducts' => $allOutOfStockProducts,
+            ];
+
+            $mail_to = explode(',', env('MAIL_TO'));
+            
+            Mail::to($mail_to)->send(new StockMail($mailData));
+        }
     }
 
     /**

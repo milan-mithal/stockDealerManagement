@@ -17,7 +17,7 @@
         
         <p>You can check order details under order section.</p>
         
-        <p>You can log in to your account by visiting our website at: <a href="https://shamsnatural.com/">https://shamsnatural.com/</a></p>
+        <p>You can log in to your account by visiting our website at: <a href="https://shamsnaturals.com/">https://shamsnaturals.com/</a></p>
     
         
         <p>Best regards,<br>
