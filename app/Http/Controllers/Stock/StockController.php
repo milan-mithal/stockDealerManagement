@@ -106,7 +106,7 @@ class StockController extends Controller
         
         // Insert data into the database
         $updateData = Stock::findOrFail($id);
-        $updateData->stock_qty += $request->stock_qty;
+        $updateData->stock_qty = $request->stock_qty;
         $updateData->stock_min_qty = $request->stock_min_qty;
         $updateData->modified_by = Auth::user()->id;;
         $updateData->save();

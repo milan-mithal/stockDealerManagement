@@ -91,7 +91,7 @@
                                         <th class="text-center"></th>
                                         <th>Product</th>
                                         <th class="text-center">Quantity</th>
-                                        <th class="text-end">Product Price (AED)</th>
+                                        <th class="text-end">Price (AED)</th>
                                         <th class="text-end">Sub Total (AED)</th>
                                     </tr>
                                     @php $total = 0; @endphp

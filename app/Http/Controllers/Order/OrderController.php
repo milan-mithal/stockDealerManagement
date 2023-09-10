@@ -81,15 +81,16 @@ class OrderController extends Controller
     {
         $request->validate([
             'order_status' => ['required', new Enum(OrderStatusEnums::class)],
-            'courier_company' => 'required_if:delivery_type,delivery',
-            'awb_number' => 'required_if:delivery_type,delivery',
-            'deliver_bill_upload' => 'required_if:delivery_type,delivery|mimes:jpeg,png,jpg,pdf|max:2048',
+            //'courier_company' => 'required_if:order_status,delivery',
+            //'awb_number' => 'required_if:order_status,delivery',
+            //'deliver_bill_upload' => 'required_if:order_status,delivery|mimes:jpeg,png,jpg,pdf|max:2048',
+            'deliver_bill_upload' => 'mimes:jpeg,png,jpg,pdf|max:2048',
             'order_remarks' => 'required',
         ], [
             'order_status.required' => 'Please choose order status.',
-            'courier_company.required_if' => 'Please enter couries/delivery company name.',
-            'awb_number.required_if' => 'Please enter AWB number.',
-            'deliver_bill_upload.required_if' => 'Please select an image/pdf file to upload.',
+            //'courier_company.required_if' => 'Please enter couries/delivery company name.',
+            //'awb_number.required_if' => 'Please enter AWB number.',
+            //'deliver_bill_upload.required_if' => 'Please select an image/pdf file to upload.',
             'deliver_bill_upload.image' => 'The uploaded file must be an image/pdf.',
             'deliver_bill_upload.mimes' => 'Only jpeg, png, jpg, and pdf files are allowed.',
             'deliver_bill_upload.max' => 'The uploaded image must not exceed 2MB.',

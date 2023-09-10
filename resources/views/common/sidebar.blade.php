@@ -83,7 +83,7 @@
                 </li>
                 @endif 
 
-                @if (Auth::user()->role == 'dealer')
+                @if (Auth::user()->role == 'admin' || Auth::user()->role == 'dealer')
                 <li>
                     <h3>Dealer Section</h3>
                 </li>
