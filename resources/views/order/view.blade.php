@@ -55,9 +55,6 @@
 															<th class="wd-10p border-bottom-0">Order Id</th>
                                                             <th class="wd-10p border-bottom-0">Dealer Code</th>
                                                             <th class="wd-10p border-bottom-0">Dealer</th>
-                                                            <th class="wd-10p border-bottom-0">Dealer Region/Commuity</th>
-                                                            <th class="wd-10p border-bottom-0">Total Amount (AED)</th>
-                                                            <th class="wd-10p border-bottom-0">Delivery Type</th>
 															<th class="wd-10p border-bottom-0">Order Status</th>
 															<th class="wd-10p border-bottom-0">Order Remarks</th>
                                                             <th class="wd-10p border-bottom-0">Order Date</th>
@@ -85,9 +82,6 @@
 															<td class="text-14"><a href="{{ route('order.show',$orderList->order_id) }}">{{$orderList->order_id}}</a></td>
                                                             <td>{{$orderList->user_code}}</td>
                                                             <td>{{$orderList->dealer_name}}</td>
-                                                            <td>{{$orderList->region}}/{{$orderList->community}}</td>
-															<td>{{$orderList->total_amount}}</td>
-                                                            <td>{{ ucwords(str_replace("_", " ", $orderList->delivery_type)) }}</td>
 															<td class="text-center"><button class="{{ $class }} btn-w-lg">{{ ucfirst($orderList->order_status) }}</button></td>
 															<td>{{$orderList->order_remarks}}</td>
                                                             <td>{{ \Carbon\Carbon::parse($orderList->order_date)->format('d-m-Y') }}</td>

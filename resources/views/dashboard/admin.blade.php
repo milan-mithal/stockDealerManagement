@@ -231,7 +231,6 @@
 														<th class="wd-10p border-bottom-0">Dealer Code</th>
 														<th class="wd-10p border-bottom-0">Dealer</th>
 														<th class="wd-10p border-bottom-0">Dealer Region/Commuity</th>
-														<th class="wd-10p border-bottom-0">Delivery type</th>
 														<th class="wd-10p border-bottom-0">Total Amount (AED)</th>
 														<th class="wd-10p border-bottom-0">Order Status</th>
 														<th class="wd-10p border-bottom-0">Order Remarks</th>
@@ -261,7 +260,7 @@
 														<td>{{$orderList->user_code}}</td>
 														<td>{{$orderList->dealer_name}}</td>
 														<td>{{$orderList->region}}/{{$orderList->community}}</td>
-														<td>{{ ucwords(str_replace('_',' ',$orderList->total_amount)) }}</td>
+														
 														<td>{{$orderList->total_amount}}</td>
 														<td class="text-center"><button class="{{ $class }} btn-w-lg">{{ ucfirst($orderList->order_status) }}</button></td>
 														<td>{{$orderList->order_remarks}}</td>

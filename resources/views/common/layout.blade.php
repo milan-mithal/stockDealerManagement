@@ -119,6 +119,9 @@
 	<!-- REPLY JS-->
 	<script src="{{url('/assets/js/reply.js')}}"></script>
 
+	<!-- bootstrap-datepicker js (Date picker Style-01) -->
+	<script src="{{url('/assets/plugins/bootstrap-datepicker/js/datepicker.js')}}"></script>
+
 	<!-- PERFECT SCROLLBAR JS-->
 	<script src="{{url('/assets/plugins/p-scroll/perfect-scrollbar.js')}}"></script>
 	<script src="{{url('/assets/plugins/p-scroll/pscroll.js')}}"></script>

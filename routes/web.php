@@ -9,7 +9,7 @@ use App\Http\Controllers\Dealer\DealerController;
 use App\Http\Controllers\Dealer\DealerOrderController;
 use App\Http\Controllers\Order\OrderController;
 use App\Http\Controllers\Common\CommonController;
-
+use App\Http\Controllers\Reports\ReportController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -102,6 +102,15 @@ Route::middleware('checkstatus')->group(function () {
         Route::get('/order/list', 'index')->name('order.index');
         Route::get('/order/orderdetails/{id}', 'show')->name('order.show');
         Route::post('/order/update/{id}', 'update')->name('order.update');
+    });
+
+    // Report Routes
+    Route::controller(ReportController::class)->group(function() {
+        Route::get('/report/stock', 'stockreport')->name('report.stock');
+        Route::get('/report/dealer', 'dealerreport')->name('report.dealer');
+        Route::match(array('GET','POST'),'/report/order', 'orderreport')->name('report.order');
+        Route::post('/report/orderdatasubmit', 'orderdata')->name('report.orderdata');
+        
     });
 });
 
