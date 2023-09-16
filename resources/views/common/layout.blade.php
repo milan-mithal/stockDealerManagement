@@ -77,7 +77,7 @@
 	</div>
 
 	<!-- BACK-TO-TOP -->
-	<a href="#top" id="back-to-top"><i class="fa fa-long-arrow-up"></i></a>
+	{{-- <a href="#top" id="back-to-top"><i class="fa fa-long-arrow-up"></i></a> --}}
 
 	<!-- JQUERY JS -->
 	<script src="{{url('/assets/js/jquery.min.js')}}"></script>

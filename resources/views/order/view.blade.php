@@ -76,6 +76,9 @@
                                                         @if ($orderList->order_status == 'dispatched')
                                                         @php $class='btn btn-primary-gradient' @endphp
                                                         @endif 
+                                                        @if ($orderList->order_status == 'cancelled')
+                                                        @php $class='btn btn-danger-gradient' @endphp
+                                                        @endif 
 
 														<tr>
                                                             <td>{{$loop->iteration}}</td>

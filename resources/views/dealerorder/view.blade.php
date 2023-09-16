@@ -49,8 +49,12 @@
 										<div class="card-body">
 											<div class="table-responsive">
 												<table class="table editable-table table-bordered text-nowrap border-bottom" id="basic-datatable">
+                                                    @if (count($allCartList) > 0)
                                                     <button id="button" class="btn btn-primary-gradient mb-4 data-table-btn" data-bs-target="#modalInput" data-bs-toggle="modal" href="javascript:void(0)">Provide Pickup Details</button>
-													<thead>
+													@else
+                                                    <p><a href="{{ route('dealer.index') }}">Click here </a> to add products in order list</p>
+                                                    @endif
+                                                    <thead>
 														<tr>
 															<th class="wd-10p border-bottom-0">Code</th>
                                                             <th class="wd-10p border-bottom-0">Product Name</th>

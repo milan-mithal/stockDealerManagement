@@ -92,37 +92,53 @@
                                         <th>Product</th>
                                         <th class="text-center">Quantity</th>
                                         <th class="text-end">Price (AED)</th>
-                                        <th class="text-end">Sub Total (AED)</th>
+                                        {{-- <th class="text-end">Sub Total (AED)</th> --}}
                                     </tr>
-                                    @php $total = 0; @endphp
+                                    @php $total = 0; 
+                                         $totalqty =0;
+                                    @endphp
                                     @foreach ($allorderProductList as $orderProductList)
                                     <tr>
                                         <td class="text-center">{{$loop->iteration}}</td>
                                         <td>
                                             <p class="font-w600 mb-1">{{ $orderProductList->product_code}}</p>
-                                            <div class="text-muted"><div class="text-muted">Category: {{ $orderProductList->product_category}}, Product Name: {{ $orderProductList->product_name}}, Size: {{ $orderProductList->product_size}}</div></div>
+                                            <div class="text-muted"><div class="text-muted">Category: {{ $orderProductList->product_category}},  Product Name: {{ $orderProductList->product_name}}, Size: {{ $orderProductList->product_size}}</div></div>
                                         </td>
                                         <td class="text-center">{{ $orderProductList->order_quantity}}</td>
                                         <td class="text-end">{{ $orderProductList->product_price}}</td>
-                                        <td class="text-end">{{ $orderProductList->order_quantity * $orderProductList->product_price}}</td>
+                                        {{-- <td class="text-end">{{ $orderProductList->order_quantity * $orderProductList->product_price}}</td> --}}
                                     </tr>
+                                    @php $totalqty += $orderProductList->order_quantity; @endphp
                                     @php $total += $orderProductList->order_quantity * $orderProductList->product_price; @endphp
                                     @endforeach
                                     <tr>
-                                        <td colspan="4" class="fw-bold text-uppercase text-end">Total</td>
-                                        <td class="fw-bold text-end h4">{{ $total }}</td>
+                                        <td colspan="2" class="fw-bold text-uppercase text-end">Total</td>
+                                        <td class="fw-bold text-end h4">{{ $totalqty }}</td>
+                                        {{-- <td class="fw-bold text-end h4">{{ $total }}</td> --}}
                                     </tr>
                                 </tbody></table>
                             </div>
                         </div>
                         <div class="card-footer text-end">
-                            @if ($orderDetails->order_status != 'dispatched')
+                            @if ($orderDetails->order_status != 'dispatched' && $orderDetails->order_status != 'cancelled')
                             <a class="btn btn-primary-gradient" data-bs-target="#modalInput" data-bs-toggle="modal" href="javascript:void(0)">Order Status</a>
                             @endif
                             <button type="button" class="btn btn-info-gradient" onclick="javascript:window.print();"><i class="si si-printer"></i> Print Order Details</button>
                         </div>
+                        
                     </div>
                 </div><!-- COL-END -->
+                <div class="d-flex flex-row justify-content-between mt-10 mb-2 p-3 br-5">
+                    <div class="p-sm-4 p-2 bg-gray-200">
+                       RECEIVED BY
+                    </div>
+                    <div class="p-sm-4 p-2 bg-gray-300">
+                        CHECKED BY
+                    </div>
+                    <div class="p-sm-4 p-2 bg-gray-400">
+                        PREPARED BY
+                    </div>
+                </div>
             </div>
             <!-- ROW-1 CLOSED -->
 

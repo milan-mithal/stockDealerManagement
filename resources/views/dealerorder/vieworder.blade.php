@@ -92,22 +92,26 @@
                                         <th class="text-end">Product Price (AED)</th>
                                         <th class="text-end">Sub Total (AED)</th>
                                     </tr>
-                                    @php $total = 0; @endphp
+                                    @php $total = 0; 
+                                         $totalqty = 0;
+                                    @endphp
                                     @foreach ($allorderProductList as $orderProductList)
                                     <tr>
                                         <td class="text-center">{{$loop->iteration}}</td>
                                         <td>
                                             <p class="font-w600 mb-1">{{ $orderProductList->product_code}}</p>
-                                            <div class="text-muted"><div class="text-muted">Category: {{ $orderProductList->product_category}}, Product Name: {{ $orderProductList->product_name}}, Size: {{ $orderProductList->product_size}}</div></div>
+                                            <div class="text-muted"><div class="text-muted">Category: {{ $orderProductList->product_category}},<br/> Product Name: {{ $orderProductList->product_name}}, <br/>Size: {{ $orderProductList->product_size}}</div></div>
                                         </td>
                                         <td class="text-center">{{ $orderProductList->order_quantity}}</td>
                                         <td class="text-end">{{ $orderProductList->product_price}}</td>
                                         <td class="text-end">{{ $orderProductList->order_quantity * $orderProductList->product_price}}</td>
                                     </tr>
+                                    @php $totalqty += $orderProductList->order_quantity; @endphp
                                     @php $total += $orderProductList->order_quantity * $orderProductList->product_price; @endphp
                                     @endforeach
                                     <tr>
-                                        <td colspan="4" class="fw-bold text-uppercase text-end">Total</td>
+                                        <td colspan="2" class="fw-bold text-uppercase text-end">Total</td>
+                                        <td class="fw-bold text-end h4">{{ $totalqty }}</td>
                                         <td class="fw-bold text-end h4">{{ $total }}</td>
                                     </tr>
                                 </tbody></table>
