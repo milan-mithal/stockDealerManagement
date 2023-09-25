@@ -109,6 +109,37 @@
                                                             <div class="invalid-feedback block">{{ $message }}</div>
                                                             @enderror
                                                         </div>
+                                                        <div class="form-group input-group align-items-center">
+                                                            <label for="formFile" class="form-label me-4">Box Dimension</label>
+                                                            <input type="number" name="length" id="length" class="form-control" placeholder="Length (cm)" value="{{ old('length') }}"/>
+                                                            @error('length')
+                                                            <span class="invalid-feedback block">{{ $message }}</span>
+                                                            @enderror
+                                                            <span class="input-group-addon">X</span>
+                                                            <input type="number" name="width" id="width" class="form-control" placeholder="Width (cm)" value="{{ old('width') }}"/>
+                                                            @error('width')
+                                                            <span class="invalid-feedback block">{{ $message }}</span>
+                                                            @enderror
+                                                            <span class="input-group-addon">X</span>
+                                                            <input type="number" name="height" id="height" class="form-control" placeholder="Height (cm)" value="{{ old('height') }}"/>
+                                                            @error('height')
+                                                            <span class="invalid-feedback block">{{ $message }}</span>
+                                                            @enderror
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label for="formFile" class="form-label">No. Of Qty (per box)</label>
+                                                            <input class="form-control" type="text" name="qty_per_box" id="qty_per_box" value="{{ old('qty_per_box') }}">
+                                                            @error('qty_per_box')
+                                                            <div class="invalid-feedback block">{{ $message }}</div>
+                                                            @enderror
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label for="formFile" class="form-label">Weight (Kgs per Box)</label>
+                                                            <input class="form-control" type="number" name="weight_per_box" id="weight_per_box" value="{{ old('weight_per_box') }}">
+                                                            @error('weight_per_box')
+                                                            <div class="invalid-feedback block">{{ $message }}</div>
+                                                            @enderror
+                                                        </div>
                                                         <div class="form-group">
                                                             <label for="formFile" class="form-label">Status</label>
                                                             <select class="form-control" name="status" id="status">

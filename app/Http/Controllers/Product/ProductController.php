@@ -52,6 +52,11 @@ class ProductController extends Controller
             'product_image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
             'product_price' => 'required|min:1|numeric',
             'product_size' => 'required',
+            'length' => 'required|min:1|numeric',
+            'width' => 'required|min:1|numeric',
+            'height' => 'required|min:1|numeric',
+            'qty_per_box' => 'required|min:1|numeric',
+            'weight_per_box' => 'required|min:1|numeric',
             'status' => ['required', new Enum(CommonStatusEnums::class)]
         ], [
             'product_category.required' => 'Please choose product category.',
@@ -66,6 +71,21 @@ class ProductController extends Controller
             'product_price.min' => 'Product price cannot be less than 1.',
             'product_price.numeric' => 'Product price should be numeric.',
             'product_size.required' => 'Please enter product size.',
+            'length.required' => 'Please enter length.',
+            'length.min' => 'Length cannot be less than 1.',
+            'length.numeric' => 'Length should be numeric.',
+            'width.required' => 'Please enter width.',
+            'width.min' => 'Width cannot be less than 1.',
+            'width.numeric' => 'Width should be numeric.',
+            'height.required' => 'Please enter height.',
+            'height.min' => 'Height cannot be less than 1.',
+            'height.numeric' => 'Height should be numeric.',
+            'qty_per_box.required' => 'Please enter quantity per box.',
+            'qty_per_box.min' => 'Quantity per box cannot be less than 1.',
+            'qty_per_box.numeric' => 'Quantity per box should be numeric.',
+            'weight_per_box.required' => 'Please enter weight per box.',
+            'weight_per_box.min' => 'Weight per box cannot be less than 1.',
+            'weight_per_box.numeric' => 'Weight per box should be numeric.',
             'status.required' => 'Please choose product status.'
         ]);
         $imageNamePath = '';
@@ -84,6 +104,11 @@ class ProductController extends Controller
         $insertData->product_image = $imageNamePath;
         $insertData->product_price = $request->product_price;
         $insertData->product_size = $request->product_size;
+        $insertData->length = $request->length;
+        $insertData->width = $request->width;
+        $insertData->height = $request->height;
+        $insertData->qty_per_box = $request->qty_per_box;
+        $insertData->weight_per_box = $request->weight_per_box;
         $insertData->status = $request->status;
         $insertData->created_by = Auth::user()->id;
         $insertData->modified_by = Auth::user()->id;
@@ -121,6 +146,11 @@ class ProductController extends Controller
             'product_image' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
             'product_price' => 'required|min:1|numeric',
             'product_size' => 'required',
+            'length' => 'required|min:1|numeric',
+            'width' => 'required|min:1|numeric',
+            'height' => 'required|min:1|numeric',
+            'qty_per_box' => 'required|min:1|numeric',
+            'weight_per_box' => 'required|min:1|numeric',
             'status' => ['required', new Enum(CommonStatusEnums::class)]
         ], [
             'product_category.required' => 'Please choose product category.',
@@ -134,6 +164,20 @@ class ProductController extends Controller
             'product_price.min' => 'Product price cannot be less than 1.',
             'product_price.numeric' => 'Product price should be numeric.',
             'product_size.required' => 'Please enter product size.',
+            'length.min' => 'Length cannot be less than 1.',
+            'length.numeric' => 'Length should be numeric.',
+            'width.required' => 'Please enter width.',
+            'width.min' => 'Width cannot be less than 1.',
+            'width.numeric' => 'Width should be numeric.',
+            'height.required' => 'Please enter height.',
+            'height.min' => 'Height cannot be less than 1.',
+            'height.numeric' => 'Height should be numeric.',
+            'qty_per_box.required' => 'Please enter quantity per box.',
+            'qty_per_box.min' => 'Quantity per box cannot be less than 1.',
+            'qty_per_box.numeric' => 'Quantity per box should be numeric.',
+            'weight_per_box.required' => 'Please enter weight per box.',
+            'weight_per_box.min' => 'Weight per box cannot be less than 1.',
+            'weight_per_box.numeric' => 'Weight per box should be numeric.',
             'status.required' => 'Please choose product status.'
         ]);
         $imageNamePath = $request->old_product_image; 
@@ -155,6 +199,11 @@ class ProductController extends Controller
         $updateData->product_image = $imageNamePath;
         $updateData->product_price = $request->product_price;
         $updateData->product_size = $request->product_size;
+        $updateData->length = $request->length;
+        $updateData->width = $request->width;
+        $updateData->height = $request->height;
+        $updateData->qty_per_box = $request->qty_per_box;
+        $updateData->weight_per_box = $request->weight_per_box;
         $updateData->status = $request->status;
         $updateData->modified_by = Auth::user()->id;
         $updateData->save();
