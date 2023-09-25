@@ -142,7 +142,7 @@ class LoginRegisterController extends Controller
             $totalDealers = User::where([['role','dealer'],['status', '=', 'active']])->count();
 
             $totalOrders = 0;
-            $totalOrders = Order::all()->count();
+            $totalOrders = Order::where('order_status','!=','cancelled')->count();
 
             $totalProducts = 0;
             $totalProducts = Product::where('status','!=','deleted')->count();
@@ -156,6 +156,7 @@ class LoginRegisterController extends Controller
             $totalOrderAddedCurrentMonth = 0;
             $totalOrderAddedCurrentMonth = Order::whereMonth('created_at', date('m'))
                 ->whereYear('created_at', date('Y'))
+                ->where('order_status','!=','cancelled')
                 ->count();
             
             $totalAmountOrder = 0;

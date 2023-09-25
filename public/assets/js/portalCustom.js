@@ -27,6 +27,7 @@ const addToCart = (id) => {
     }
 
     if (orderProductQty > productStockQty) {
+        $('#order_qty_'+orderProductId).val(0);
         $('#errorCart_'+orderProductId).html('Order quantity cannot be greater than Total stock available.');
         return false;
     }
@@ -86,7 +87,11 @@ const removeFromCart = (id) => {
       /**
        * Show in Cart
        */
+      if (msg == 0) {
+        location.reload();
+      }
       $('#orderCartNo').html(msg);
+      $('#row_'+orderProductId).fadeOut();
       $('#order_qty_'+orderProductId).val('');
       $('#successCart_'+orderProductId).html('Product removed from order list.');
     });
