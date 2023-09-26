@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use App\Enums\CommonStatusEnums;
 use App\Models\Stock;
+use App\Models\OrderList;
 use Auth;
 
 class Dealer extends Model
@@ -39,7 +40,8 @@ class Dealer extends Model
         $currentuserid = Auth::user()->id;
         $data = DB::table('temp_order_list')
                 ->join('products', 'temp_order_list.product_id', '=' , 'products.id')
-                ->select('products.product_name as product_name', 'products.product_code as product_code', 'products.product_image as product_image', 'product_price as product_price', 'temp_order_list.id as temp_order_id' ,'temp_order_list.order_quantity as order_quantity')
+                ->join('stocks', 'products.product_code', '=', 'stocks.product_code')
+                ->select('products.id as id','products.product_name as product_name', 'products.product_code as product_code', 'products.product_image as product_image', 'product_price as product_price', 'temp_order_list.id as temp_order_id' ,'temp_order_list.order_quantity as order_quantity','stocks.stock_qty as total_stock_qty', 'stocks.stock_sold_qty as total_stock_sold_qty')
                 ->where('temp_order_list.user_id', '=', $currentuserid)
                 ->get();
 
@@ -54,33 +56,52 @@ class Dealer extends Model
         $data = DB::table('temp_order_list')
                 ->join('products', 'temp_order_list.product_id', '=' , 'products.id')
                 ->join('stocks', 'products.product_code', '=' , 'stocks.product_code')
-                ->select('products.product_name as product_name', 'products.product_code as product_code', 'products.product_category as product_category', 'products.product_size as product_size','products.product_price as product_price','temp_order_list.order_quantity as order_quantity', 'stocks.stock_qty as stock_qty', 'stocks.stock_sold_qty as stock_sold_qty')
+                ->select('products.*','temp_order_list.order_quantity as order_quantity', 'stocks.stock_qty as stock_qty', 'stocks.stock_sold_qty as stock_sold_qty')
                 ->where('temp_order_list.user_id', '=', $currentuserid)
                 ->get();
         foreach ($data as $row) {
+            $orderListExist = OrderList::where([['order_id',$order_id],['product_code',$row->product_code]])->count();
+            if ($orderListExist == 0) {
+                 //Total Boxes
+                 $totalBoxes = ceil($row->order_quantity/$row->qty_per_box);
+                 //Total Weight
+                 $totalWeight = ceil($totalBoxes*$row->weight_per_box);
+                 //CBM
+                 $lwh = ($row->length*$row->width*$row->height)/1000000;
+                 $cmb = round($lwh*$totalBoxes,3);
+
+                 $box_dimension = $row->length."X".$row->width."X".$row->height;
+
+                DB::table('order_list')->insert([
+                    'order_id' => $order_id,
+                    'product_code' => $row->product_code,
+                    'product_name' => $row->product_name,
+                    'product_category' => $row->product_category,
+                    'product_size' => $row->product_size,
+                    'product_price' => $row->product_price,
+                    'order_quantity' => $row->order_quantity,
+                    'total_boxes' => $totalBoxes,
+                    'weight_per_box' => $row->weight_per_box,
+                    'box_dimension' => $box_dimension,
+                    'cbm' => $cmb, 
+                    'order_status' => $orderStatus,
+                    'created_at' => \Carbon\Carbon::now(),
+                    'updated_at' => \Carbon\Carbon::now()
+                ]);
+                $product_code = $row->product_code;
+                $stock_qty = $row->stock_qty - $row->order_quantity;
+                $stock_sold_qty = $row->stock_sold_qty + $row->order_quantity;
+                $productQtyUpdate = Stock::where('product_code', '=', $product_code)
+                                    ->update([
+                                        'stock_qty' => $stock_qty,
+                                        'stock_sold_qty' => $stock_sold_qty,
+                                    ]);
+                
+                $totalAmount += $row->product_price * $row->order_quantity;
+                 
+
+            }
             
-            DB::table('order_list')->insert([
-                'order_id' => $order_id,
-                'product_code' => $row->product_code,
-                'product_name' => $row->product_name,
-                'product_category' => $row->product_category,
-                'product_size' => $row->product_size,
-                'product_price' => $row->product_price,
-                'order_quantity' => $row->order_quantity,
-                'order_status' => $orderStatus,
-                'created_at' => \Carbon\Carbon::now(),
-                'updated_at' => \Carbon\Carbon::now()
-            ]);
-            $product_code = $row->product_code;
-            $stock_qty = $row->stock_qty - $row->order_quantity;
-            $stock_sold_qty = $row->stock_sold_qty + $row->order_quantity;
-            $productQtyUpdate = Stock::where('product_code', '=', $product_code)
-                                ->update([
-                                    'stock_qty' => $stock_qty,
-                                    'stock_sold_qty' => $stock_sold_qty,
-                                ]);
-            
-            $totalAmount += $row->product_price * $row->order_quantity;
         }
 
         $orderPlaceId = DB::table('orders')->insertGetId([

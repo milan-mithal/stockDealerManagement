@@ -100,13 +100,27 @@ class DealerOrderController extends Controller
             exit();
         }
 
-        $getTempOrderData = Dealer::where([
+
+        $getTempOrderDataCount = Dealer::where([
             ['user_id',$currentuserid],
             ['product_id',$request->product_id]
-        ])->first();
-
-      
-        if ($getTempOrderData) {
+        ])->count();
+        
+        if($getTempOrderDataCount == 0) {
+            $insertData = new Dealer();
+            $insertData->user_id = $currentuserid;
+            $insertData->product_id = $request->product_id;
+            $insertData->order_quantity = $request->order_quantity;
+            $insertData->save();
+            $getTotalProductAdded = Dealer::where('user_id',$currentuserid)->count();
+            
+            return $getTotalProductAdded;
+        } else {
+            $getTempOrderData = Dealer::where([
+                ['user_id',$currentuserid],
+                ['product_id',$request->product_id]
+            ])->first();
+            
             $id = $getTempOrderData->id;
             $updateData = Dealer::findOrFail($id);
             $updateData->order_quantity = $request->order_quantity;
@@ -114,16 +128,9 @@ class DealerOrderController extends Controller
             $getTotalProductAdded = Dealer::where('user_id',$currentuserid)->count();
             
             return $getTotalProductAdded;
-        } 
 
-        $insertData = new Dealer();
-        $insertData->user_id = $currentuserid;
-        $insertData->product_id = $request->product_id;
-        $insertData->order_quantity = $request->order_quantity;
-        $insertData->save();
-        $getTotalProductAdded = Dealer::where('user_id',$currentuserid)->count();
-        
-        return $getTotalProductAdded;
+        }
+
     }
 
     /**

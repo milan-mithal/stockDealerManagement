@@ -90,39 +90,57 @@
                                     <tbody><tr class=" ">
                                         <th class="text-center"></th>
                                         <th>Product</th>
-                                        <th class="text-center">Quantity</th>
+                                        <th class="text-center">Qty</th>
                                         <th class="text-end">Price (AED)</th>
-                                        {{-- <th class="text-end">Sub Total (AED)</th> --}}
+                                        <th class="text-end">Boxes</th>
+                                        {{-- <th class="text-end">Weight (KGS)</th> --}}
+                                        <th class="text-end">Sub Weight (KGS)</th>
+                                        <th class="text-end">Box Dimension (CBM)</th>
                                     </tr>
                                     @php $total = 0; 
                                          $totalqty =0;
+                                         $totalBoxes = 0;
+                                         $totalWeight = 0;
+                                         $totalCBM = 0;
                                     @endphp
                                     @foreach ($allorderProductList as $orderProductList)
                                     <tr>
                                         <td class="text-center">{{$loop->iteration}}</td>
                                         <td>
                                             <p class="font-w600 mb-1">{{ $orderProductList->product_code}}</p>
-                                            <div class="text-muted"><div class="text-muted">Category: {{ $orderProductList->product_category}},  Product Name: {{ $orderProductList->product_name}}, Size: {{ $orderProductList->product_size}}</div></div>
+                                            <div class="text-muted"><div class="text-muted">Category: {{ $orderProductList->product_category}}, <br/>Name: {{ $orderProductList->product_name}},Size: {{ $orderProductList->product_size}}</div></div>
                                         </td>
                                         <td class="text-center">{{ $orderProductList->order_quantity}}</td>
                                         <td class="text-end">{{ $orderProductList->product_price}}</td>
-                                        {{-- <td class="text-end">{{ $orderProductList->order_quantity * $orderProductList->product_price}}</td> --}}
+                                        <td class="text-end">{{ $orderProductList->total_boxes}}</td>
+                                        {{-- <td class="text-end">{{ $orderProductList->weight_per_box}}</td> --}}
+                                        <td class="text-end">{{ $orderProductList->total_boxes*$orderProductList->weight_per_box}}</td>
+                                        <td class="text-end">{{ $orderProductList->box_dimension}} CMS</td>
+                                       
                                     </tr>
                                     @php $totalqty += $orderProductList->order_quantity; @endphp
                                     @php $total += $orderProductList->order_quantity * $orderProductList->product_price; @endphp
+                                    @php $totalBoxes += $orderProductList->total_boxes; @endphp
+                                    @php $totalWeight += $orderProductList->total_boxes*$orderProductList->weight_per_box; @endphp
+                                    @php $totalCBM += $orderProductList->cbm; @endphp
+
                                     @endforeach
                                     <tr>
                                         <td colspan="2" class="fw-bold text-uppercase text-end">Total</td>
                                         <td class="fw-bold text-end h4">{{ $totalqty }}</td>
-                                        {{-- <td class="fw-bold text-end h4">{{ $total }}</td> --}}
+                                        <td class="fw-bold text-end h4">&nbsp;</td>
+                                        <td class="fw-bold text-end h4">{{ $totalBoxes }}</td>
+                                        {{-- <td class="fw-bold text-end h4">&nbsp;</td> --}}
+                                        <td class="fw-bold text-end h4">{{ $totalWeight }}</td>
+                                        <td class="fw-bold text-end h4">{{ $totalCBM }}</td>
                                     </tr>
                                 </tbody></table>
                             </div>
                         </div>
                         <div class="card-footer text-end">
-                            @if ($orderDetails->order_status != 'dispatched' && $orderDetails->order_status != 'cancelled')
+                            {{-- @if ($orderDetails->order_status != 'dispatched' && $orderDetails->order_status != 'cancelled') --}}
                             <a class="btn btn-primary-gradient" data-bs-target="#modalInput" data-bs-toggle="modal" href="javascript:void(0)">Order Status</a>
-                            @endif
+                            {{-- @endif --}}
                             <button type="button" class="btn btn-info-gradient" onclick="javascript:window.print();"><i class="si si-printer"></i> Print Order Details</button>
                         </div>
                         

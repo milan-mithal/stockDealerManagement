@@ -51,7 +51,8 @@
 												<table class="table editable-table table-bordered text-nowrap border-bottom" id="basic-datatable">
                                                     @if (count($allCartList) > 0)
                                                     <button id="button" class="btn btn-primary-gradient mb-4 data-table-btn" data-bs-target="#modalInput" data-bs-toggle="modal" href="javascript:void(0)">Provide Pickup Details</button>
-													@else
+                                                    <p><a href="{{ route('dealer.index') }}">Click here </a> to add more product in order list</p>
+                                                    @else
                                                     <p><a href="{{ route('dealer.index') }}">Click here </a> to add products in order list</p>
                                                     @endif
                                                     <thead>
@@ -60,17 +61,29 @@
                                                             <th class="wd-10p border-bottom-0">Product Name</th>
 															<th class="wd-10p border-bottom-0">Image</th>
 															<th class="wd-10p border-bottom-0">Price (AED)</th>
+                                                            <th class="wd-10p border-bottom-0">Total Stock Available</th>
                                                             <th class="wd-10p border-bottom-0">Order Stock</th>
+
 														</tr>
 													</thead>
 													<tbody>
                                                         @foreach ($allCartList as $productDetails)
-														<tr>
+														<tr id="row_{{ $productDetails->id }}">
 															<td>{{$productDetails->product_code}}</td>
 															<td>{{$productDetails->product_name}}</td>
 															<td><img class="hpx-100" src="{{ url($productDetails->product_image)}}" /></td>
 															<td>{{$productDetails->product_price}}</td>
-                                                            <td>{{$productDetails->order_quantity}}</td>
+                                                            <td>{{$productDetails->total_stock_qty}}</td>
+                                                            <td class="wd-20p"><input type="number" class="wp-50" id="order_qty_{{ $productDetails->id }}" value="{{$productDetails->order_quantity}}" placeholder="0" />
+                                                                <br/>
+                                                                <button type="button" class="btn btn-icon mt-3  btn-primary" data-bs-placement="top" data-bs-toggle="tooltip" data-bs-original-title="Add To Cart" id="addToCart_{{ $productDetails->id }}" data-qty="{{$productDetails->total_stock_qty}}" data-url="{{ route('dealerorder.store') }}" onClick="addToCart({{ $productDetails->id }})"><i class="fe fe-check"></i></button>
+                                                                
+                                                                <button type="button" class="btn btn-icon mt-3  btn-danger" data-bs-placement="top" data-bs-toggle="tooltip" data-bs-original-title="Remove From Cart" id="removeFromCart_{{ $productDetails->id }}" data-url="{{ route('dealerorder.destroy') }}" onClick="removeFromCart({{ $productDetails->id }})"><i class="fe fe-x"></i></button>
+                                                                
+                                                                <div class="valid-feedback block text-bold mb-2" id="successCart_{{ $productDetails->id }}"></div>
+                                                                <div class="invalid-feedback block text-bold mb-2" id="errorCart_{{ $productDetails->id }}"></div>
+                                                            </td>
+                                                            
 														</tr>
                                                         @endforeach
 													</tbody>
