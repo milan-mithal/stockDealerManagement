@@ -69,7 +69,7 @@
                                                             @if ($productDetails->total_stock_qty > 0)
                                                             <td class="wd-20p"><input type="number" class="wp-50" id="order_qty_{{ $productDetails->id }}" value="{{$productDetails->ordered_qty}}" placeholder="0" />
                                                                 <br/>
-                                                                <button type="button" class="btn btn-icon mt-3  btn-primary" data-bs-placement="top" data-bs-toggle="tooltip" data-bs-original-title="Add To Cart" id="addToCart_{{ $productDetails->id }}" data-qty="{{$productDetails->total_stock_qty}}" data-url="{{ route('dealerorder.store') }}" onClick="addToCart({{ $productDetails->id }})"><i class="fe fe-check"></i></button>
+                                                                <button type="button" class="btn btn-icon mt-3  btn-primary" data-bs-placement="top" data-bs-toggle="tooltip" data-bs-original-title="Add To Cart" id="addToCart_{{ $productDetails->id }}" data-qty="{{$productDetails->total_stock_qty}}" data-comingsoon="{{$productDetails->coming_soon}}" data-url="{{ route('dealerorder.store') }}" onClick="addToCart({{ $productDetails->id }})"><i class="fe fe-check"></i></button>
                                                                 
                                                                 <button type="button" class="btn btn-icon mt-3  btn-danger" data-bs-placement="top" data-bs-toggle="tooltip" data-bs-original-title="Remove From Cart" id="removeFromCart_{{ $productDetails->id }}" data-url="{{ route('dealerorder.destroy') }}" onClick="removeFromCart({{ $productDetails->id }})"><i class="fe fe-x"></i></button>
                                                                 
@@ -86,7 +86,13 @@
 															<td><img class="hpx-100" src="{{ url($productDetails->product_image)}}" /></td>
                                                             <td>{{$productDetails->product_size}}</td>
 															<td>{{$productDetails->product_price}}</td>
-                                                            <td>{{$productDetails->total_stock_qty}}</td>
+                                                            <td>
+                                                                @if ($productDetails->coming_soon == '1' && $productDetails->total_stock_qty > 0)
+                                                                <strong>{{$productDetails->total_stock_qty}}</strong> <br/> <h5 class="text-bold tag tag-purple">{{$productDetails->stock_coming_soon}} Coming Soon</h5>
+                                                                @else
+                                                                <strong>{{$productDetails->total_stock_qty}}</strong>
+                                                                @endif
+                                                            </td>
 														</tr>
                                                         @endforeach
 													</tbody>

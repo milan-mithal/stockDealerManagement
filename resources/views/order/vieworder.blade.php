@@ -91,11 +91,11 @@
                                         <th class="text-center"></th>
                                         <th>Product</th>
                                         <th class="text-center">Qty</th>
-                                        <th class="text-end">Price (AED)</th>
+                                        <th class="text-end">Price(AED)</th>
                                         <th class="text-end">Boxes</th>
                                         {{-- <th class="text-end">Weight (KGS)</th> --}}
-                                        <th class="text-end">Sub Weight (KGS)</th>
-                                        <th class="text-end">Box Dimension (CBM)</th>
+                                        <th class="text-end">Weight(KGS)</th>
+                                        <th class="text-end">CBM</th>
                                     </tr>
                                     @php $total = 0; 
                                          $totalqty =0;
@@ -108,7 +108,7 @@
                                         <td class="text-center">{{$loop->iteration}}</td>
                                         <td>
                                             <p class="font-w600 mb-1">{{ $orderProductList->product_code}}</p>
-                                            <div class="text-muted"><div class="text-muted">Category: {{ $orderProductList->product_category}}, <br/>Name: {{ $orderProductList->product_name}},Size: {{ $orderProductList->product_size}}</div></div>
+                                            <div class="text-muted">Category: {{ $orderProductList->product_category}}, <br/>Name: {{ $orderProductList->product_name}},Size: {{ $orderProductList->product_size}}</div>
                                         </td>
                                         <td class="text-center">{{ $orderProductList->order_quantity}}</td>
                                         <td class="text-end">{{ $orderProductList->product_price}}</td>

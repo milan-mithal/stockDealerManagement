@@ -29,7 +29,7 @@ class Dealer extends Model
                 $join->on('products.id', '=', 'temp_order_list.product_id')
                      ->where('temp_order_list.user_id', '=', $currentuserid);
             })
-            ->select('products.*','stocks.stock_qty as total_stock_qty', 'stocks.stock_sold_qty as total_stock_sold_qty', 'temp_order_list.order_quantity as ordered_qty')
+            ->select('products.*','stocks.stock_qty as total_stock_qty', 'stocks.coming_soon as coming_soon','stocks.stock_coming_soon as stock_coming_soon','stocks.stock_sold_qty as total_stock_sold_qty', 'temp_order_list.order_quantity as ordered_qty')
             ->where('products.status', CommonStatusEnums::Active)
             ->get();
 
@@ -41,7 +41,7 @@ class Dealer extends Model
         $data = DB::table('temp_order_list')
                 ->join('products', 'temp_order_list.product_id', '=' , 'products.id')
                 ->join('stocks', 'products.product_code', '=', 'stocks.product_code')
-                ->select('products.id as id','products.product_name as product_name', 'products.product_code as product_code', 'products.product_image as product_image', 'product_price as product_price', 'temp_order_list.id as temp_order_id' ,'temp_order_list.order_quantity as order_quantity','stocks.stock_qty as total_stock_qty', 'stocks.stock_sold_qty as total_stock_sold_qty')
+                ->select('products.id as id','products.product_name as product_name', 'products.product_code as product_code', 'products.product_image as product_image', 'product_price as product_price', 'temp_order_list.id as temp_order_id' ,'temp_order_list.order_quantity as order_quantity','stocks.stock_qty as total_stock_qty','stocks.coming_soon as coming_soon', 'stocks.stock_coming_soon as stock_coming_soon','stocks.stock_sold_qty as total_stock_sold_qty')
                 ->where('temp_order_list.user_id', '=', $currentuserid)
                 ->get();
 

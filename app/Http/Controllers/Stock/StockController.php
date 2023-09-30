@@ -39,7 +39,7 @@ class StockController extends Controller
     {
         $request->validate([
             'product_code' => 'required|exists:products,product_code|unique:stocks,product_code',
-            'stock_qty' => 'required|min:1|numeric',
+            'stock_qty' => 'required|numeric',
             'stock_sold_qty' => 'required|min:0|numeric',
             'stock_min_qty' => 'required|min:1|numeric',   
         ], [
@@ -47,7 +47,6 @@ class StockController extends Controller
             'product_code.exists' => 'Product code does not exists.',
             'product_code.unique' => 'Stock for this product code already exists.',
             'stock_qty.required' => 'Please enter stock quantity.',
-            'stock_qty.min' => 'Stock quantity cannot be less than 1.',
             'stock_qty.numeric' => 'Stock quantity should be numeric.',
             'stock_sold_qty.required' => 'Please enter stock sold quantity.',
             'stock_sold_qty.min' => 'Stock sold quantity cannot be less than 0.',
@@ -60,9 +59,11 @@ class StockController extends Controller
         // Insert data into the database
         $insertData = new Stock();
         $insertData->product_code = $request->product_code;
+        $insertData->coming_soon = $request->coming_soon;
         $insertData->stock_qty = $request->stock_qty;
         $insertData->stock_sold_qty = $request->stock_sold_qty;
         $insertData->stock_min_qty = $request->stock_min_qty;
+        $insertData->stock_coming_soon = $request->stock_coming_soon;
         $insertData->created_by = Auth::user()->id;
         $insertData->modified_by = Auth::user()->id;
         $insertData->save();
@@ -93,11 +94,10 @@ class StockController extends Controller
     public function update(Request $request, string $id)
     {
         $request->validate([
-            'stock_qty' => 'required|min:1|numeric',
+            'stock_qty' => 'required|numeric',
             'stock_min_qty' => 'required|min:1|numeric',   
         ], [
             'stock_qty.required' => 'Please enter stock quantity.',
-            'stock_qty.min' => 'Stock quantity cannot be less than 1.',
             'stock_qty.numeric' => 'Stock quantity should be numeric.',
             'stock_min_qty.required' => 'Please enter stock Minimum quantity alert.',
             'stock_min_qty.min' => 'Stock Minimum quantity cannot be less than 1.',
@@ -106,8 +106,10 @@ class StockController extends Controller
         
         // Insert data into the database
         $updateData = Stock::findOrFail($id);
+        $updateData->coming_soon = $request->coming_soon;
         $updateData->stock_qty = $request->stock_qty;
         $updateData->stock_min_qty = $request->stock_min_qty;
+        $updateData->stock_coming_soon = $request->stock_coming_soon;
         $updateData->modified_by = Auth::user()->id;;
         $updateData->save();
     

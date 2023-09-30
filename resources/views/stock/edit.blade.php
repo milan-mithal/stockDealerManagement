@@ -64,9 +64,23 @@
                                                             @enderror
                                                         </div>
                                                         <div class="form-group">
+                                                            <label for="formFile" class="form-label">Coming Soon</label>
+                                                            <select class="form-control" name="coming_soon" id="coming_soon">
+                                                                    <option value="0" @selected(old('coming_soon',$stockDetail->coming_soon) == '0')>No</option>
+                                                                    <option value="1" @selected(old('coming_soon',$stockDetail->coming_soon) == '1')>Yes</option>
+                                                              </select>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label for="formFile" class="form-label">Enter Coming Soon Quantity</label>
+                                                            <input class="form-control" type="text" name="stock_coming_soon" id="stock_coming_soon" value="{{ old('stock_coming_soon', $stockDetail->stock_coming_soon) }}">
+                                                            @error('stock_coming_soon')
+                                                              <div class="invalid-feedback block">{{ $message }}</div>
+                                                            @enderror
+                                                        </div>
+                                                        <div class="form-group">
                                                             <label for="formFile" class="form-label">Enter New Stock Quantity</label>
                                                            
-                                                            <input class="form-control" type="text" name="stock_qty" id="stock_qty" value="{{ old('stock_qty',0) }}">
+                                                            <input class="form-control" type="text" name="stock_qty" id="stock_qty" value="{{ old('stock_qty',$stockDetail->stock_qty ) }}">
                                                             @error('stock_qty')
                                                               <div class="invalid-feedback block">{{ $message }}</div>
                                                             @enderror

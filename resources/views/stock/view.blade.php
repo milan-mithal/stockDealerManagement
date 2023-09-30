@@ -53,6 +53,7 @@
 														<tr>
 															<th class="wd-15p border-bottom-0">Code</th>
 															<th class="wd-15p border-bottom-0">Category</th>
+                                                            <th class="wd-15p border-bottom-0">Coming Soon</th>
                                                             <th class="wd-25p border-bottom-0">Total Stock Available</th>
                                                             <th class="wd-25p border-bottom-0">Total Stock Sold Till Today</th>
                                                             <th class="wd-25p border-bottom-0">Minimum Quanity Alert</th>
@@ -64,6 +65,8 @@
 														<tr>
 															<td>{{$stockList->product_code}}</td>
                                                             <td>{{$stockList->product_category}}</td>
+                                                            <td>{{$stockList->stock_coming_soon}}
+                                                            </td>
 															<td>{{$stockList->stock_qty}}</td>
 															<td>{{$stockList->stock_sold_qty}}</td>
 															<td>{{$stockList->stock_min_qty}}</td>

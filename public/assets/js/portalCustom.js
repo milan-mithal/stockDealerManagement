@@ -16,6 +16,7 @@ const addToCart = (id) => {
     const orderProductQty = parseInt($('#order_qty_'+orderProductId).val());
     const addToCartUrl = $('#addToCart_'+orderProductId).attr('data-url');
     const productStockQty = parseInt($('#addToCart_'+orderProductId).attr('data-qty'));
+    const comingsoon = $('#addToCart_'+orderProductId).attr('data-comingsoon');
 
     $('#successCart_'+orderProductId).html('');
     $('#errorCart_'+orderProductId).html('');
@@ -26,7 +27,7 @@ const addToCart = (id) => {
         return false;
     }
 
-    if (orderProductQty > productStockQty) {
+    if (orderProductQty > productStockQty && comingsoon == '0') {
         $('#order_qty_'+orderProductId).val(0);
         $('#errorCart_'+orderProductId).html('Order quantity cannot be greater than Total stock available.');
         return false;

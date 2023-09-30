@@ -134,7 +134,7 @@
 
 	<!-- CUSTOM JS -->
 	<script src="{{url('/assets/js/custom.js')}}"></script>
-	<script src="{{url('/assets/js/portalCustom.js?ver=1.3')}}"></script>
+	<script src="{{url('/assets/js/portalCustom.js?ver=1.4')}}"></script>
 
 	@if (Auth::check() && Auth::user()->role == 'admin')
 	<script>

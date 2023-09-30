@@ -94,9 +94,9 @@ class DealerOrderController extends Controller
         $currentuserid = Auth::user()->id;
 
         $checkActualQty = Product::join('stocks', 'products.product_code', '=' , 'stocks.product_code')
-                          ->select('stocks.stock_qty')
+                          ->select('stocks.stock_qty', 'stocks.coming_soon')
                           ->where('products.id', '=', $request->product_id)->first();
-        if ($request->order_quantity > $checkActualQty->stock_qty) {
+        if (($request->order_quantity > $checkActualQty->stock_qty) && ($checkActualQty->coming_soon == '0')) {
             exit();
         }
 
