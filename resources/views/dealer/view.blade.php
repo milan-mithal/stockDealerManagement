@@ -53,8 +53,7 @@
 														<tr>
 															<th class="wd-10p border-bottom-0">Code</th>
                                                             <th class="wd-20p border-bottom-0">Order Stock</th>
-															<th class="wd-10p border-bottom-0">Category</th>
-                                                            <th class="wd-10p border-bottom-0">Product Name</th>
+                                                            <th class="wd-10p border-bottom-0">Product Category/Name</th>
 															<th class="wd-10p border-bottom-0">Image</th>
 															<th class="wd-10p border-bottom-0">Size</th>
 															<th class="wd-10p border-bottom-0">Price (AED)</th>
@@ -81,16 +80,24 @@
                                                                 <a href="javascript:void(0)" class="btn btn-danger-gradient">Out Of Stock</a>
                                                             </td>
                                                             @endif
-                                                            <td>{{$productDetails->product_category}}</td>
-															<td>{{$productDetails->product_name}}</td>
+															<td>{{$productDetails->product_category}}/<br/>
+                                                                {{$productDetails->product_name}}</td>
 															<td><img class="hpx-100" src="{{ url($productDetails->product_image)}}" /></td>
                                                             <td>{{$productDetails->product_size}}</td>
 															<td>{{$productDetails->product_price}}</td>
                                                             <td>
-                                                                @if ($productDetails->coming_soon == '1' && $productDetails->total_stock_qty > 0)
-                                                                <strong>{{$productDetails->total_stock_qty}}</strong> <br/> <h5 class="text-bold tag tag-purple">{{$productDetails->stock_coming_soon}} Coming Soon</h5>
+                                                                @if ($productDetails->coming_soon == '1' && ($productDetails->total_stock_qty - $productDetails->stock_coming_soon > 0))
+                                                                <h3 class="tag tag-blue">In Stock:&nbsp; <strong>{{ $productDetails->total_stock_qty - $productDetails->stock_coming_soon  }}</strong></h3>
+                                                                <br/>
+                                                                <h5 class="tag tag-orange">Coming Soon:&nbsp; <strong>{{ $productDetails->stock_coming_soon }}</strong></h5>
+                                                                @elseif ($productDetails->coming_soon == '1' && ($productDetails->total_stock_qty - $productDetails->stock_coming_soon <= 0))
+                                                                <h3 class="tag tag-blue">In Stock:&nbsp; <strong>0</strong></h3>
+                                                                <br/>
+                                                                <h5 class="tag tag-danger">Available For Order:&nbsp; <strong>{{ $productDetails->total_stock_qty }}</strong></h5>
+                                                                <br/>
+                                                                <h5 class="tag tag-orange">Coming Soon:&nbsp; <strong>{{ $productDetails->stock_coming_soon }}</strong></h5>
                                                                 @else
-                                                                <strong>{{$productDetails->total_stock_qty}}</strong>
+                                                                <h3 class="tag tag-blue">In Stock:&nbsp; <strong>{{ $productDetails->total_stock_qty }}</strong></h3>
                                                                 @endif
                                                             </td>
 														</tr>

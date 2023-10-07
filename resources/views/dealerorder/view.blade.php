@@ -74,10 +74,18 @@
 															<td><img class="hpx-100" src="{{ url($productDetails->product_image)}}" /></td>
 															<td>{{$productDetails->product_price}}</td>
                                                             <td>
-                                                                @if ($productDetails->coming_soon == '1')
-                                                                <strong>{{$productDetails->total_stock_qty}}</strong> <br/> <h5 class="text-bold tag tag-purple">{{$productDetails->stock_coming_soon}} Coming Soon</h5>
+                                                                @if ($productDetails->coming_soon == '1' && ($productDetails->total_stock_qty - $productDetails->stock_coming_soon > 0))
+                                                                <h3 class="tag tag-blue">In Stock:&nbsp; <strong>{{ $productDetails->total_stock_qty - $productDetails->stock_coming_soon  }}</strong></h3>
+                                                                <br/>
+                                                                <h5 class="tag tag-orange">Coming Soon:&nbsp; <strong>{{ $productDetails->stock_coming_soon }}</strong></h5>
+                                                                @elseif ($productDetails->coming_soon == '1' && ($productDetails->total_stock_qty - $productDetails->stock_coming_soon <= 0))
+                                                                <h3 class="tag tag-blue">In Stock:&nbsp; <strong>0</strong></h3>
+                                                                <br/>
+                                                                <h5 class="tag tag-danger">Available For Order:&nbsp; <strong>{{ $productDetails->total_stock_qty }}</strong></h5>
+                                                                <br/>
+                                                                <h5 class="tag tag-orange">Coming Soon:&nbsp; <strong>{{ $productDetails->stock_coming_soon }}</strong></h5>
                                                                 @else
-                                                                <strong>{{$productDetails->total_stock_qty}}</strong>
+                                                                <h3 class="tag tag-blue">In Stock:&nbsp; <strong>{{ $productDetails->total_stock_qty }}</strong></h3>
                                                                 @endif
                                                             </td>
                                                             <td class="wd-20p"><input type="number" class="wp-50" id="order_qty_{{ $productDetails->id }}" value="{{$productDetails->order_quantity}}" placeholder="0" />

@@ -78,7 +78,8 @@
                                                             @enderror
                                                         </div>
                                                         <div class="form-group">
-                                                            <label for="formFile" class="form-label">Enter New Stock Quantity</label>
+                                                            <label for="formFile" class="form-label">Enter Total Stock Quantity</label>
+                                                            <div class="invalid-feedback block text-bold mb-2">Total Stock Quantity = Quantity in Hand + Coming Soon Quantity</div>
                                                             <input class="form-control" type="text" name="stock_qty" id="stock_qty" value="{{ old('stock_qty', '0') }}">
                                                             @error('stock_qty')
                                                               <div class="invalid-feedback block">{{ $message }}</div>
