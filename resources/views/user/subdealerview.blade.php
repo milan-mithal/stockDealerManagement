@@ -10,12 +10,12 @@
             <!-- PAGE-HEADER -->
             <div class="page-header">
                 <div>
-                    <h1 class="page-title">Manage Users</h1>
+                    <h1 class="page-title">View Sub Dealer List</h1>
                 </div>
                 <div class="ms-auto pageheader-btn">
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item"><a href="javascript:void(0);">Users</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">View</li>
+                        <li class="breadcrumb-item active" aria-current="page">View Subdealer</li>
                     </ol>
                 </div>
             </div>
@@ -59,15 +59,14 @@
                                                             <th class="wd-20p border-bottom-0">Dealer Region</th>
                                                             <th class="wd-20p border-bottom-0">Dealer Community</th>
                                                             <th class="wd-20p border-bottom-0">Dealer Phone No.</th>
-															<th class="wd-20p border-bottom-0">Role</th>
+                                                            <th class="wd-20p border-bottom-0">Dealer Percentage.</th>
 															<th class="wd-15p border-bottom-0">Status</th>
-                                                            <th class="wd-25p border-bottom-0">Action</th>
 														</tr>
 													</thead>
 													<tbody>
                                                         @foreach ($allUserList as $userDetails)
-                                                        @if (Auth::user()->role != 'admin')
-														<tr>
+                                                        
+                                                        <tr>
 															<td>{{$userDetails->user_code}}</td>
                                                             <td>{{$userDetails->name}}</td>
 															<td>{{$userDetails->email}}</td>
@@ -76,39 +75,16 @@
                                                             <td>{{$userDetails->region}}</td>
 															<td>{{$userDetails->community}}</td>
                                                             <td>{{$userDetails->phone_no}}</td>
-                                                            <td>{{ ucfirst($userDetails->role) }}</td>
+                                                            <td>{{$userDetails->percentage}}%</td>
                                                             <td>@if ($userDetails->status == 'active')
                                                                 <a href="javascript:void(0)" class="btn btn-primary-gradient">Active</a>
                                                                 @endif
                                                                 @if ($userDetails->status == 'inactive')
                                                                 <a href="javascript:void(0)" class="btn btn-danger-gradient">Blocked</a>
                                                                 @endif</td>
-                                                            <td>
-                                                                <a href="{{ route('user.edit', $userDetails->id) }}"><button type="button" class="btn btn-icon  btn-primary"><i class="fe fe-edit"></i></button></a>
-                                                            </td>
+
 														</tr>
-                                                        @else 
-                                                        <tr>
-															<td><a href="{{ route('user.subdealer', $userDetails->id) }}">{{$userDetails->user_code}}</a></td>
-                                                            <td>{{$userDetails->name}}</td>
-															<td>{{$userDetails->email}}</td>
-                                                            <td>{{$userDetails->dealer_name}}</td>
-															<td>{{$userDetails->address}}</td>
-                                                            <td>{{$userDetails->region}}</td>
-															<td>{{$userDetails->community}}</td>
-                                                            <td>{{$userDetails->phone_no}}</td>
-                                                            <td>{{ ucfirst($userDetails->role) }}</td>
-                                                            <td>@if ($userDetails->status == 'active')
-                                                                <a href="javascript:void(0)" class="btn btn-primary-gradient">Active</a>
-                                                                @endif
-                                                                @if ($userDetails->status == 'inactive')
-                                                                <a href="javascript:void(0)" class="btn btn-danger-gradient">Blocked</a>
-                                                                @endif</td>
-                                                            <td>
-                                                                <a href="{{ route('user.edit', $userDetails->id) }}"><button type="button" class="btn btn-icon  btn-primary"><i class="fe fe-edit"></i></button></a>
-                                                            </td>
-														</tr>
-                                                        @endif
+                                                       
                                                         @endforeach
 													</tbody>
 												</table>

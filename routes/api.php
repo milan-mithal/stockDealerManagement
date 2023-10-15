@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\StockController;
+use App\Http\Controllers\API\CurrencyController;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,3 +21,4 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::get('v1/outofstock', [StockController::class, 'index']);
+Route::get('v1/currency', [CurrencyController::class, 'index']);

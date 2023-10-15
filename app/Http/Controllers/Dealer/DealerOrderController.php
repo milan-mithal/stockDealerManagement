@@ -11,6 +11,8 @@ use App\Models\Order;
 use App\Models\OrderList;
 use App\Models\Product;
 use App\Models\Stock;
+use App\Models\SubOrder;
+use App\Models\SubOrderList;
 use Mail;
 use App\Mail\Dealer\OrderMail;
 
@@ -20,6 +22,7 @@ class DealerOrderController extends Controller
     {
         $this->middleware('auth');
         $this->middleware('checknewuser');
+        $this->middleware('checkroleboth');
     }
     /**
      * Display a listing of the resource.
@@ -134,7 +137,7 @@ class DealerOrderController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Show Dealers Orders
      */
     public function show()
     {
@@ -142,6 +145,18 @@ class DealerOrderController extends Controller
         $allOrderList = Order::where('user_id','=',$currentuserid)->orderByDesc('order_id')->get();
 
         return view('dealerorder.orderview',  ['allOrderList' => $allOrderList]);
+    }
+
+    /**
+     * Display All Sub Dealers Orders
+     */
+
+    public function showdealerorder()
+    {
+        $currentuserid = Auth::user()->id;
+        $allOrderList = SubOrder::where('dealer_id','=',$currentuserid)->orderByDesc('order_id')->get();
+
+        return view('dealerorder.subdealerorderview',  ['allOrderList' => $allOrderList]);
     }
 
     /**
@@ -155,6 +170,16 @@ class DealerOrderController extends Controller
 
         return view('dealerorder.vieworder',  ['orderDetails' => $orderDetails, 'allorderProductList' => $allorderProductList]); 
     }
+
+    public function subdealerordershow(string $id)
+    {
+        $order_id = strip_tags($id);
+        $orderDetails = SubOrder::orderDetails($order_id);
+        $allorderProductList = SubOrderList::where('order_id', '=' , $order_id)->get();
+
+        return view('dealerorder.subdealervieworder',  ['orderDetails' => $orderDetails, 'allorderProductList' => $allorderProductList]); 
+    }
+
 
     /**
      * Update the specified resource in storage.
@@ -185,4 +210,65 @@ class DealerOrderController extends Controller
         }
 
     }
+
+    /**
+     * Update Sub Dealer Order Status
+     */
+
+     public function subdealerorderacceptedstatus(string $id) 
+     {
+        $updateData = SubOrder::findOrFail($id);
+        $updateData->order_status = "accepted";
+        $updateData->order_remarks = "Order has been accepted.";
+        $updateData->save();
+
+        return redirect()->route('dealerorder.showdealerorder')->with('success', 'Order status changed successfully.');
+     }
+
+     public function subdealerordercancelstatus(string $id) 
+     {
+        $updateData = SubOrder::findOrFail($id);
+        $updateData->order_status = "cancelled";
+        $updateData->order_remarks = "Order has been cancelled.";
+        $updateData->save();
+
+        return redirect()->route('dealerorder.showdealerorder')->with('success', 'Order status changed successfully.');
+     }
+
+     public function subdealerplaceorder(String $orderid)
+     {
+        $selectOrderList = SubOrderList::join('products', 'sub_orders_list.product_code', '=', 'products.product_code')
+                                        ->select('products.id as prdId', 'sub_orders_list.order_quantity as orderQty')
+                                        ->where('sub_orders_list.order_id', '=', $orderid)
+                                        ->get();
+        $dataToInsert = [];    
+        $currentuserid = Auth::user()->id;                            
+        foreach ($selectOrderList as $orderList)
+        {
+            $dataToInsert[] = [
+                'user_id' => $currentuserid,
+                'product_id' => $orderList->prdId,
+                'order_quantity' => $orderList->orderQty,
+            ];
+        }
+
+        $dataInsert =  Dealer::insert($dataToInsert);
+        if ($dataInsert)
+        {
+            $recordFound = SubOrder::where('order_id', $orderid)->first();
+    
+            if ($recordFound) {
+                $recordFound->update([
+                    'order_placed' => 'Yes',
+                ]);
+
+    
+                return redirect()->route('dealerorder.index')->with('success', 'You can place order from here.');
+            } else {
+                return redirect()->route('dealerorder.subdealerordershow',$orderid)->with('error', 'Order Not Found. Please try again.');
+            }
+
+        }
+     }
+
 }

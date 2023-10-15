@@ -17,6 +17,7 @@ use App\Mail\User\ForgotPasswordMail;
 use App\Models\Dealer;
 use App\Models\User;
 use App\Models\Order;
+use App\Models\SubOrder;
 use App\Models\Product;
 use App\Models\Stock;
 
@@ -188,11 +189,12 @@ class LoginRegisterController extends Controller
                 'allOutOfStockProducts' => $allOutOfStockProducts,
                 'allOrderList' => $allOrderList,
                 'totalStockAmount' => $totalStockAmount
-        ]);
+            ]);
         }  
         if(Auth::check() && Auth::user()->role == 'dealer') {
             $currentuserid = Auth::user()->id;
             $allOrderList = Order::where('user_id','=',$currentuserid)->orderByDesc('order_id')->get();
+            $allSubOrderList = SubOrder::where('dealer_id','=',$currentuserid)->orderByDesc('order_id')->get();
             $totalProducts = 0;
             $totalProducts = Product::where('status','!=','deleted')->count();
 
@@ -203,9 +205,28 @@ class LoginRegisterController extends Controller
 
             return view('dashboard.dealer',[
                 'allOrderList' => $allOrderList,
+                'allSubOrderList' => $allSubOrderList,
                 'totalProducts' => $totalProducts,
                 'totalStockAmount' => $totalStockAmount
-        ]);
+            ]);
+        }
+
+        if(Auth::check() && Auth::user()->role == 'subdealer') {
+            $currentuserid = Auth::user()->id;
+            $allOrderList = SubOrder::where('user_id','=',$currentuserid)->orderByDesc('order_id')->get();
+            $totalProducts = 0;
+            $totalProducts = Product::where('status','!=','deleted')->count();
+
+            $totalStockAmount = Stock::join('products', 'stocks.product_code', '=', 'products.product_code')
+                                ->where('products.status', '!=', 'deleted')
+                                ->selectRaw('SUM(stocks.stock_qty) as total_stock_qty, SUM(stocks.stock_qty * products.product_price) as total_stock_price')
+                                ->first();
+
+            return view('dashboard.subdealer',[
+                'allOrderList' => $allOrderList,
+                'totalProducts' => $totalProducts,
+                'totalStockAmount' => $totalStockAmount
+            ]);
         }
 
         if(Auth::check() && Auth::user()->role == 'packing')
