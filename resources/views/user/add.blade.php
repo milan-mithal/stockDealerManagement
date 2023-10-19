@@ -10,7 +10,13 @@
                 <!-- PAGE-HEADER -->
                 <div class="page-header">
                     <div>
-                        <h1 class="page-title">Add User</h1>
+                        <h1 class="page-title">
+                            @if (Auth::user()->role == 'dealer')
+                            Add Sub Dealer
+                            @else
+                            Add User
+                            @endif
+                        </h1>
                     </div>
                     <div class="ms-auto pageheader-btn">
                         <ol class="breadcrumb">
@@ -175,6 +181,8 @@
                                             @enderror
                                         </div>
                                     @endif
+
+
                                         <div class="form-group">
                                             <label for="formFile" class="form-label">Dealer Identification No.</label>
                                             <input class="form-control" type="text" name="identification_no"

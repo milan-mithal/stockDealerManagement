@@ -10,7 +10,11 @@
                 <!-- PAGE-HEADER -->
                 <div class="page-header">
                     <div>
-                        <h1 class="page-title">Edit User</h1>
+                        @if (Auth::user()->role == 'dealer')
+                            Edit Sub Dealer
+                            @else
+                            Edit User
+                            @endif
                     </div>
                     <div class="ms-auto pageheader-btn">
                         <ol class="breadcrumb">
@@ -175,6 +179,15 @@
                                             @enderror
                                         </div>
                                     @endif
+
+                                    <div class="form-group subdealer-percentage">
+                                        <label for="formFile" class="form-label">Dealer Percentage</label>
+                                        <input class="form-control" type="text" name="percentage" maxlength="2"
+                                            id="percentage" value="{{ old('percentage',$percentage) }}">
+                                        @error('percentage')
+                                            <div class="invalid-feedback block">{{ $message }}</div>
+                                        @enderror
+                                    </div>
                                         
                                         <div class="form-group">
                                             <label for="formFile" class="form-label">Dealer Identification No.</label>
@@ -225,15 +238,19 @@
                 let roleStatus = this.value;
                 if (roleStatus == 'subdealer') {
                     $('.subdealer-list').show();
+                    $('.subdealer-percentage').show();
                 } else {
                     $('.subdealer-list').hide();
+                    $('.subdealer-percentage').hide();
                 }
             });
             let selectedRole = $('#role').find(":selected").val();;
             if (selectedRole == 'subdealer') {
                 $('.subdealer-list').show();
+                $('.subdealer-percentage').show();
             } else {
                 $('.subdealer-list').hide();
+                $('.subdealer-percentage').hide();
             }
         });
     </script>

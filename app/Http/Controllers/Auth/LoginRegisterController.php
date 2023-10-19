@@ -141,6 +141,8 @@ class LoginRegisterController extends Controller
         {
             $totalDealers = 0;
             $totalDealers = User::where([['role','dealer'],['status', '=', 'active']])->count();
+            $totalSubDealers = 0;
+            $totalSubDealers = User::where([['role','subdealer'],['status', '=', 'active']])->count();
 
             $totalOrders = 0;
             $totalOrders = Order::where('order_status','!=','cancelled')->count();
@@ -150,6 +152,12 @@ class LoginRegisterController extends Controller
 
             $totalDealerAddedCurrentMonth = 0;
             $totalDealerAddedCurrentMonth = User::where([['role','dealer'],['status', '=', 'active']])
+                ->whereMonth('created_at', date('m'))
+                ->whereYear('created_at', date('Y'))
+                ->count();
+            
+            $totalSubDealerAddedCurrentMonth = 0;
+            $totalSubDealerAddedCurrentMonth = User::where([['role','subdealer'],['status', '=', 'active']])
                 ->whereMonth('created_at', date('m'))
                 ->whereYear('created_at', date('Y'))
                 ->count();
@@ -181,9 +189,11 @@ class LoginRegisterController extends Controller
 
             return view('dashboard.admin',[
                 'totalDealers' => $totalDealers,
+                'totalSubDealers' => $totalSubDealers,
                 'totalOrders' => $totalOrders,
                 'totalProducts' => $totalProducts,
                 'totalDealerAddedCurrentMonth' => $totalDealerAddedCurrentMonth,
+                'totalSubDealerAddedCurrentMonth' => $totalSubDealerAddedCurrentMonth,
                 'totalOrderAddedCurrentMonth' => $totalOrderAddedCurrentMonth,
                 'totalAmountOrder' => $totalAmountOrder,
                 'allOutOfStockProducts' => $allOutOfStockProducts,

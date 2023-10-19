@@ -54,13 +54,14 @@
 															<th class="wd-15p border-bottom-0">Code</th>
 															<th class="wd-15p border-bottom-0">Name</th>
                                                             <th class="wd-15p border-bottom-0">Email</th>
-                                                            <th class="wd-15p border-bottom-0">Dealer Name</th>
-                                                            <th class="wd-20p border-bottom-0">Dealer Address</th>
-                                                            <th class="wd-20p border-bottom-0">Dealer Region</th>
-                                                            <th class="wd-20p border-bottom-0">Dealer Community</th>
-                                                            <th class="wd-20p border-bottom-0">Dealer Phone No.</th>
-                                                            <th class="wd-20p border-bottom-0">Dealer Percentage.</th>
+                                                            <th class="wd-15p border-bottom-0">Name</th>
+                                                            <th class="wd-20p border-bottom-0">Address</th>
+                                                            <th class="wd-20p border-bottom-0">Region</th>
+                                                            <th class="wd-20p border-bottom-0">Community</th>
+                                                            <th class="wd-20p border-bottom-0">Phone No.</th>
+                                                            <th class="wd-20p border-bottom-0">Percentage</th>
 															<th class="wd-15p border-bottom-0">Status</th>
+                                                            <th class="wd-15p border-bottom-0">Action</th>
 														</tr>
 													</thead>
 													<tbody>
@@ -76,12 +77,17 @@
 															<td>{{$userDetails->community}}</td>
                                                             <td>{{$userDetails->phone_no}}</td>
                                                             <td>{{$userDetails->percentage}}%</td>
-                                                            <td>@if ($userDetails->status == 'active')
+                                                            <td>
+                                                                @if ($userDetails->status == 'active')
                                                                 <a href="javascript:void(0)" class="btn btn-primary-gradient">Active</a>
                                                                 @endif
                                                                 @if ($userDetails->status == 'inactive')
                                                                 <a href="javascript:void(0)" class="btn btn-danger-gradient">Blocked</a>
-                                                                @endif</td>
+                                                                @endif
+                                                            </td>
+                                                            <td>
+                                                                <a href="{{ route('user.edit', $userDetails->id) }}"><button type="button" class="btn btn-icon  btn-primary"><i class="fe fe-edit"></i></button></a>
+                                                            </td>
 
 														</tr>
                                                        
