@@ -63,6 +63,7 @@ Route::middleware('checkstatus')->group(function () {
         Route::post('/user/update/{id}', 'update')->name('user.update');
         Route::get('/user/destroy/{id}', 'destroy')->name('user.destroy');
         Route::get('/user/subdealer/{id}', 'subdealer')->name('user.subdealer');
+        Route::get('/user/viewsubdelear', 'viewsubdelear')->name('user.viewsubdelear');
     });
 
     // Product Routes

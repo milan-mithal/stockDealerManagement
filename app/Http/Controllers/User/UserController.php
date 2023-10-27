@@ -46,6 +46,17 @@ class UserController extends Controller
         return view('user.view',  ['allUserList' => $userList]);
     }
 
+    public function viewsubdelear()
+    {
+        $userList = User::leftJoin('sub_dealer_pricing', 'users.id', '=', 'sub_dealer_pricing.sub_dealer_id')
+            ->join('users as dealer', 'sub_dealer_pricing.dealer_id', '=', 'dealer.id')
+            ->select('users.*','dealer.dealer_name as maindealer_name', 'sub_dealer_pricing.percentage as percentage')
+            ->where('users.role', '=', 'subdealer')
+            ->where('users.id', '!=', 1)
+            ->get();
+        return view('user.viewsubdealer',  ['allUserList' => $userList]);
+    }
+
     public function subdealer(string $id)
     {
         $userList = User::leftJoin('sub_dealer_pricing', 'users.id', '=', 'sub_dealer_pricing.sub_dealer_id')

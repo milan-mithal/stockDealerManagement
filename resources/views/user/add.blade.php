@@ -184,7 +184,7 @@
 
 
                                         <div class="form-group">
-                                            <label for="formFile" class="form-label">Dealer Identification No.</label>
+                                            <label for="formFile" class="form-label">VAT No.</label>
                                             <input class="form-control" type="text" name="identification_no"
                                                 id="identification_no" value="{{ old('identification_no') }}">
                                             @error('identification_no')

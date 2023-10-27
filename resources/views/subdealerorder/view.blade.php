@@ -71,9 +71,13 @@
                                                         @php
                                                         $originalProductPrice = $productDetails->product_price;
                                                         $productPercentagePrice = ($originalProductPrice * $dealerPercentage)/100 + $originalProductPrice;
-                                                        $rateConversion = $productPercentagePrice * $rate;
+                                                        $rateConversion = $productPercentagePrice;  
+                                                        if($userCurrency != 'AED') {
+                                                            $rateConversion = $productPercentagePrice * $rate;
+                                                        }
+                                                        
                                                         $finalPrice = round($rateConversion,2);
-                                                         @endphp
+                                                        @endphp
 														<tr id="row_{{ $productDetails->id }}">
 															<td>{{$productDetails->product_code}}</td>
 															<td>{{$productDetails->product_name}}</td>
@@ -96,9 +100,9 @@
                                                             </td>
                                                             <td class="wd-20p"><input type="number" class="wp-50" id="order_qty_{{ $productDetails->id }}" value="{{$productDetails->order_quantity}}" placeholder="0" />
                                                                 <br/>
-                                                                <button type="button" class="btn btn-icon mt-3  btn-primary" data-bs-placement="top" data-bs-toggle="tooltip" data-bs-original-title="Add To Cart" id="addToCart_{{ $productDetails->id }}" data-qty="{{$productDetails->total_stock_qty}}" data-comingsoon="{{$productDetails->coming_soon}}" data-url="{{ route('dealerorder.store') }}" onClick="addToCart({{ $productDetails->id }})"><i class="fe fe-check"></i></button>
+                                                                <button type="button" class="btn btn-icon mt-3  btn-primary" data-bs-placement="top" data-bs-toggle="tooltip" data-bs-original-title="Add To Cart" id="addToCart_{{ $productDetails->id }}" data-qty="{{$productDetails->total_stock_qty}}" data-comingsoon="{{$productDetails->coming_soon}}" data-url="{{ route('subdealerorder.store') }}" onClick="addToCart({{ $productDetails->id }})"><i class="fe fe-check"></i></button>
                                                                 
-                                                                <button type="button" class="btn btn-icon mt-3  btn-danger" data-bs-placement="top" data-bs-toggle="tooltip" data-bs-original-title="Remove From Cart" id="removeFromCart_{{ $productDetails->id }}" data-url="{{ route('dealerorder.destroy') }}" onClick="removeFromCart({{ $productDetails->id }})"><i class="fe fe-x"></i></button>
+                                                                <button type="button" class="btn btn-icon mt-3  btn-danger" data-bs-placement="top" data-bs-toggle="tooltip" data-bs-original-title="Remove From Cart" id="removeFromCart_{{ $productDetails->id }}" data-url="{{ route('subdealerorder.destroy') }}" onClick="removeFromCart({{ $productDetails->id }})"><i class="fe fe-x"></i></button>
                                                                 
                                                                 <div class="valid-feedback block text-bold mb-2" id="successCart_{{ $productDetails->id }}"></div>
                                                                 <div class="invalid-feedback block text-bold mb-2" id="errorCart_{{ $productDetails->id }}"></div>

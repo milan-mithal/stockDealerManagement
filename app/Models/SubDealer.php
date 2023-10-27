@@ -82,8 +82,22 @@ class SubDealer extends Model
 
                  //Currecy Calculation
                 $originalProductPrice = $row->product_price;
-                $productPercentagePrice = ($originalProductPrice * $dealerPercentage)/100 + $originalProductPrice;
-                $rateConversion = $productPercentagePrice * $rate;
+                
+                if($currentuserCurrency == 'AED' && $dealerPercentage <= 0)
+                {
+                    $productPercentagePrice = $originalProductPrice;
+                    $rateConversion = $productPercentagePrice;
+                } else if($currentuserCurrency != 'AED' && $dealerPercentage <= 0) {
+                            $productPercentagePrice = $originalProductPrice;
+                            $rateConversion = $productPercentagePrice * $rate;
+                } else if($currentuserCurrency == 'AED' && $dealerPercentage > 0) {
+                    $productPercentagePrice = ($originalProductPrice * $dealerPercentage)/100 + $originalProductPrice;
+                    $rateConversion = $productPercentagePrice;
+                }
+                else {
+                    $productPercentagePrice = ($originalProductPrice * $dealerPercentage)/100 + $originalProductPrice;
+                    $rateConversion = $productPercentagePrice * $rate;
+                }
                 $finalPrice = round($rateConversion,2);
 
 
@@ -120,6 +134,10 @@ class SubDealer extends Model
             
         }
 
+        $orderListExist_2 = SubOrderList::where([['order_id',$order_id]])->count();
+        if ($orderListExist_2 > 0)
+        {
+
         $orderPlaceId = DB::table('sub_orders')->insertGetId([
             'order_id' => $order_id,
             'dealer_id' =>  $currentuserDealerId,
@@ -135,7 +153,11 @@ class SubDealer extends Model
             'updated_at' => \Carbon\Carbon::now()
         ]);
 
-        return $orderPlaceId;
+        return true;
+        } else {
+            return false;
+        }
+        
     }
 
     public static function orderDetails($order_id) {

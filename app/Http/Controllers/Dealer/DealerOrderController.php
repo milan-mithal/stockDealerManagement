@@ -64,18 +64,21 @@ class DealerOrderController extends Controller
         $prefix = "SN-";  
         $order_id = IdGenerator::generate(['table' => 'orders','field'=>'order_id' ,'length' => 10, 'prefix' => $prefix]);
         $placeOrderId = Dealer::orderPlace($order_id,$delivery_type,$third_party_details,$delivery_details);
-        if ($placeOrderId) {
+        if ($placeOrderId == true) {
             Dealer::where('user_id', $currentuserid)->delete();
+            $mailData = [
+                'order_id' => $order_id,
+                'dealer_name' => Auth::user()->dealer_name
+            ];
+            $mail_to = explode(',', env('MAIL_TO'));
+            Mail::to($mail_to)->send(new OrderMail($mailData));
+            
+            return redirect()->route('dealerorder.show')->with('success', 'Order has been placed successfully.');
+        } else {
+            return redirect()->route('dealerorder.show')->with('error', 'Error Occured While Placing Order. Kindly try again.');
         }
 
-        $mailData = [
-            'order_id' => $order_id,
-            'dealer_name' => Auth::user()->dealer_name
-        ];
-        $mail_to = explode(',', env('MAIL_TO'));
-        Mail::to($mail_to)->send(new OrderMail($mailData));
         
-        return redirect()->route('dealerorder.show')->with('success', 'Order has been placed successfully.');
     }
 
     /**

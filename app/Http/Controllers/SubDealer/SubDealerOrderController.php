@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Haruncpi\LaravelIdGenerator\IdGenerator;
 use Auth;
+use App\Models\User;
 use App\Models\SubDealer;
 use App\Models\SubOrder;
 use App\Models\SubOrderList;
@@ -45,21 +46,28 @@ class SubDealerOrderController extends Controller
     public function create(Request $request)
     {
         $currentuserid = Auth::user()->id;
+        $dealerId = Auth::user()->dealer_id;
+        $dealerEmail = User::select('email')->where('id',$dealerId)->first();
         $prefix = "SN-SD-";  
         $order_id = IdGenerator::generate(['table' => 'sub_orders','field'=>'order_id' ,'length' => 12, 'prefix' => $prefix]);
         $placeOrderId = SubDealer::orderPlace($order_id);
-        if ($placeOrderId) {
+        if ($placeOrderId == true) {
             SubDealer::where('user_id', $currentuserid)->delete();
+            $mailData = [
+                'order_id' => $order_id,
+                'dealer_name' => Auth::user()->dealer_name
+            ];
+            $mail_to = explode(',', env('MAIL_TO'));
+            $dealer_email_to = $dealerEmail->email;
+            Mail::to($mail_to)->send(new OrderMail($mailData));
+            Mail::to($dealer_email_to)->send(new OrderMail($mailData));
+            
+            return redirect()->route('subdealerorder.show')->with('success', 'Order has been placed successfully.');
+        } else {
+            return redirect()->route('subdealerorder.show')->with('error', 'Error Occured While Placing Order. Kindly try again.');
         }
 
-        $mailData = [
-            'order_id' => $order_id,
-            'dealer_name' => Auth::user()->dealer_name
-        ];
-        $mail_to = explode(',', env('MAIL_TO'));
-        Mail::to($mail_to)->send(new OrderMail($mailData));
         
-        return redirect()->route('subdealerorder.show')->with('success', 'Order has been placed successfully.');
     }
 
     /**

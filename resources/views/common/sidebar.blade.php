@@ -38,6 +38,10 @@
                     <ul class="slide-menu">
                         <li><a href="{{ route('user.index') }}" class="slide-item {{ (request()->is('user/list')) ? 'active' : '' }}">View</a></li>
                         <li><a href="{{ route('user.create') }}" class="slide-item {{ (request()->is('user/create')) ? 'active' : '' }}">Add</a></li>
+                        @if (Auth::user()->role == 'admin')
+                        <li><a href="{{ route('user.viewsubdelear') }}" class="slide-item {{ (request()->is('user/viewsubdelear')) ? 'active' : '' }}">View Subdealer</a></li>
+                        @endif
+
                     </ul>
                 </li>
                 @endif

@@ -65,7 +65,10 @@
                                                          @php
                                                             $originalProductPrice = $productDetails->product_price;
                                                             $productPercentagePrice = ($originalProductPrice * $dealerPercentage)/100 + $originalProductPrice;
+                                                            $rateConversion = $productPercentagePrice;  
+                                                            if($userCurrency != 'AED') {
                                                             $rateConversion = $productPercentagePrice * $rate;
+                                                            }
                                                             $finalPrice = round($rateConversion,2);
                                                          @endphp
 														<tr>
