@@ -11,6 +11,8 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Mail;
 use App\Models\User;
+use App\Models\Currency;
+use App\Models\DealerPercentage;
 use App\Enums\UserRolesEnums;
 use App\Enums\UserStatusEnums;
 use App\Enums\DeleteStatusEnums;
@@ -23,15 +25,45 @@ class UserController extends Controller
     {
         $this->middleware('auth');
         $this->middleware('checknewuser');
-        $this->middleware('checkrole');
+        $this->middleware('checkroleboth');
     }
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $userList = User::where('id', '!=', 1)->get();
+        $userId = Auth::user()->id;
+        $role = Auth::user()->role;
+        $userList = User::where('id', '!=', 1)->where('role','!=', 'subdealer')->get();
+        if ($role == 'dealer') {
+            $userList = User::leftJoin('sub_dealer_pricing', 'users.id', '=', 'sub_dealer_pricing.sub_dealer_id')
+            ->select('users.*', 'sub_dealer_pricing.percentage as percentage')
+            ->where('users.dealer_id', '=', $userId)
+            ->where('users.id', '!=', 1)
+            ->get();
+        }
+
         return view('user.view',  ['allUserList' => $userList]);
+    }
+
+    public function viewsubdelear()
+    {
+        $userList = User::leftJoin('sub_dealer_pricing', 'users.id', '=', 'sub_dealer_pricing.sub_dealer_id')
+            ->join('users as dealer', 'sub_dealer_pricing.dealer_id', '=', 'dealer.id')
+            ->select('users.*','dealer.dealer_name as maindealer_name', 'sub_dealer_pricing.percentage as percentage')
+            ->where('users.role', '=', 'subdealer')
+            ->where('users.id', '!=', 1)
+            ->get();
+        return view('user.viewsubdealer',  ['allUserList' => $userList]);
+    }
+
+    public function subdealer(string $id)
+    {
+        $userList = User::leftJoin('sub_dealer_pricing', 'users.id', '=', 'sub_dealer_pricing.sub_dealer_id')
+        ->select('users.*', 'sub_dealer_pricing.percentage as percentage')
+        ->where('users.dealer_id', '=', $id)->where('users.role','=', 'subdealer')
+        ->get();
+        return view('user.subdealerview',  ['allUserList' => $userList]);
     }
 
     /**
@@ -39,7 +71,9 @@ class UserController extends Controller
      */
     public function create()
     {
-        return view('user.add');
+        $dealerList = User::where([['role', '=', 'dealer'],['status', '=', 'active']])->get();
+        $currencyList = Currency::all();
+        return view('user.add',  ['allDealerList' => $dealerList, 'allcurrencyList' => $currencyList]);
     }
 
     /**
@@ -55,7 +89,10 @@ class UserController extends Controller
             'phone_no' => 'required|string|max:250',
             'region' => 'required|string|max:40',
             'community' => 'required|string|max:40',
+            'currency' => 'required',
+            'identification_no' => 'required|string|max:250|unique:users',
             'role' => ['required', new Enum(UserRolesEnums::class)],
+            'dealer_id' => 'required_if:role,subdealer',
             'status' => ['required', new Enum(UserStatusEnums::class)]
         ], [
             'name.required' => 'Please enter name.',
@@ -69,7 +106,11 @@ class UserController extends Controller
             'phone_no.required' => 'Please enter user phone no.',
             'region.required' => 'Please enter user region.',
             'community.required' => 'Please enter user community.',
+            'currency.required' => 'Please select currency.',
+            'identification_no.required' => 'Please enter identification no.',
+            'identification_no.unique' => 'This dealer identification no. already exists.',
             'role.required' => 'Please select user role.',
+            'dealer_id.required_if' => 'Please select dealer.',
             'status.required' => 'Please select user status.'
         ]);
 
@@ -77,6 +118,13 @@ class UserController extends Controller
         $user_code = IdGenerator::generate(['table' => 'users','field'=>'user_code' ,'length' => 7, 'prefix' => $prefix]);
         $password = Str::password(10);
         $hasdedPassword = Hash::make($password);
+        $indentificationNo = $request->identification_no;
+        $tokenKey = time().$request->email;
+        $token = Hash::make($tokenKey);
+        $dealer_id = 0;
+        if ($request->dealer_id) {
+            $dealer_id = $request->dealer_id;
+        }
         // Insert data into the database
         $insertData = new User();
         $insertData->name = $request->name;
@@ -87,13 +135,18 @@ class UserController extends Controller
         $insertData->region = $request->region;
         $insertData->community = $request->community;
         $insertData->role = $request->role;
+        $insertData->currency = $request->currency;
+        $insertData->identification_no = $indentificationNo;
+        $insertData->dealer_id = $dealer_id;
         $insertData->status = $request->status;
         $insertData->user_code = $user_code;
         $insertData->password = $hasdedPassword;
+        $insertData->token = $token;
         $insertData->created_by = Auth::user()->id;
         $insertData->modified_by = Auth::user()->id;
         $insertData->new_user = 'newuser';
         $insertData->save();
+        
 
         $mailData = [
             'name' => $request->name,
@@ -103,6 +156,9 @@ class UserController extends Controller
          
         Mail::to($request->email)->send(new UserRegisterMail($mailData));
     
+        if ($request->role == 'subdealer') {
+            return redirect()->route('user.edit',$insertData->id)->with('success', 'Sub Dealer created successfully. Kindly Update Subdealer Percentage.');
+        }
         return redirect()->route('user.create')->with('success', 'User created successfully.');
     }
 
@@ -120,7 +176,14 @@ class UserController extends Controller
     public function edit(string $id)
     {
         $userDetails = User::findOrFail($id);
-        return view('user.edit', compact('userDetails'));
+        $currencyList = Currency::all();
+        $percentage = DealerPercentage::where('sub_dealer_id',$id)->first();
+        $percentageData = 0;
+        if($percentage) {
+            $percentageData = $percentage->percentage;
+        }
+        $dealerList = User::where([['role', '=', 'dealer'],['status', '=', 'active']])->get();
+        return view('user.edit',  ['allDealerList' => $dealerList, 'allcurrencyList' => $currencyList, 'userDetails'=> $userDetails, 'percentage'=> $percentageData]);
     }
 
     /**
@@ -136,7 +199,11 @@ class UserController extends Controller
             'phone_no' => 'required|string|max:250',
             'region' => 'required|string|max:40',
             'community' => 'required|string|max:40',
+            'currency' => 'required',
+            'identification_no' => 'required|string|max:250|unique:users,identification_no,'.$id,
             'role' => ['required', new Enum(UserRolesEnums::class)],
+            'dealer_id' => 'required_if:role,subdealer',
+            'percentage' => 'required_if:role,subdealer|numeric',
             'status' => ['required', new Enum(UserStatusEnums::class)]
         ], [
             'name.required' => 'Please enter name.',
@@ -150,10 +217,21 @@ class UserController extends Controller
             'phone_no.required' => 'Please enter user phone no.',
             'region.required' => 'Please enter user region.',
             'community.required' => 'Please enter user community.',
+            'currency.required' => 'Please select currency.',
+            'identification_no.required' => 'Please enter identification no.',
+            'identification_no.unique' => 'This dealer identification no. already exists.',
             'role.required' => 'Please select user role.',
+            'dealer_id.required_if' => 'Please select dealer.',
+            'percentage.required_if' => 'Please enter pecentage.',
             'status.required' => 'Please select user status.'
         ]);
-
+        $indentificationNo = $request->identification_no;
+        $tokenKey = time().$request->email;
+        $token = Hash::make($tokenKey);
+        $dealer_id = 0;
+        if ($request->dealer_id) {
+            $dealer_id = $request->dealer_id;
+        }
         $updateData = User::findOrFail($id);
         $updateData->name = $request->name;
         $updateData->email = $request->email;
@@ -162,10 +240,27 @@ class UserController extends Controller
         $updateData->phone_no = $request->phone_no;
         $updateData->region = $request->region;
         $updateData->community = $request->community;
+        $updateData->currency = $request->currency;
+        $updateData->identification_no = $indentificationNo;
+        $updateData->dealer_id = $dealer_id;
         $updateData->role = $request->role;
         $updateData->status = $request->status;
+        $updateData->token = $token;
         $updateData->modified_by = Auth::user()->id;
         $updateData->save();
+
+        $percentage = DealerPercentage::where('sub_dealer_id',$id)->first();
+        if ($percentage) {
+            $perUpdateData = DealerPercentage::findOrFail($percentage->id);
+            $perUpdateData->percentage = $request->percentage;
+            $perUpdateData->save();
+        } else {
+            $insertData = new DealerPercentage();
+            $insertData->dealer_id = $dealer_id;
+            $insertData->sub_dealer_id = $id;
+            $insertData->percentage = $request->percentage;
+            $insertData->save();
+        }
     
         return redirect()->route('user.index')->with('success', 'User updated successfully.');
     }

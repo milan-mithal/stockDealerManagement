@@ -103,26 +103,32 @@ class Dealer extends Model
             }
             
         }
-
-        $orderPlaceId = DB::table('orders')->insertGetId([
-            'order_id' => $order_id,
-            'user_id' => $currentuserid,
-            'total_amount' => $totalAmount,
-            'order_status' => $orderStatus,
-            'order_remarks' => $orderRemarks,
-            'order_date' => date('Y-m-d'),
-            'delivery_type' => $delivery_type,
-            'third_party_details' => $third_party_details,
-            'delivery_details' => $delivery_details,
-            'courier_company' => '',
-            'awb_number' => '',
-            'deliver_bill_upload' => '',
-            'modified_by' => 0,
-            'created_at' => \Carbon\Carbon::now(),
-            'updated_at' => \Carbon\Carbon::now()
-        ]);
-
-        return $orderPlaceId;
+        $orderListExist_2 = OrderList::where([['order_id',$order_id]])->count();
+        if ($orderListExist_2 > 0)
+        {
+            $orderPlaceId = DB::table('orders')->insertGetId([
+                'order_id' => $order_id,
+                'user_id' => $currentuserid,
+                'total_amount' => $totalAmount,
+                'order_status' => $orderStatus,
+                'order_remarks' => $orderRemarks,
+                'order_date' => date('Y-m-d'),
+                'delivery_type' => $delivery_type,
+                'third_party_details' => $third_party_details,
+                'delivery_details' => $delivery_details,
+                'courier_company' => '',
+                'awb_number' => '',
+                'deliver_bill_upload' => '',
+                'modified_by' => 0,
+                'created_at' => \Carbon\Carbon::now(),
+                'updated_at' => \Carbon\Carbon::now()
+            ]);
+    
+            return true;
+        } else {
+            return false;
+        }
+        
     }
 
     public static function orderDetails($order_id) {

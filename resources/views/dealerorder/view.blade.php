@@ -50,7 +50,7 @@
 											<div class="table-responsive">
 												<table class="table editable-table table-bordered text-nowrap border-bottom" id="basic-datatable">
                                                     @if (count($allCartList) > 0)
-                                                    <button id="button" class="btn btn-primary-gradient mb-4 data-table-btn" data-bs-target="#modalInput" data-bs-toggle="modal" href="javascript:void(0)">Provide Pickup Details</button>
+                                                    <button id="button" class="btn btn-danger-gradient mb-4 data-table-btn" data-bs-target="#modalInput" data-bs-toggle="modal" href="javascript:void(0)">Provide Pickup Details</button>
                                                     <p><a href="{{ route('dealer.index') }}">Click here </a> to add more product in order list</p>
                                                     @else
                                                     <p><a href="{{ route('dealer.index') }}">Click here </a> to add products in order list</p>
@@ -102,6 +102,12 @@
                                                         @endforeach
 													</tbody>
 												</table>
+                                                @if (count($allCartList) > 0)
+                                                <button id="button" class="btn btn-danger-gradient mb-4 data-table-btn" data-bs-target="#modalInput" data-bs-toggle="modal" href="javascript:void(0)">Provide Pickup Details</button>
+                                                <p><a href="{{ route('dealer.index') }}">Click here </a> to add more product in order list</p>
+                                                @else
+                                                <p><a href="{{ route('dealer.index') }}">Click here </a> to add products in order list</p>
+                                                @endif
 											</div>
 										</div>
 									</div>

@@ -52,7 +52,7 @@ const addToCart = (id) => {
     });
     
     request.fail(function(jqXHR, textStatus) {
-      alert( "Request failed: " + textStatus );
+      location.reload();
     });
 }
 
@@ -98,7 +98,7 @@ const removeFromCart = (id) => {
     });
     
     request.fail(function(jqXHR, textStatus) {
-      alert( "Request failed: " + textStatus );
+      location.reload();
     });
 
 }
@@ -150,7 +150,7 @@ const showNewOrders = () => {
   });
   
   request.fail(function(jqXHR, textStatus) {
-    alert( "Request failed: " + textStatus );
+    location.reload();
   });
 
 }

@@ -69,6 +69,8 @@
                                                                 <option value="600 gsm Canvas Leather Combinations" @selected(old('product_category') == '600 gsm Canvas Leather Combinations')>600 gsm Canvas Leather Combinations</option>
                                                                 <option value="Natural Leather Bags" @selected(old('product_category') == 'Natural Leather Bags')>Natural Leather Bags</option>
                                                                 <option value="Joolood" @selected(old('product_category') == 'Joolood')>Joolood</option>
+                                                                <option value="Non woven bags- Laminated" @selected(old('product_category') == 'Non woven bags- Laminated')>Non woven bags- Laminated</option>
+                                                                <option value="Non woven bags- Unlaminated" @selected(old('product_category') == 'Non woven bags- Unlaminated')>Non woven bags- Unlaminated</option>
                                                               </select>
                                                               @error('product_category')
                                                               <div class="invalid-feedback block">{{ $message }}</div>

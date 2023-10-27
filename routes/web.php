@@ -7,6 +7,8 @@ use App\Http\Controllers\Product\ProductController;
 use App\Http\Controllers\Stock\StockController;
 use App\Http\Controllers\Dealer\DealerController;
 use App\Http\Controllers\Dealer\DealerOrderController;
+use App\Http\Controllers\SubDealer\SubDealerController;
+use App\Http\Controllers\SubDealer\SubDealerOrderController;
 use App\Http\Controllers\Order\OrderController;
 use App\Http\Controllers\Common\CommonController;
 use App\Http\Controllers\Reports\ReportController;
@@ -60,6 +62,8 @@ Route::middleware('checkstatus')->group(function () {
         Route::get('/user/edit/{id}', 'edit')->name('user.edit');
         Route::post('/user/update/{id}', 'update')->name('user.update');
         Route::get('/user/destroy/{id}', 'destroy')->name('user.destroy');
+        Route::get('/user/subdealer/{id}', 'subdealer')->name('user.subdealer');
+        Route::get('/user/viewsubdelear', 'viewsubdelear')->name('user.viewsubdelear');
     });
 
     // Product Routes
@@ -93,7 +97,13 @@ Route::middleware('checkstatus')->group(function () {
         Route::get('/dealerorder/orderlist', 'index')->name('dealerorder.index');
         Route::post('/dealerorder/placeorder', 'create')->name('dealerorder.create');
         Route::get('/dealerorder/allorderslist', 'show')->name('dealerorder.show');
+        Route::get('/dealerorder/allsubdealerorderslist', 'showdealerorder')->name('dealerorder.showdealerorder');
         Route::get('/dealerorder/orderdetails/{id}', 'ordershow')->name('dealerorder.ordershow');
+        Route::get('/dealerorder/subdealerorderdetails/{id}', 'subdealerordershow')->name('dealerorder.subdealerordershow');
+        Route::get('/dealerorder/subdealerorderacceptedstatus/{id}', 'subdealerorderacceptedstatus')->name('dealerorder.subdealerorderacceptedstatus');
+        Route::get('/dealerorder/subdealerordercancelstatus/{id}', 'subdealerordercancelstatus')->name('dealerorder.subdealerordercancelstatus');
+        Route::get('/dealerorder/subdealerplaceorder/{orderid}', 'subdealerplaceorder')->name('dealerorder.subdealerplaceorder');
+        
         
     });
 
@@ -112,6 +122,24 @@ Route::middleware('checkstatus')->group(function () {
         Route::post('/report/orderdatasubmit', 'orderdata')->name('report.orderdata');
         
     });
+
+    // Sub Dealer Routes
+    Route::controller(SubDealerController::class)->group(function() {
+        Route::get('/subdealer/list', 'index')->name('subdealer.index');
+    });
+
+    // Sub Dealer Order Routes
+    Route::controller(SubDealerOrderController::class)->group(function() {
+        Route::get('/subdealerorder/orderlist', 'index')->name('subdealerorder.index');
+        Route::post('/subdealerorder/store', 'store')->name('subdealerorder.store');
+        Route::post('/subdealerorder/destroy', 'destroy')->name('subdealerorder.destroy');
+        Route::post('/subdealerorder/placeorder', 'create')->name('subdealerorder.create');
+        Route::get('/subdealerorder/allorderslist', 'show')->name('subdealerorder.show');
+        Route::get('/subdealerorder/orderdetails/{id}', 'ordershow')->name('subdealerorder.ordershow');
+        
+    });
+
+
 });
 
 

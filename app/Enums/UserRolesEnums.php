@@ -6,6 +6,7 @@ enum UserRolesEnums:string {
     case Admin = 'admin';
     case Packing = 'packing';
     case Dealer = 'dealer';
+    case Sub_Dealer = 'subdealer';
 
     public static function values(): array
     {
