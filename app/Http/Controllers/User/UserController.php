@@ -157,6 +157,7 @@ class UserController extends Controller
         Mail::to($request->email)->send(new UserRegisterMail($mailData));
     
         if ($request->role == 'subdealer') {
+            Mail::to('info@shamsnaturals.com')->send(new UserRegisterMail($mailData));
             return redirect()->route('user.edit',$insertData->id)->with('success', 'Sub Dealer created successfully. Kindly Update Subdealer Percentage.');
         }
         return redirect()->route('user.create')->with('success', 'User created successfully.');

@@ -10,6 +10,8 @@
     <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff; padding: 20px; border-radius: 5px; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);">
         <h2 style="color: #333;">Your Website - Login Details</h2>
         <p>Hello {{ $mailData['name'] }},</p>
+        <p>We are delighted to extend a warm welcome to you on behalf of Shams Naturals. We value your support and contribution to our business and we encourage you to share your thoughts with us so that we can continue to improve and grow together.
+            We are excited to embark on this journey to work closely with you to deliver outstanding results.</p>
         <p>Here are your login details for our website:</p>
         
         <p><strong>Username:</strong> {{ $mailData['useremail'] }}</p>

@@ -37,7 +37,7 @@ Route::controller(LoginRegisterController::class)->group(function() {
 });
 
 // User Authentication Routes
-Route::middleware('checkstatus')->group(function () {
+Route::group(['middleware' => ['auth', 'checkSessionId']], function () {
 
     // User Authentication Routes
     Route::controller(LoginRegisterController::class)->group(function() {
@@ -141,7 +141,3 @@ Route::middleware('checkstatus')->group(function () {
 
 
 });
-
-
-
-

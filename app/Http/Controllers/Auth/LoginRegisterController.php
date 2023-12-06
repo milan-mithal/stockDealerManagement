@@ -6,9 +6,11 @@ namespace App\Http\Controllers\Auth;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Str;
+use Carbon\Carbon;
 use Mail;
 use DB;
 use App\Enums\UserStatusEnums;
@@ -117,12 +119,22 @@ class LoginRegisterController extends Controller
 
         if(Auth::attempt($credentials))
         {
-                $request->session()->regenerate();
-                return redirect()->route('dashboard')
-                    ->withSuccess('You have successfully logged in!');
-        }
+            // The user is authenticated, update session ID and last login time
+            $sessionId = Session::getId();
+            Session::put('userSession', $sessionId);
+            $user = Auth::user();
+            $user->last_login_at = Carbon::now();
+            $user->session_id = $sessionId;
+            $user->save();
+    
+    
+            $request->session()->regenerate();
 
-        
+        return redirect()->route('dashboard')->withSuccess('You have successfully logged in!');
+            
+
+          
+        }
 
         return back()->withErrors([
             'email' => 'Your provided credentials do not match in our records.',
@@ -288,6 +300,11 @@ class LoginRegisterController extends Controller
      */
     public function logout(Request $request)
     {
+        $userId= Auth::user()->id;
+        $session_id = 'loggedOut';
+        $updateData = User::findOrFail($userId);
+        $updateData->session_id = $session_id;
+        $updateData->save();
         Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
