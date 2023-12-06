@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Haruncpi\LaravelIdGenerator\IdGenerator;
 use Auth;
+use App\Models\User;
 use App\Models\Dealer;
 use App\Models\Order;
 use App\Models\OrderList;
@@ -15,6 +16,7 @@ use App\Models\SubOrder;
 use App\Models\SubOrderList;
 use Mail;
 use App\Mail\Dealer\OrderMail;
+use App\Mail\Order\OrderStatusMail;
 
 class DealerOrderController extends Controller
 {
@@ -224,6 +226,31 @@ class DealerOrderController extends Controller
         $updateData->order_status = "accepted";
         $updateData->order_remarks = "Order has been accepted.";
         $updateData->save();
+        /**
+         * Sending Mail to Dealer and Shamsnatural
+         */
+        $orderDetails = SubOrder::select('order_id','order_status','dealer_id','user_id','order_remarks')->where('id',$id)->first();
+        
+        $dealerId = $orderDetails->dealer_id;
+        $subDealerId =  $orderDetails->user_id;
+
+        $subDealerEmail = User::select('name','email')->where('id',$subDealerId)->first();
+        $mailData = [
+            'order_id' => $orderDetails->order_id,
+            'order_status' => $orderDetails->order_status,
+            'order_remarks' => $orderDetails->order_remarks,
+            'dealer_name' => $subDealerEmail->name,
+            'delivery_type' => '',
+            'courier_company' => '',
+            'awb_number' => '',
+            'third_party_details' => '',
+            'deliver_bill_upload' => '',
+        ];
+        $mail_to = explode(',', env('MAIL_TO'));
+        $dealer_email_to = $subDealerEmail->email;
+
+        Mail::to($mail_to)->send(new OrderStatusMail($mailData));
+        Mail::to($dealer_email_to)->send(new OrderStatusMail($mailData));
 
         return redirect()->route('dealerorder.showdealerorder')->with('success', 'Order status changed successfully.');
      }
@@ -234,6 +261,32 @@ class DealerOrderController extends Controller
         $updateData->order_status = "cancelled";
         $updateData->order_remarks = "Order has been cancelled.";
         $updateData->save();
+
+        /**
+         * Sending Mail to Dealer and Shamsnatural
+         */
+        $orderDetails = SubOrder::select('order_id','order_status','dealer_id','user_id','order_remarks')->where('id',$id)->first();
+        
+        $dealerId = $orderDetails->dealer_id;
+        $subDealerId =  $orderDetails->user_id;
+
+        $subDealerEmail = User::select('name','email')->where('id',$subDealerId)->first();
+        $mailData = [
+            'order_id' => $orderDetails->order_id,
+            'order_status' => $orderDetails->order_status,
+            'order_remarks' => $orderDetails->order_remarks,
+            'dealer_name' => $subDealerEmail->name,
+            'delivery_type' => '',
+            'courier_company' => '',
+            'awb_number' => '',
+            'third_party_details' => '',
+            'deliver_bill_upload' => '',
+        ];
+        $mail_to = explode(',', env('MAIL_TO'));
+        $dealer_email_to = $subDealerEmail->email;
+
+        Mail::to($mail_to)->send(new OrderStatusMail($mailData));
+        Mail::to($dealer_email_to)->send(new OrderStatusMail($mailData));
 
         return redirect()->route('dealerorder.showdealerorder')->with('success', 'Order status changed successfully.');
      }

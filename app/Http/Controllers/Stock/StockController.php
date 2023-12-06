@@ -41,7 +41,8 @@ class StockController extends Controller
             'product_code' => 'required|exists:products,product_code|unique:stocks,product_code',
             'stock_qty' => 'required|numeric',
             'stock_sold_qty' => 'required|min:0|numeric',
-            'stock_min_qty' => 'required|min:1|numeric',   
+            'stock_min_qty' => 'required|min:1|numeric',
+            'stock_coming_soon' => 'required|min:0|numeric',
         ], [
             'product_code.required' => 'Please enter product code.',
             'product_code.exists' => 'Product code does not exists.',
@@ -54,6 +55,9 @@ class StockController extends Controller
             'stock_min_qty.required' => 'Please enter stock Minimum quantity alert.',
             'stock_min_qty.min' => 'Stock Minimum quantity cannot be less than 1.',
             'stock_min_qty.numeric' => 'Stock Minimum quantity should be numeric.',
+            'stock_coming_soon.required' => 'Please enter coming soon quantity.',
+            'stock_coming_soon.min' => 'Coming Soon quantity cannot be less than 0.',
+            'stock_coming_soon.numeric' => 'Coming Soon quantity should be numeric.',
         ]);
         
         // Insert data into the database

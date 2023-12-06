@@ -61,6 +61,7 @@ class SubDealerOrderController extends Controller
             $dealer_email_to = $dealerEmail->email;
             Mail::to($mail_to)->send(new OrderMail($mailData));
             Mail::to($dealer_email_to)->send(new OrderMail($mailData));
+            Mail::to('shamjit@shamsnaturals.com')->send(new OrderMail($mailData));
             
             return redirect()->route('subdealerorder.show')->with('success', 'Order has been placed successfully.');
         } else {

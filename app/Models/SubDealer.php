@@ -118,14 +118,17 @@ class SubDealer extends Model
                     'created_at' => \Carbon\Carbon::now(),
                     'updated_at' => \Carbon\Carbon::now()
                 ]);
-                $product_code = $row->product_code;
-                $stock_qty = $row->stock_qty - $row->order_quantity;
-                $stock_sold_qty = $row->stock_sold_qty + $row->order_quantity;
-                $productQtyUpdate = Stock::where('product_code', '=', $product_code)
-                                    ->update([
-                                        'stock_qty' => $stock_qty,
-                                        'stock_sold_qty' => $stock_sold_qty,
-                                    ]);
+                /**
+                 * QTY Detected on placing order
+                 */
+                // $product_code = $row->product_code;
+                // $stock_qty = $row->stock_qty - $row->order_quantity;
+                // $stock_sold_qty = $row->stock_sold_qty + $row->order_quantity;
+                // $productQtyUpdate = Stock::where('product_code', '=', $product_code)
+                //                     ->update([
+                //                         'stock_qty' => $stock_qty,
+                //                         'stock_sold_qty' => $stock_sold_qty,
+                //                     ]);
                 
                 $totalAmount += $finalPrice * $row->order_quantity;
                  
