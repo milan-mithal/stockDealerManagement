@@ -253,6 +253,7 @@ class UserController extends Controller
         $percentage = DealerPercentage::where('sub_dealer_id',$id)->first();
         if ($percentage) {
             $perUpdateData = DealerPercentage::findOrFail($percentage->id);
+            $perUpdateData->dealer_id = $dealer_id;
             $perUpdateData->percentage = $request->percentage;
             $perUpdateData->save();
         } else {
