@@ -8,6 +8,8 @@ use Haruncpi\LaravelIdGenerator\IdGenerator;
 use Illuminate\Validation\Rules\Enum;
 use App\Models\Order;
 use App\Models\OrderList;
+use App\Models\SubOrder;
+use App\Models\SubOrderList;
 use App\Enums\OrderStatusEnums;
 use Auth;
 use Mail;
@@ -163,5 +165,30 @@ class OrderController extends Controller
     public function destroy(string $id)
     {
         //
+    }
+
+    /**
+     * Display a listing of the resource.
+     */
+    public function suborderindex()
+    {
+        $allOrderList = SubOrder::allOrderDetails();
+
+        return view('order.suborderview',  ['allOrderList' => $allOrderList]); 
+    }
+
+  
+    
+    /**
+     * Display the specified resource.
+     */
+    public function subordershow(string $id)
+    {
+        $order_id = strip_tags($id);
+        $orderDetails = SubOrder::orderDetails($order_id);
+        $allorderProductList = SubOrderList::where('order_id', '=' , $order_id)->get();
+
+        return view('order.subordervieworder',  ['orderDetails' => $orderDetails, 'allorderProductList' => $allorderProductList]); 
+
     }
 }

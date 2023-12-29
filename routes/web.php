@@ -111,6 +111,8 @@ Route::group(['middleware' => ['auth', 'checkSessionId']], function () {
     Route::controller(OrderController::class)->group(function() {
         Route::get('/order/list', 'index')->name('order.index');
         Route::get('/order/orderdetails/{id}', 'show')->name('order.show');
+        Route::get('/suborder/list', 'suborderindex')->name('suborder.index');
+        Route::get('/suborder/orderdetails/{id}', 'subordershow')->name('suborder.show');
         Route::post('/order/update/{id}', 'update')->name('order.update');
     });
 

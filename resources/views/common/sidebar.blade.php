@@ -84,7 +84,8 @@
                         <span class="side-menu__label">Orders</span><i class="angle fa fa-angle-right"></i>
                     </a>
                     <ul class="slide-menu">
-                        <li><a href="{{ route('order.index') }}" class="slide-item {{ (request()->is('order/list')) ? 'active' : '' }}">View Orders</a></li>
+                        <li><a href="{{ route('order.index') }}" class="slide-item {{ (request()->is('order/list')) ? 'active' : '' }}">View Dealer Orders</a></li>
+                        <li><a href="{{ route('suborder.index') }}" class="slide-item {{ (request()->is('suborder/list')) ? 'active' : '' }}">View Sub-Dealer Orders</a></li>
                     </ul>
                 </li>
                 @endif 

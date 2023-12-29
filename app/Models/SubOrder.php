@@ -21,7 +21,7 @@ class SubOrder extends Model
         $data = DB::table('sub_orders')
                 ->join('users', 'sub_orders.user_id', '=' , 'users.id')
                 ->select('users.name as user_name','users.user_code as user_code', 'users.email as user_email','users.dealer_name as dealer_name','users.address as address',
-                'users.region as region','users.community as community','users.phone_no as phone_no','sub_orders.id as id', 'sub_orders.order_id as order_id', 'sub_orders.total_amount as total_amount', 'sub_orders.delivery_type as delivery_type','sub_orders.delivery_details as delivery_details', 'sub_orders.order_status as order_status' ,'sub_orders.order_remarks as order_remarks','sub_orders.order_date as order_date')
+                'users.region as region','users.community as community','users.phone_no as phone_no','sub_orders.id as id', 'sub_orders.order_id as order_id', 'sub_orders.total_amount as total_amount', 'sub_orders.order_status as order_status' ,'sub_orders.order_remarks as order_remarks','sub_orders.order_date as order_date')
                 ->orderby('sub_orders.order_id','desc')
                 ->get();
         return $data;
