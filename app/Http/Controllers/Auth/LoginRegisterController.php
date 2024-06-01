@@ -182,6 +182,7 @@ class LoginRegisterController extends Controller
             
             $totalAmountOrder = 0;
             $totalAmountOrder = Order::whereMonth('created_at', date('m'))
+            ->where('order_status','!=','cancelled')
             ->whereYear('created_at', date('Y'))
             ->sum('total_amount');
 

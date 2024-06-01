@@ -88,6 +88,7 @@ Route::group(['middleware' => ['auth', 'checkSessionId']], function () {
     // Dealer Routes
     Route::controller(DealerController::class)->group(function() {
         Route::get('/dealer/list', 'index')->name('dealer.index');
+        Route::post('/dealer/addAllProducts', 'create')->name('dealer.create');
     });
 
     // Dealer Order Routes

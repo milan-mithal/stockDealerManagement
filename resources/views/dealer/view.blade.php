@@ -12,6 +12,7 @@
                 <div>
                     <h1 class="page-title">View/Order Products</h1>
                 </div>
+                
                 <div class="ms-auto pageheader-btn">
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item"><a href="javascript:void(0);">Dealer</a></li>
@@ -48,6 +49,20 @@
                                                 @endif
 										<div class="card-body">
 											<div class="table-responsive">
+                                                <div>
+                                                    <p><strong>To add all products in cart, enter Quanity & Click on Add All Product Button.
+                                                        This will delete all previous added product(s) from cart.</strong></p>   
+                                                    <form name="allproduct" action="{{ route('dealer.create'); }}" method="post" >
+                                                        @csrf
+                                                        <div class="form-group">
+                                                        <label for="formFile" class="form-label">Enter Quantity</label>
+                                                        <input class="form-control" type="number" id="quantity" name="quantity" min="1" max="10" maxlength="2" value="1">
+                                                        <button type="submit" name="submit" id="submit" class="btn ripple btn-primary mt-4">Add All Products</button>
+                                                        </div>
+                                                    </form>
+                                                      
+                                                                                          
+                                                </div>
 												<table class="table editable-table table-bordered text-nowrap border-bottom" id="basic-datatable">
 													<thead>
 														<tr>
