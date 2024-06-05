@@ -71,7 +71,11 @@
                                                                 <option value="Joolood" @selected(old('product_category') == 'Joolood')>Joolood</option>
                                                                 <option value="Non woven bags- Laminated" @selected(old('product_category') == 'Non woven bags- Laminated')>Non woven bags- Laminated</option>
                                                                 <option value="Non woven bags- Unlaminated" @selected(old('product_category') == 'Non woven bags- Unlaminated')>Non woven bags- Unlaminated</option>
-                                                              </select>
+                                                                <option value="Canvas Bags-260 gsm" @selected(old('product_category') == 'Canvas Bags-260 gsm')>Canvas Bags-260 gsm</option>
+
+                                                                
+                                                              
+                                                            </select>
                                                               @error('product_category')
                                                               <div class="invalid-feedback block">{{ $message }}</div>
                                                               @enderror

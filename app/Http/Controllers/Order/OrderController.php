@@ -116,6 +116,12 @@ class OrderController extends Controller
         
         $updateData = Order::findOrFail($id);
         $updateData->order_status = $request->order_status;
+
+        if($request->order_status == 'cancelled') {
+           OrderList::cancelledOrderQtyAddedBack($order_id);
+        }
+
+        
         $updateData->order_remarks = $request->order_remarks;
         if($request->delivery_type == 'delivery') {
             $updateData->courier_company = $request->courier_company;

@@ -17,4 +17,16 @@ class OrderList extends Model
         'id', 'order_id', 'product_code', 'product_name', 'product_category', 'product_size', 'product_price', 'order_quantity', 'order_status'
     ];
 
+    public static function cancelledOrderQtyAddedBack($order_id) {
+        $update = DB::table('order_list')
+        ->join('stocks', 'order_list.product_code', '=', 'stocks.product_code')
+        ->where('order_list.order_id', $order_id)
+        ->update([
+            'stocks.stock_qty' => DB::raw('stocks.stock_qty + order_list.order_quantity'),
+            'stocks.stock_sold_qty' => DB::raw('stocks.stock_sold_qty - order_list.order_quantity')
+        ]);
+
+    return $update;
+    }
+
 }
