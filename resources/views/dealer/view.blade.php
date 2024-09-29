@@ -63,62 +63,142 @@
                                                       
                                                                                           
                                                 </div>
-												<table class="table editable-table table-bordered text-nowrap border-bottom" id="basic-datatable">
-													<thead>
-														<tr>
-															<th class="wd-10p border-bottom-0">Code</th>
-                                                            <th class="wd-20p border-bottom-0">Order Stock</th>
-                                                            <th class="wd-10p border-bottom-0">Product Category/Name</th>
-															<th class="wd-10p border-bottom-0">Image</th>
-															<th class="wd-10p border-bottom-0">Size</th>
-															<th class="wd-10p border-bottom-0">Price (AED)</th>
-                                                            <th class="wd-10p border-bottom-0">Total Stock Available</th>
-														</tr>
-													</thead>
-													<tbody>
-                                                        @foreach ($allProductList as $productDetails)
-                                                          
-														<tr>
-															<td>{{$productDetails->product_code}}</td>
-                                                            @if ($productDetails->total_stock_qty > 0)
-                                                            <td class="wd-20p"><input type="number" class="wp-50" id="order_qty_{{ $productDetails->id }}" value="{{$productDetails->ordered_qty}}" placeholder="0" />
-                                                                <br/>
-                                                                <button type="button" class="btn btn-icon mt-3  btn-primary" data-bs-placement="top" data-bs-toggle="tooltip" data-bs-original-title="Add To Cart" id="addToCart_{{ $productDetails->id }}" data-qty="{{$productDetails->total_stock_qty}}" data-comingsoon="{{$productDetails->coming_soon}}" data-url="{{ route('dealerorder.store') }}" onClick="addToCart({{ $productDetails->id }})"><i class="fe fe-check"></i></button>
-                                                                
-                                                                <button type="button" class="btn btn-icon mt-3  btn-danger" data-bs-placement="top" data-bs-toggle="tooltip" data-bs-original-title="Remove From Cart" id="removeFromCart_{{ $productDetails->id }}" data-url="{{ route('dealerorder.destroy') }}" onClick="removeFromCart({{ $productDetails->id }})"><i class="fe fe-x"></i></button>
-                                                                
-                                                                <div class="valid-feedback block text-bold mb-2" id="successCart_{{ $productDetails->id }}"></div>
-                                                                <div class="invalid-feedback block text-bold mb-2" id="errorCart_{{ $productDetails->id }}"></div>
-                                                            </td>
-                                                            @else
-                                                            <td>
-                                                                <a href="javascript:void(0)" class="btn btn-danger-gradient">Out Of Stock</a>
-                                                            </td>
-                                                            @endif
-															<td>{{$productDetails->product_category}}/<br/>
-                                                                {{$productDetails->product_name}}</td>
-															<td><img class="hpx-100" src="{{ url($productDetails->product_image)}}" /></td>
-                                                            <td>{{$productDetails->product_size}}</td>
-															<td>{{$productDetails->product_price}}</td>
-                                                            <td>
-                                                                @if ($productDetails->coming_soon == '1' && ($productDetails->total_stock_qty - $productDetails->stock_coming_soon > 0))
-                                                                <h3 class="tag tag-blue">In Stock:&nbsp; <strong>{{ $productDetails->total_stock_qty - $productDetails->stock_coming_soon  }}</strong></h3>
-                                                                <br/>
-                                                                <h5 class="tag tag-orange">Coming Soon:&nbsp; <strong>{{ $productDetails->stock_coming_soon }}</strong></h5>
-                                                                @elseif ($productDetails->coming_soon == '1' && ($productDetails->total_stock_qty - $productDetails->stock_coming_soon <= 0))
-                                                                <h3 class="tag tag-blue">In Stock:&nbsp; <strong>0</strong></h3>
-                                                                <br/>
-                                                                <h5 class="tag tag-danger">Available For Order:&nbsp; <strong>{{ $productDetails->total_stock_qty }}</strong></h5>
-                                                                <br/>
-                                                                <h5 class="tag tag-orange">Coming Soon:&nbsp; <strong>{{ $productDetails->stock_coming_soon }}</strong></h5>
+                                                <div class="panel panel-primary">
+                                                    <div class="tab-menu-heading border-bottom-0">
+                                                        <div class="tabs-menu4 border-bottomo-sm">
+                                                            <!-- Tabs -->
+                                                            <nav class="nav d-sm-flex d-block">
+                                                                <a class="nav-link border border-bottom-0 br-sm-5 me-2 active" data-bs-toggle="tab" href="#tab25">
+                                                                    Tab 1
+                                                                </a>
+                                                                <a class="nav-link border border-bottom-0 br-sm-5 me-2" data-bs-toggle="tab" href="#tab26">
+                                                                    Tab 2
+                                                                </a>
+                                                            </nav>
+                                                        </div>
+                                                    </div>
+                                                    <div class="panel-body tabs-menu-body">
+                                                        <div class="tab-content">
+                                                            <div class="tab-pane active " id="tab25">
+                                                    <table class="table editable-table table-bordered text-nowrap border-bottom" id="basic-datatable">
+                                                        <thead>
+                                                            <tr>
+                                                                <th class="wd-10p border-bottom-0">Code</th>
+                                                                <th class="wd-20p border-bottom-0">Order Stock</th>
+                                                                <th class="wd-10p border-bottom-0">Product Category/Name</th>
+                                                                <th class="wd-10p border-bottom-0">Image</th>
+                                                                <th class="wd-10p border-bottom-0">Size</th>
+                                                                <th class="wd-10p border-bottom-0">Price (AED)</th>
+                                                                <th class="wd-10p border-bottom-0">Total Stock Available</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            @foreach ($allProductList as $productDetails)
+                                                            
+                                                            <tr>
+                                                                <td>{{$productDetails->product_code}}</td>
+                                                                @if ($productDetails->total_stock_qty > 0)
+                                                                <td class="wd-20p"><input type="number" class="wp-50" id="order_qty_{{ $productDetails->id }}" value="{{$productDetails->ordered_qty}}" placeholder="0" />
+                                                                    <br/>
+                                                                    <button type="button" class="btn btn-icon mt-3  btn-primary" data-bs-placement="top" data-bs-toggle="tooltip" data-bs-original-title="Add To Cart" id="addToCart_{{ $productDetails->id }}" data-qty="{{$productDetails->total_stock_qty}}" data-comingsoon="{{$productDetails->coming_soon}}" data-url="{{ route('dealerorder.store') }}" onClick="addToCart({{ $productDetails->id }})"><i class="fe fe-check"></i></button>
+                                                                    
+                                                                    <button type="button" class="btn btn-icon mt-3  btn-danger" data-bs-placement="top" data-bs-toggle="tooltip" data-bs-original-title="Remove From Cart" id="removeFromCart_{{ $productDetails->id }}" data-url="{{ route('dealerorder.destroy') }}" onClick="removeFromCart({{ $productDetails->id }})"><i class="fe fe-x"></i></button>
+                                                                    
+                                                                    <div class="valid-feedback block text-bold mb-2" id="successCart_{{ $productDetails->id }}"></div>
+                                                                    <div class="invalid-feedback block text-bold mb-2" id="errorCart_{{ $productDetails->id }}"></div>
+                                                                </td>
                                                                 @else
-                                                                <h3 class="tag tag-blue">In Stock:&nbsp; <strong>{{ $productDetails->total_stock_qty }}</strong></h3>
+                                                                <td>
+                                                                    <a href="javascript:void(0)" class="btn btn-danger-gradient">Out Of Stock</a>
+                                                                </td>
                                                                 @endif
-                                                            </td>
-														</tr>
-                                                        @endforeach
-													</tbody>
-												</table>
+                                                                <td>{{$productDetails->product_category}}/<br/>
+                                                                    {{$productDetails->product_name}}</td>
+                                                                <td><img class="hpx-100" src="{{ url($productDetails->product_image)}}" /></td>
+                                                                <td>{{$productDetails->product_size}}</td>
+                                                                <td>{{$productDetails->product_price}}</td>
+                                                                <td>
+                                                                    @if ($productDetails->coming_soon == '1' && ($productDetails->total_stock_qty - $productDetails->stock_coming_soon > 0))
+                                                                    <h3 class="tag tag-blue">In Stock:&nbsp; <strong>{{ $productDetails->total_stock_qty - $productDetails->stock_coming_soon  }}</strong></h3>
+                                                                    <br/>
+                                                                    <h5 class="tag tag-orange">Coming Soon:&nbsp; <strong>{{ $productDetails->stock_coming_soon }}</strong></h5>
+                                                                    @elseif ($productDetails->coming_soon == '1' && ($productDetails->total_stock_qty - $productDetails->stock_coming_soon <= 0))
+                                                                    <h3 class="tag tag-blue">In Stock:&nbsp; <strong>0</strong></h3>
+                                                                    <br/>
+                                                                    <h5 class="tag tag-danger">Available For Order:&nbsp; <strong>{{ $productDetails->total_stock_qty }}</strong></h5>
+                                                                    <br/>
+                                                                    <h5 class="tag tag-orange">Coming Soon:&nbsp; <strong>{{ $productDetails->stock_coming_soon }}</strong></h5>
+                                                                    @else
+                                                                    <h3 class="tag tag-blue">In Stock:&nbsp; <strong>{{ $productDetails->total_stock_qty }}</strong></h3>
+                                                                    @endif
+                                                                </td>
+                                                            </tr>
+                                                            @endforeach
+                                                        </tbody>
+                                                    </table>
+                                                            </div>
+                                                            <div class="tab-pane" id="tab26">
+                                                                <table class="table editable-table table-bordered text-nowrap border-bottom" id="example3">
+                                                                    <thead>
+                                                                        <tr>
+                                                                            <th class="wd-10p border-bottom-0">Code1</th>
+                                                                            <th class="wd-20p border-bottom-0">Order Stock</th>
+                                                                            <th class="wd-10p border-bottom-0">Product Category/Name</th>
+                                                                            <th class="wd-10p border-bottom-0">Image</th>
+                                                                            <th class="wd-10p border-bottom-0">Size</th>
+                                                                            <th class="wd-10p border-bottom-0">Price (AED)</th>
+                                                                            <th class="wd-10p border-bottom-0">Total Stock Available</th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody>
+                                                                        @foreach ($allProductList as $productDetails)
+                                                                        
+                                                                        <tr>
+                                                                            <td>{{$productDetails->product_code}}</td>
+                                                                            @if ($productDetails->total_stock_qty > 0)
+                                                                            <td class="wd-20p"><input type="number" class="wp-50" id="order_qty_{{ $productDetails->id }}" value="{{$productDetails->ordered_qty}}" placeholder="0" />
+                                                                                <br/>
+                                                                                <button type="button" class="btn btn-icon mt-3  btn-primary" data-bs-placement="top" data-bs-toggle="tooltip" data-bs-original-title="Add To Cart" id="addToCart_{{ $productDetails->id }}" data-qty="{{$productDetails->total_stock_qty}}" data-comingsoon="{{$productDetails->coming_soon}}" data-url="{{ route('dealerorder.store') }}" onClick="addToCart({{ $productDetails->id }})"><i class="fe fe-check"></i></button>
+                                                                                
+                                                                                <button type="button" class="btn btn-icon mt-3  btn-danger" data-bs-placement="top" data-bs-toggle="tooltip" data-bs-original-title="Remove From Cart" id="removeFromCart_{{ $productDetails->id }}" data-url="{{ route('dealerorder.destroy') }}" onClick="removeFromCart({{ $productDetails->id }})"><i class="fe fe-x"></i></button>
+                                                                                
+                                                                                <div class="valid-feedback block text-bold mb-2" id="successCart_{{ $productDetails->id }}"></div>
+                                                                                <div class="invalid-feedback block text-bold mb-2" id="errorCart_{{ $productDetails->id }}"></div>
+                                                                            </td>
+                                                                            @else
+                                                                            <td>
+                                                                                <a href="javascript:void(0)" class="btn btn-danger-gradient">Out Of Stock</a>
+                                                                            </td>
+                                                                            @endif
+                                                                            <td>{{$productDetails->product_category}}/<br/>
+                                                                                {{$productDetails->product_name}}</td>
+                                                                            <td><img class="hpx-100" src="{{ url($productDetails->product_image)}}" /></td>
+                                                                            <td>{{$productDetails->product_size}}</td>
+                                                                            <td>{{$productDetails->product_price}}</td>
+                                                                            <td>
+                                                                                @if ($productDetails->coming_soon == '1' && ($productDetails->total_stock_qty - $productDetails->stock_coming_soon > 0))
+                                                                                <h3 class="tag tag-blue">In Stock:&nbsp; <strong>{{ $productDetails->total_stock_qty - $productDetails->stock_coming_soon  }}</strong></h3>
+                                                                                <br/>
+                                                                                <h5 class="tag tag-orange">Coming Soon:&nbsp; <strong>{{ $productDetails->stock_coming_soon }}</strong></h5>
+                                                                                @elseif ($productDetails->coming_soon == '1' && ($productDetails->total_stock_qty - $productDetails->stock_coming_soon <= 0))
+                                                                                <h3 class="tag tag-blue">In Stock:&nbsp; <strong>0</strong></h3>
+                                                                                <br/>
+                                                                                <h5 class="tag tag-danger">Available For Order:&nbsp; <strong>{{ $productDetails->total_stock_qty }}</strong></h5>
+                                                                                <br/>
+                                                                                <h5 class="tag tag-orange">Coming Soon:&nbsp; <strong>{{ $productDetails->stock_coming_soon }}</strong></h5>
+                                                                                @else
+                                                                                <h3 class="tag tag-blue">In Stock:&nbsp; <strong>{{ $productDetails->total_stock_qty }}</strong></h3>
+                                                                                @endif
+                                                                            </td>
+                                                                        </tr>
+                                                                        @endforeach
+                                                                    </tbody>
+                                                                </table>
+                                                                        </div>
+
+                                                        </div>
+                                                    </div>
+                                                </div>
 											</div>
 										</div>
 									</div>

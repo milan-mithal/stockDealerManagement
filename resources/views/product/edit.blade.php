@@ -72,6 +72,12 @@
                                                                 <option value="Non woven bags- Laminated" @selected(old('product_category', $productDetail->product_category) == 'Non woven bags- Laminated')>Non woven bags- Laminated</option>
                                                                 <option value="Non woven bags- Unlaminated" @selected(old('product_category', $productDetail->product_category) == 'Non woven bags- Unlaminated')>Non woven bags- Unlaminated</option>
                                                                 <option value="Canvas Bags-260 gsm" @selected(old('product_category', $productDetail->product_category) == 'Canvas Bags-260 gsm')>Canvas Bags-260 gsm</option>
+                                                                <option value="Backpacks" @selected(old('product_category', $productDetail->product_category) == 'Backpacks')>Backpacks</option>
+                                                                <option value="Cooler bags" @selected(old('product_category', $productDetail->product_category) == 'Cooler bags')>Cooler bags</option>
+                                                                <option value="String bags" @selected(old('product_category', $productDetail->product_category) == 'String bags')>String bags</option>
+                                                                <option value="Foldable tote bags" @selected(old('product_category', $productDetail->product_category) == 'Foldable tote bags')>Foldable tote bags</option>
+                                                                <option value="Foldable duffel bags" @selected(old('product_category', $productDetail->product_category) == 'Foldable duffel bags')>Foldable duffel bags</option>
+
                                                               </select>
                                                               @error('product_category')
                                                               <div class="invalid-feedback block">{{ $message }}</div>
