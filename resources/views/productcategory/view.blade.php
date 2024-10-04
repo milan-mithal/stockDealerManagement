@@ -1,23 +1,27 @@
 @extends('common.layout')
+
 @section('content')
     <!--app-content open-->
     <div class="app-content main-content mt-0">
         <div class="side-app">
             <!-- CONTAINER -->
             <div class="main-container container-fluid">
+
                 <!-- PAGE-HEADER -->
                 <div class="page-header">
                     <div>
-                        <h1 class="page-title">Manage Products</h1>
+                        <h1 class="page-title">Manage Products Category</h1>
                     </div>
                     <div class="ms-auto pageheader-btn">
                         <ol class="breadcrumb">
-                            <li class="breadcrumb-item"><a href="javascript:void(0);">Product</a></li>
+                            <li class="breadcrumb-item"><a href="javascript:void(0);">Product Category</a></li>
                             <li class="breadcrumb-item active" aria-current="page">View</li>
                         </ol>
                     </div>
                 </div>
                 <!-- PAGE-HEADER END -->
+
+
                 <!-- Row -->
                 <div class="row row-sm">
                     <div class="col-lg-12">
@@ -48,43 +52,34 @@
                                         <thead>
                                             <tr>
                                                 <th class="wd-15p border-bottom-0">S.No.</th>
-                                                <th class="wd-15p border-bottom-0">Code</th>
+                                                <th class="wd-15p border-bottom-0">Main Category</th>
                                                 <th class="wd-15p border-bottom-0">Category</th>
-                                                <th class="wd-15p border-bottom-0">Product Name</th>
-                                                <th class="wd-20p border-bottom-0">Image</th>
-                                                <th class="wd-15p border-bottom-0">Size</th>
-                                                <th class="wd-25p border-bottom-0">Price (AED)</th>
                                                 <th class="wd-25p border-bottom-0">Action</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @foreach ($allProductList as $productDetails)
+                                            @foreach ($allProductCategoryList as $productCategoryDetails)
                                                 <tr>
                                                     <td>{{ $loop->iteration }}</td>
-                                                    <td>{{ $productDetails->product_code }}</td>
-                                                    <td>{{ ucfirst($productDetails->main_category) }} -
-                                                        {{ $productDetails->cat_name }}
-                                                    </td>
-                                                    <td>{{ $productDetails->product_name }}</td>
-                                                    <td><img class="hpx-100"
-                                                            src="{{ url($productDetails->product_image) }}" /></td>
-                                                    <td>{{ $productDetails->product_size }}</td>
-                                                    <td>{{ $productDetails->product_price }}</td>
+                                                    <td>{{ ucfirst($productCategoryDetails->main_category_name) }}</td>
+                                                    <td>{{ $productCategoryDetails->category_name }}</td>
                                                     <td>
-                                                        @if ($productDetails->status == 'active')
+                                                        @if ($productCategoryDetails->status == 'active')
                                                             <a href="javascript:void(0)"
                                                                 class="btn btn-primary-gradient">Active</a>
                                                         @endif
-                                                        @if ($productDetails->status == 'inactive')
+                                                        @if ($productCategoryDetails->status == 'inactive')
                                                             <a href="javascript:void(0)"
                                                                 class="btn btn-danger-gradient">Blocked</a>
                                                         @endif
-                                                        <a href="{{ route('product.edit', $productDetails->id) }}"><button
+
+                                                        <a
+                                                            href="{{ route('productcategory.edit', $productCategoryDetails->id) }}"><button
                                                                 type="button" class="btn btn-icon  btn-primary"><i
                                                                     class="fe fe-edit"></i></button></a>
-                                                        <a class="deleteUrl_{{ $productDetails->id }}"
-                                                            onClick="confirmDelete({{ $productDetails->id }})"
-                                                            data-url="{{ route('product.destroy', $productDetails->id) }}"><button
+                                                        <a class="deleteUrl_{{ $productCategoryDetails->id }}"
+                                                            onClick="confirmDelete({{ $productCategoryDetails->id }})"
+                                                            data-url="{{ route('productcategory.destroy', $productCategoryDetails->id) }}"><button
                                                                 type="button" class="btn btn-icon  btn-danger"
                                                                 data-bs-toggle="modal" data-bs-target="#largemodal"><i
                                                                     class="fe fe-trash"></i></button></a>
@@ -99,6 +94,9 @@
                     </div>
                 </div>
                 <!-- End Row -->
+
+
+
             </div>
         </div>
     </div>
