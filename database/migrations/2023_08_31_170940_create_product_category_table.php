@@ -13,11 +13,13 @@ return new class extends Migration
     {
         Schema::create('product_category', function (Blueprint $table) {
             $table->id();
+            $table->string('main_category_name');
             $table->string('category_name');
             $table->string('status');
             $table->integer('created_by');
             $table->integer('modified_by');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

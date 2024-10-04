@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
+use App\Enums\MainCategoryEnums;
 use App\Enums\CommonStatusEnums;
 use App\Models\Stock;
 use App\Models\OrderList;
@@ -21,15 +22,34 @@ class Dealer extends Model
     ];
 
 
-    public static function productList() {
+    public static function productListNatural() {
         $currentuserid = Auth::user()->id;
         $data = DB::table('products')
+            ->join('product_category', 'products.product_category', '=', 'product_category.id')
             ->join('stocks', 'products.product_code', '=', 'stocks.product_code')
             ->leftJoin('temp_order_list', function ($join) use ($currentuserid) {
                 $join->on('products.id', '=', 'temp_order_list.product_id')
                      ->where('temp_order_list.user_id', '=', $currentuserid);
             })
-            ->select('products.*','stocks.stock_qty as total_stock_qty', 'stocks.coming_soon as coming_soon','stocks.stock_coming_soon as stock_coming_soon','stocks.stock_sold_qty as total_stock_sold_qty', 'temp_order_list.order_quantity as ordered_qty')
+            ->select('products.*','product_category.category_name as catName','stocks.stock_qty as total_stock_qty', 'stocks.coming_soon as coming_soon','stocks.stock_coming_soon as stock_coming_soon','stocks.stock_sold_qty as total_stock_sold_qty', 'temp_order_list.order_quantity as ordered_qty')
+            ->where('products.main_category', MainCategoryEnums::Naturals)
+            ->where('products.status', CommonStatusEnums::Active)
+            ->get();
+
+        return $data;
+    }
+
+    public static function productListEssentials() {
+        $currentuserid = Auth::user()->id;
+        $data = DB::table('products')
+            ->join('product_category', 'products.product_category', '=', 'product_category.id')
+            ->join('stocks', 'products.product_code', '=', 'stocks.product_code')
+            ->leftJoin('temp_order_list', function ($join) use ($currentuserid) {
+                $join->on('products.id', '=', 'temp_order_list.product_id')
+                     ->where('temp_order_list.user_id', '=', $currentuserid);
+            })
+            ->select('products.*','product_category.category_name as catName','stocks.stock_qty as total_stock_qty', 'stocks.coming_soon as coming_soon','stocks.stock_coming_soon as stock_coming_soon','stocks.stock_sold_qty as total_stock_sold_qty', 'temp_order_list.order_quantity as ordered_qty')
+            ->where('products.main_category', MainCategoryEnums::Essentials)
             ->where('products.status', CommonStatusEnums::Active)
             ->get();
 

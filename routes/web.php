@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginRegisterController;
 use App\Http\Controllers\User\UserController;
 use App\Http\Controllers\Product\ProductController;
+use App\Http\Controllers\Product\ProductCategoryController;
 use App\Http\Controllers\Stock\StockController;
 use App\Http\Controllers\Dealer\DealerController;
 use App\Http\Controllers\Dealer\DealerOrderController;
@@ -66,6 +67,10 @@ Route::group(['middleware' => ['auth', 'checkSessionId']], function () {
         Route::get('/user/viewsubdelear', 'viewsubdelear')->name('user.viewsubdelear');
     });
 
+    //Product Category Routes
+
+    Route::resource('productcategory', ProductCategoryController::class);
+
     // Product Routes
     Route::controller(ProductController::class)->group(function() {
         Route::get('/product/list', 'index')->name('product.index');
@@ -73,7 +78,7 @@ Route::group(['middleware' => ['auth', 'checkSessionId']], function () {
         Route::post('/product/store', 'store')->name('product.store');
         Route::get('/product/edit/{id}', 'edit')->name('product.edit');
         Route::post('/product/update/{id}', 'update')->name('product.update');
-        Route::get('/product/destroy/{id}', 'destroy')->name('product.destroy');
+        Route::delete('/product/destroy/{id}', 'destroy')->name('product.destroy');
     });
 
     // Stock Routes

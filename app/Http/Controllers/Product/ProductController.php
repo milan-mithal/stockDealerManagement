@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Product;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Models\ProductCategory;
 use App\Models\Product;
 use App\Models\Stock;
 use File;
@@ -28,7 +29,7 @@ class ProductController extends Controller
      */
     public function index()
     {  
-        $productList = Product::where('status', '!=', DeleteStatusEnums::Deleted)->get();
+        $productList = Product::productList();
         return view('product.view',  ['allProductList' => $productList]);
     }
 
@@ -37,7 +38,8 @@ class ProductController extends Controller
      */
     public function create()
     {
-        return view('product.add');
+        $productCategoryList = ProductCategory::where('status', '!=', DeleteStatusEnums::Deleted)->get();
+        return view('product.add',  ['allProductCategoryList' => $productCategoryList]);
     }
 
     /**
@@ -46,6 +48,7 @@ class ProductController extends Controller
     public function store(Request $request)
     {
         $request->validate([
+            'main_category' => 'required',
             'product_category' => 'required',
             'product_code' => 'required|unique:products,product_code',
             'product_name' => 'required',
@@ -59,6 +62,7 @@ class ProductController extends Controller
             'weight_per_box' => 'required|min:1|numeric',
             'status' => ['required', new Enum(CommonStatusEnums::class)]
         ], [
+            'main_category.required' => 'Please choose main product category.',
             'product_category.required' => 'Please choose product category.',
             'product_code.required' => 'Please enter product code.',
             'product_code.unique' => 'Please enter unique product code.',
@@ -97,6 +101,7 @@ class ProductController extends Controller
 
         // Insert data into the database
         $insertData = new Product();
+        $insertData->main_category = $request->main_category;
         $insertData->product_category = $request->product_category;
         $insertData->product_code = $request->product_code;
         $insertData->product_name = $request->product_name;
@@ -130,7 +135,8 @@ class ProductController extends Controller
     public function edit(string $id)
     {
         $productDetail = Product::findOrFail($id);
-        return view('product.edit', compact('productDetail'));
+        $allProductCategoryList = ProductCategory::where('status', '!=', DeleteStatusEnums::Deleted)->get();
+        return view('product.edit', compact('productDetail', 'allProductCategoryList'));
     }
 
     /**
@@ -139,6 +145,7 @@ class ProductController extends Controller
     public function update(Request $request, string $id)
     {
         $request->validate([
+            'main_category' => 'required',
             'product_category' => 'required',
             'product_code' => 'required|unique:products,product_code,'. $id,
             'product_name' => 'required',
@@ -152,6 +159,7 @@ class ProductController extends Controller
             'weight_per_box' => 'required|min:1|numeric',
             'status' => ['required', new Enum(CommonStatusEnums::class)]
         ], [
+            'main_category.required' => 'Please choose main product category.',
             'product_category.required' => 'Please choose product category.',
             'product_code.required' => 'Please enter product code.',
             'product_code.unique' => 'Please enter unique product code.',
@@ -191,6 +199,7 @@ class ProductController extends Controller
         }
 
         $updateData = Product::findOrFail($id);
+        $updateData->main_category = $request->main_category;
         $updateData->product_category = $request->product_category;
         $updateData->product_code = $request->product_code;
         $updateData->product_name = $request->product_name;

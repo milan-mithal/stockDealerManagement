@@ -22,8 +22,9 @@ class DealerController extends Controller
      */
     public function index()
     {
-        $productList = Dealer::productList();
-        return view('dealer.view',  ['allProductList' => $productList]);
+        $productListNatural = Dealer::productListNatural();
+        $productListEssentials = Dealer::productListEssentials();
+        return view('dealer.view',  ['productListNatural' => $productListNatural, 'productListEssentials' => $productListEssentials]);
     }
 
     /**
@@ -37,10 +38,10 @@ class DealerController extends Controller
         $productList = Product::where('status', '!=', DeleteStatusEnums::Deleted)->get();
         foreach($productList as $product) {
             $product_id = $product->id;
-            $checkActualQty = Product::join('stocks', 'products.product_code', '=' , 'stocks.product_code')
-                          ->select('stocks.stock_qty', 'stocks.coming_soon')
+            $checkActualQty = Product::leftJoin('stocks', 'products.product_code', '=' , 'stocks.product_code')
+                          ->select('stocks.stock_qty', 'stocks.stock_coming_soon')
                           ->where('products.id', '=', $product_id)->first();
-                if (($orderQty <= $checkActualQty->stock_qty) || ($orderQty <= $checkActualQty->coming_soon)) {
+                if ($checkActualQty && ($orderQty <= $checkActualQty->stock_qty) || ($orderQty <= $checkActualQty->stock_coming_soon)) {
                     $insertData = new Dealer();
                     $insertData->user_id = $user_id;
                     $insertData->product_id = $product_id;

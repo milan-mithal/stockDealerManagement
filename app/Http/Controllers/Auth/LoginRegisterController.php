@@ -15,6 +15,7 @@ use Mail;
 use DB;
 use App\Enums\UserStatusEnums;
 use App\Enums\UserRolesEnums;
+use App\Enums\MainCategoryEnums;
 use App\Mail\User\ForgotPasswordMail;
 use App\Models\Dealer;
 use App\Models\User;
@@ -159,8 +160,11 @@ class LoginRegisterController extends Controller
             $totalOrders = 0;
             $totalOrders = Order::where('order_status','!=','cancelled')->count();
 
-            $totalProducts = 0;
-            $totalProducts = Product::where('status','!=','deleted')->count();
+            $totalProductsNatural = 0;
+            $totalProductsNatural = Product::where([['status','!=','deleted'],['main_category', '=', MainCategoryEnums::Naturals]])->count();
+
+            $totalProductsEssentials= 0;
+            $totalProductsEssentials = Product::where([['status','!=','deleted'],['main_category', '=', MainCategoryEnums::Essentials]])->count();
 
             $totalDealerAddedCurrentMonth = 0;
             $totalDealerAddedCurrentMonth = User::where([['role','dealer'],['status', '=', 'active']])
@@ -194,61 +198,94 @@ class LoginRegisterController extends Controller
             $allOrderList = [];
             $allOrderList = Order::recentOrders();
 
-            $totalStockAmount = Stock::join('products', 'stocks.product_code', '=', 'products.product_code')
+            $totalStockAmountNatural = Stock::join('products', 'stocks.product_code', '=', 'products.product_code')
+                                ->where('products.main_category', '=', MainCategoryEnums::Naturals)                    
                                 ->where('products.status', '!=', 'deleted')
                                 ->selectRaw('SUM(stocks.stock_qty) as total_stock_qty, SUM(stocks.stock_qty * products.product_price) as total_stock_price')
                                 ->first();
+
+            $totalStockAmountEssentials = Stock::join('products', 'stocks.product_code', '=', 'products.product_code')
+            ->where('products.main_category', '=', MainCategoryEnums::Essentials)
+            ->where('products.status', '!=', 'deleted')
+            ->selectRaw('SUM(stocks.stock_qty) as total_stock_qty, SUM(stocks.stock_qty * products.product_price) as total_stock_price')
+            ->first();
             
 
             return view('dashboard.admin',[
                 'totalDealers' => $totalDealers,
                 'totalSubDealers' => $totalSubDealers,
                 'totalOrders' => $totalOrders,
-                'totalProducts' => $totalProducts,
+                'totalProductsNatural' => $totalProductsNatural,
+                'totalProductsEssentials' => $totalProductsEssentials,
                 'totalDealerAddedCurrentMonth' => $totalDealerAddedCurrentMonth,
                 'totalSubDealerAddedCurrentMonth' => $totalSubDealerAddedCurrentMonth,
                 'totalOrderAddedCurrentMonth' => $totalOrderAddedCurrentMonth,
                 'totalAmountOrder' => $totalAmountOrder,
                 'allOutOfStockProducts' => $allOutOfStockProducts,
                 'allOrderList' => $allOrderList,
-                'totalStockAmount' => $totalStockAmount
+                'totalStockAmountNatural' => $totalStockAmountNatural,
+                'totalStockAmountEssentials' => $totalStockAmountEssentials
             ]);
         }  
         if(Auth::check() && Auth::user()->role == 'dealer') {
             $currentuserid = Auth::user()->id;
             $allOrderList = Order::where('user_id','=',$currentuserid)->orderByDesc('order_id')->get();
             $allSubOrderList = SubOrder::where('dealer_id','=',$currentuserid)->orderByDesc('order_id')->get();
-            $totalProducts = 0;
-            $totalProducts = Product::where('status','!=','deleted')->count();
+            $totalProductsNatural = 0;
+            $totalProductsNatural = Product::where([['status','!=','deleted'],['main_category', '=', MainCategoryEnums::Naturals]])->count();
 
-            $totalStockAmount = Stock::join('products', 'stocks.product_code', '=', 'products.product_code')
+            $totalProductsEssentials= 0;
+            $totalProductsEssentials = Product::where([['status','!=','deleted'],['main_category', '=', MainCategoryEnums::Essentials]])->count();
+
+            $totalStockAmountNatural = Stock::join('products', 'stocks.product_code', '=', 'products.product_code')
+                                ->where('products.main_category', '=', MainCategoryEnums::Naturals)                    
                                 ->where('products.status', '!=', 'deleted')
                                 ->selectRaw('SUM(stocks.stock_qty) as total_stock_qty, SUM(stocks.stock_qty * products.product_price) as total_stock_price')
                                 ->first();
 
+            $totalStockAmountEssentials = Stock::join('products', 'stocks.product_code', '=', 'products.product_code')
+            ->where('products.main_category', '=', MainCategoryEnums::Essentials)
+            ->where('products.status', '!=', 'deleted')
+            ->selectRaw('SUM(stocks.stock_qty) as total_stock_qty, SUM(stocks.stock_qty * products.product_price) as total_stock_price')
+            ->first();
+
             return view('dashboard.dealer',[
                 'allOrderList' => $allOrderList,
                 'allSubOrderList' => $allSubOrderList,
-                'totalProducts' => $totalProducts,
-                'totalStockAmount' => $totalStockAmount
+                'totalProductsNatural' => $totalProductsNatural,
+                'totalProductsEssentials' => $totalProductsEssentials,
+                'totalStockAmountNatural' => $totalStockAmountNatural,
+                'totalStockAmountEssentials' => $totalStockAmountEssentials
             ]);
         }
 
         if(Auth::check() && Auth::user()->role == 'subdealer') {
             $currentuserid = Auth::user()->id;
             $allOrderList = SubOrder::where('user_id','=',$currentuserid)->orderByDesc('order_id')->get();
-            $totalProducts = 0;
-            $totalProducts = Product::where('status','!=','deleted')->count();
+            $totalProductsNatural = 0;
+            $totalProductsNatural = Product::where([['status','!=','deleted'],['main_category', '=', MainCategoryEnums::Naturals]])->count();
 
-            $totalStockAmount = Stock::join('products', 'stocks.product_code', '=', 'products.product_code')
-                                ->where('products.status', '!=', 'deleted')
-                                ->selectRaw('SUM(stocks.stock_qty) as total_stock_qty, SUM(stocks.stock_qty * products.product_price) as total_stock_price')
-                                ->first();
+            $totalProductsEssentials= 0;
+            $totalProductsEssentials = Product::where([['status','!=','deleted'],['main_category', '=', MainCategoryEnums::Essentials]])->count();
+
+            $totalStockAmountNatural = Stock::join('products', 'stocks.product_code', '=', 'products.product_code')
+            ->where('products.main_category', '=', MainCategoryEnums::Naturals)                    
+            ->where('products.status', '!=', 'deleted')
+            ->selectRaw('SUM(stocks.stock_qty) as total_stock_qty, SUM(stocks.stock_qty * products.product_price) as total_stock_price')
+            ->first();
+
+            $totalStockAmountEssentials = Stock::join('products', 'stocks.product_code', '=', 'products.product_code')
+            ->where('products.main_category', '=', MainCategoryEnums::Essentials)
+            ->where('products.status', '!=', 'deleted')
+            ->selectRaw('SUM(stocks.stock_qty) as total_stock_qty, SUM(stocks.stock_qty * products.product_price) as total_stock_price')
+            ->first();
 
             return view('dashboard.subdealer',[
                 'allOrderList' => $allOrderList,
-                'totalProducts' => $totalProducts,
-                'totalStockAmount' => $totalStockAmount
+                'totalProductsNatural' => $totalProductsNatural,
+                'totalProductsEssentials' => $totalProductsEssentials,
+                'totalStockAmountNatural' => $totalStockAmountNatural,
+                'totalStockAmountEssentials' => $totalStockAmountEssentials
             ]);
         }
 
