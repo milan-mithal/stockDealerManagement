@@ -80,7 +80,7 @@
                                         <h4 class="mb-2 fw-semibold">AED
                                             {{ $totalStockAmountNatural->total_stock_price + $totalStockAmountEssentials->total_stock_price }}
                                         </h4>
-                                        <p class="text-muted fs-13 mb-0">Natural :
+                                        <p class="text-muted fs-13 mb-0">Naturals :
                                             <span class="icn-box text-success fw-semibold fs-13 me-1">AED
                                                 {{ $totalStockAmountNatural->total_stock_price }}
                                             </span>
@@ -93,7 +93,7 @@
                                         <h4 class="mb-2 fw-semibold">
                                             {{ $totalStockAmountNatural->total_stock_qty + $totalStockAmountEssentials->total_stock_qty }}
                                         </h4>
-                                        <p class="text-muted fs-13 mb-0">Natural :
+                                        <p class="text-muted fs-13 mb-0">Naturals :
                                             <span class="icn-box text-success fw-semibold fs-13 me-1">
                                                 {{ $totalStockAmountNatural->total_stock_qty }}</span>
                                         </p>

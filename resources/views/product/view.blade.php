@@ -47,30 +47,28 @@
                                     <table class="table table-bordered text-nowrap border-bottom" id="basic-datatable">
                                         <thead>
                                             <tr>
-                                                <th class="wd-15p border-bottom-0">S.No.</th>
-                                                <th class="wd-15p border-bottom-0">Code</th>
-                                                <th class="wd-15p border-bottom-0">Category</th>
-                                                <th class="wd-15p border-bottom-0">Product Name</th>
-                                                <th class="wd-20p border-bottom-0">Image</th>
-                                                <th class="wd-15p border-bottom-0">Size</th>
-                                                <th class="wd-25p border-bottom-0">Price (AED)</th>
-                                                <th class="wd-25p border-bottom-0">Action</th>
+                                                <th class="wd-sm-10p border-bottom-0">S.No.</th>
+                                                <th class="wd-sm-10p border-bottom-0">Code</th>
+                                                <th class="wd-md-20p border-bottom-0">Category/Product Name</th>
+                                                <th class="wwd-md-20p border-bottom-0">Image</th>
+                                                <th class="wd-sm-10p border-bottom-0">Price (AED)</th>
+                                                <th class="wd-sm-10p border-bottom-0">Action</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             @foreach ($allProductList as $productDetails)
                                                 <tr>
-                                                    <td>{{ $loop->iteration }}</td>
-                                                    <td>{{ $productDetails->product_code }}</td>
-                                                    <td>{{ ucfirst($productDetails->main_category) }} -
-                                                        {{ $productDetails->cat_name }}
+                                                    <td class="wd-sm-10p">{{ $loop->iteration }}</td>
+                                                    <td class="wd-sm-10p">{{ $productDetails->product_code }}</td>
+                                                    <td class="wd-md-20p">{{ ucfirst($productDetails->main_category) }} -
+                                                        {{ $productDetails->cat_name }} <br />
+                                                        {{ $productDetails->product_name }}
                                                     </td>
-                                                    <td>{{ $productDetails->product_name }}</td>
-                                                    <td><img class="hpx-100"
+                                                    <td class="wd-md-40p"><img class="wpx-250 hpx-200"
                                                             src="{{ url($productDetails->product_image) }}" /></td>
-                                                    <td>{{ $productDetails->product_size }}</td>
-                                                    <td>{{ $productDetails->product_price }}</td>
-                                                    <td>
+                                                    <td class="wd-sm-10p text-center">{{ $productDetails->product_price }}
+                                                    </td>
+                                                    <td class="wd-sm-10p">
                                                         @if ($productDetails->status == 'active')
                                                             <a href="javascript:void(0)"
                                                                 class="btn btn-primary-gradient">Active</a>

@@ -17,6 +17,16 @@ class OrderList extends Model
         'id', 'order_id', 'product_code', 'product_name', 'product_category', 'product_size', 'product_price', 'order_quantity', 'order_status'
     ];
 
+    public static function productList($order_id) 
+    {
+        $data = DB::table('order_list')
+            ->leftJoin('product_category', 'order_list.product_category', '=', 'product_category.id')
+            ->select('order_list.*','product_category.category_name as cat_name')
+            ->where('order_list.order_id', $order_id)
+            ->get();
+        return $data;
+    }
+
     public static function cancelledOrderQtyAddedBack($order_id) {
         $update = DB::table('order_list')
         ->join('stocks', 'order_list.product_code', '=', 'stocks.product_code')

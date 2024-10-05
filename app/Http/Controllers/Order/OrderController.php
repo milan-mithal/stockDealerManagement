@@ -62,7 +62,7 @@ class OrderController extends Controller
     {
         $order_id = strip_tags($id);
         $orderDetails = Order::orderDetails($order_id);
-        $allorderProductList = OrderList::where('order_id', '=' , $order_id)->get();
+        $allorderProductList = OrderList::productList($order_id);
 
         return view('order.vieworder',  ['orderDetails' => $orderDetails, 'allorderProductList' => $allorderProductList]); 
 

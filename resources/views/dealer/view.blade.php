@@ -79,29 +79,29 @@
                                         </div>
                                         <div class="panel-body tabs-menu-body">
                                             <div class="tab-content">
-                                                <div class="tab-pane active " id="tab25">
+                                                <div class="tab-pane active" id="tab25">
                                                     <table
                                                         class="table editable-table table-bordered text-nowrap border-bottom"
                                                         id="basic-datatable">
                                                         <thead>
                                                             <tr>
-                                                                <th class="wd-10p border-bottom-0">Code</th>
-                                                                <th class="wd-20p border-bottom-0">Order Stock</th>
-                                                                <th class="wd-10p border-bottom-0">Product Category/Name
-                                                                </th>
-                                                                <th class="wd-10p border-bottom-0">Image</th>
-                                                                <th class="wd-10p border-bottom-0">Size</th>
-                                                                <th class="wd-10p border-bottom-0">Price (AED)</th>
-                                                                <th class="wd-10p border-bottom-0">Total Stock Available
+                                                                <th class="wd-sm-10p border-bottom-0">Code</th>
+                                                                <th class="wd-sm-10p border-bottom-0">Order Stock</th>
+                                                                {{-- <th class="wd-sm-10p border-bottom-0">Category/Name
+                                                                </th> --}}
+                                                                <th class="wd-md-50p border-bottom-0">Image</th>
+                                                                <th class="wd-sm-10p border-bottom-0">Price (AED)</th>
+                                                                <th class="wd-sm-10p border-bottom-0">Total Stock Available
                                                                 </th>
                                                             </tr>
                                                         </thead>
                                                         <tbody>
                                                             @foreach ($productListNatural as $productDetails)
                                                                 <tr>
-                                                                    <td>{{ $productDetails->product_code }}</td>
+                                                                    <td class="wd-sm-10p">
+                                                                        {{ $productDetails->product_code }}</td>
                                                                     @if ($productDetails->total_stock_qty > 0)
-                                                                        <td class="wd-20p"><input type="number"
+                                                                        <td class="wd-sm-10p"><input type="number"
                                                                                 class="wp-50"
                                                                                 id="order_qty_{{ $productDetails->id }}"
                                                                                 value="{{ $productDetails->ordered_qty }}"
@@ -135,20 +135,21 @@
                                                                             </div>
                                                                         </td>
                                                                     @else
-                                                                        <td>
+                                                                        <td class="wd-sm-10p">
                                                                             <a href="javascript:void(0)"
                                                                                 class="btn btn-danger-gradient">Out Of
                                                                                 Stock</a>
                                                                         </td>
                                                                     @endif
-                                                                    <td>{{ $productDetails->catName }}/<br />
-                                                                        {{ $productDetails->product_name }}</td>
-                                                                    <td><img class="hpx-100"
+                                                                    {{-- <td class="wd-sm-10p">
+                                                                        {{ $productDetails->catName }}/<br />
+                                                                        {{ $productDetails->product_name }}</td> --}}
+                                                                    <td class="wd-md-50p"><img class="wpx-250 hpx-200"
                                                                             src="{{ url($productDetails->product_image) }}" />
                                                                     </td>
-                                                                    <td>{{ $productDetails->product_size }}</td>
-                                                                    <td>{{ $productDetails->product_price }}</td>
-                                                                    <td>
+                                                                    <td class="wd-sm-10p text-center">
+                                                                        {{ $productDetails->product_price }}</td>
+                                                                    <td class="wd-sm-10p">
                                                                         @if ($productDetails->coming_soon == '1' && $productDetails->total_stock_qty - $productDetails->stock_coming_soon > 0)
                                                                             <h3 class="tag tag-blue">In Stock:&nbsp;
                                                                                 <strong>{{ $productDetails->total_stock_qty - $productDetails->stock_coming_soon }}</strong>
@@ -187,23 +188,23 @@
                                                         id="example3">
                                                         <thead>
                                                             <tr>
-                                                                <th class="wd-10p border-bottom-0">Code</th>
-                                                                <th class="wd-20p border-bottom-0">Order Stock</th>
-                                                                <th class="wd-10p border-bottom-0">Product Category/Name
-                                                                </th>
-                                                                <th class="wd-10p border-bottom-0">Image</th>
-                                                                <th class="wd-10p border-bottom-0">Size</th>
-                                                                <th class="wd-10p border-bottom-0">Price (AED)</th>
-                                                                <th class="wd-10p border-bottom-0">Total Stock Available
+                                                                <th class="wd-sm-10p border-bottom-0">Code</th>
+                                                                <th class="wd-sm-10p border-bottom-0">Order Stock</th>
+                                                                {{-- <th class="wd-sm-10p border-bottom-0">Category/Name
+                                                                </th> --}}
+                                                                <th class="wd-md-50p border-bottom-0">Image</th>
+                                                                <th class="wd-sm-10p border-bottom-0">Price (AED)</th>
+                                                                <th class="wd-sm-10p border-bottom-0">Total Stock Available
                                                                 </th>
                                                             </tr>
                                                         </thead>
                                                         <tbody>
                                                             @foreach ($productListEssentials as $productDetailsEssential)
                                                                 <tr>
-                                                                    <td>{{ $productDetailsEssential->product_code }}</td>
+                                                                    <td class="wd-sm-10p">
+                                                                        {{ $productDetailsEssential->product_code }}</td>
                                                                     @if ($productDetailsEssential->total_stock_qty > 0)
-                                                                        <td class="wd-20p"><input type="number"
+                                                                        <td class="wd-sm-10p"><input type="number"
                                                                                 class="wp-50"
                                                                                 id="order_qty_{{ $productDetailsEssential->id }}"
                                                                                 value="{{ $productDetailsEssential->ordered_qty }}"
@@ -237,20 +238,21 @@
                                                                             </div>
                                                                         </td>
                                                                     @else
-                                                                        <td>
+                                                                        <td class="wd-sm-10p">
                                                                             <a href="javascript:void(0)"
                                                                                 class="btn btn-danger-gradient">Out Of
                                                                                 Stock</a>
                                                                         </td>
                                                                     @endif
-                                                                    <td>{{ $productDetailsEssential->catName }}/<br />
-                                                                        {{ $productDetailsEssential->product_name }}</td>
-                                                                    <td><img class="hpx-100"
+                                                                    {{-- <td class="wd-sm-10p">
+                                                                        {{ $productDetailsEssential->catName }}/<br />
+                                                                        {{ $productDetailsEssential->product_name }}</td> --}}
+                                                                    <td class="wd-md-50p"><img class="wpx-250 hpx-200"
                                                                             src="{{ url($productDetailsEssential->product_image) }}" />
                                                                     </td>
-                                                                    <td>{{ $productDetailsEssential->product_size }}</td>
-                                                                    <td>{{ $productDetailsEssential->product_price }}</td>
-                                                                    <td>
+                                                                    <td class="wd-sm-10p text-center">
+                                                                        {{ $productDetailsEssential->product_price }}</td>
+                                                                    <td class="wd-sm-10p">
                                                                         @if (
                                                                             $productDetailsEssential->coming_soon == '1' &&
                                                                                 $productDetailsEssential->total_stock_qty - $productDetailsEssential->stock_coming_soon > 0)
