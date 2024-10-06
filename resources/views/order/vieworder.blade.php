@@ -84,7 +84,7 @@
                                                 <th class="text-center"></th>
                                                 <th>Product</th>
                                                 <th class="text-center">Qty</th>
-                                                <th class="text-end">Price(AED)</th>
+                                                <th class="text-end">Price( {{ $orderDetails->currency }})</th>
                                                 <th class="text-end">Boxes</th>
                                                 {{-- <th class="text-end">Weight (KGS)</th> --}}
                                                 <th class="text-end">Weight(KGS)</th>
@@ -106,7 +106,8 @@
                                                             {{ $orderProductList->cat_name ?? $orderProductList->product_category }},
                                                             <br />Name:
                                                             {{ $orderProductList->product_name }},Size:
-                                                            {{ $orderProductList->product_size }}</div>
+                                                            {{ $orderProductList->product_size }}
+                                                        </div>
                                                     </td>
                                                     <td class="text-center">{{ $orderProductList->order_quantity }}</td>
                                                     <td class="text-end">{{ $orderProductList->product_price }}</td>

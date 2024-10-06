@@ -90,7 +90,8 @@
                                                                 {{-- <th class="wd-sm-10p border-bottom-0">Category/Name
                                                                 </th> --}}
                                                                 <th class="wd-md-50p border-bottom-0">Image</th>
-                                                                <th class="wd-sm-10p border-bottom-0">Price (AED)</th>
+                                                                <th class="wd-sm-10p border-bottom-0">Price
+                                                                    ({{ Auth::user()->currency }})</th>
                                                                 <th class="wd-sm-10p border-bottom-0">Total Stock Available
                                                                 </th>
                                                             </tr>
@@ -148,7 +149,8 @@
                                                                             src="{{ url($productDetails->product_image) }}" />
                                                                     </td>
                                                                     <td class="wd-sm-10p text-center">
-                                                                        {{ $productDetails->product_price }}</td>
+                                                                        {{ Helper::calculatePrice($productDetails->product_price) }}
+                                                                    </td>
                                                                     <td class="wd-sm-10p">
                                                                         @if ($productDetails->coming_soon == '1' && $productDetails->total_stock_qty - $productDetails->stock_coming_soon > 0)
                                                                             <h3 class="tag tag-blue">In Stock:&nbsp;
@@ -251,7 +253,8 @@
                                                                             src="{{ url($productDetailsEssential->product_image) }}" />
                                                                     </td>
                                                                     <td class="wd-sm-10p text-center">
-                                                                        {{ $productDetailsEssential->product_price }}</td>
+                                                                        {{ Helper::calculatePrice($productDetailsEssential->product_price) }}
+                                                                    </td>
                                                                     <td class="wd-sm-10p">
                                                                         @if (
                                                                             $productDetailsEssential->coming_soon == '1' &&

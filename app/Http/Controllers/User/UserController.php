@@ -13,6 +13,7 @@ use Mail;
 use App\Models\User;
 use App\Models\Currency;
 use App\Models\DealerPercentage;
+use App\Models\MainDealerPercentage;
 use App\Enums\UserRolesEnums;
 use App\Enums\UserStatusEnums;
 use App\Enums\DeleteStatusEnums;
@@ -160,6 +161,9 @@ class UserController extends Controller
             Mail::to('info@shamsnaturals.com')->send(new UserRegisterMail($mailData));
             return redirect()->route('user.edit',$insertData->id)->with('success', 'Sub Dealer created successfully. Kindly Update Subdealer Percentage.');
         }
+        elseif($request->role == 'dealer') {
+            return redirect()->route('user.edit',$insertData->id)->with('success', 'Dealer created successfully. Kindly Update Dealer Percentage.');
+        }
         return redirect()->route('user.create')->with('success', 'User created successfully.');
     }
 
@@ -178,13 +182,27 @@ class UserController extends Controller
     {
         $userDetails = User::findOrFail($id);
         $currencyList = Currency::all();
-        $percentage = DealerPercentage::where('sub_dealer_id',$id)->first();
-        $percentageData = 0;
-        if($percentage) {
-            $percentageData = $percentage->percentage;
+        if($userDetails->role == 'subdealer'){
+            $percentage = DealerPercentage::where('sub_dealer_id',$id)->first();
+            $percentageData = 0;
+            if($percentage) {
+                $percentageData = $percentage->percentage;
+            }
+        } elseif ($userDetails->role == 'dealer') {
+            $percentage = MainDealerPercentage::where('dealer_id',$id)->first();
+            $percentageData = 0;
+            $incDec = '';
+            if($percentage) {
+                $percentageData = $percentage->percentage;
+                $incDec= $percentage->inc_dec;
+            }
+        } else {
+            $percentageData = 0;
+            $incDec = '';
         }
+        
         $dealerList = User::where([['role', '=', 'dealer'],['status', '=', 'active']])->get();
-        return view('user.edit',  ['allDealerList' => $dealerList, 'allcurrencyList' => $currencyList, 'userDetails'=> $userDetails, 'percentage'=> $percentageData]);
+        return view('user.edit',  ['allDealerList' => $dealerList, 'allcurrencyList' => $currencyList, 'userDetails'=> $userDetails, 'percentage'=> $percentageData, 'incDec' => $incDec]);
     }
 
     /**
@@ -250,18 +268,36 @@ class UserController extends Controller
         $updateData->modified_by = Auth::user()->id;
         $updateData->save();
 
-        $percentage = DealerPercentage::where('sub_dealer_id',$id)->first();
-        if ($percentage) {
-            $perUpdateData = DealerPercentage::findOrFail($percentage->id);
-            $perUpdateData->dealer_id = $dealer_id;
-            $perUpdateData->percentage = $request->percentage;
-            $perUpdateData->save();
-        } else {
-            $insertData = new DealerPercentage();
-            $insertData->dealer_id = $dealer_id;
-            $insertData->sub_dealer_id = $id;
-            $insertData->percentage = $request->percentage;
-            $insertData->save();
+        if ($request->role == 'subdealer') {
+            $percentage = DealerPercentage::where('sub_dealer_id',$id)->first();
+            if ($percentage) {
+                $perUpdateData = DealerPercentage::findOrFail($percentage->id);
+                $perUpdateData->dealer_id = $dealer_id;
+                $perUpdateData->percentage = $request->percentage;
+                $perUpdateData->save();
+            } else {
+                $insertData = new DealerPercentage();
+                $insertData->dealer_id = $dealer_id;
+                $insertData->sub_dealer_id = $id;
+                $insertData->percentage = $request->percentage;
+                $insertData->save();
+            }
+        }
+
+        if ($request->role == 'dealer') {
+            $percentage = MainDealerPercentage::where('dealer_id',$id)->first();
+            if ($percentage) {
+                $perUpdateData = MainDealerPercentage::findOrFail($percentage->id);
+                $perUpdateData->percentage = $request->percentage;
+                $perUpdateData->inc_dec = $request->inc_dec;
+                $perUpdateData->save();
+            } else {
+                $insertData = new MainDealerPercentage();
+                $insertData->dealer_id = $id;
+                $insertData->percentage = $request->percentage;
+                $insertData->inc_dec = $request->inc_dec;
+                $insertData->save();
+            }
         }
     
         return redirect()->route('user.index')->with('success', 'User updated successfully.');

@@ -57,7 +57,7 @@ class CurrencyController extends Controller
         $curl2 = curl_init();
 
         curl_setopt_array($curl2, array(
-        CURLOPT_URL => "https://api.apilayer.com/currency_data/live?source=AED",
+        CURLOPT_URL => "https://api.apilayer.com/currency_data/live?source=AED&currencies=currencies",
         CURLOPT_HTTPHEADER => array(
             "Content-Type: text/plain",
             "apikey: ".env('CURRENCY_API')
@@ -83,10 +83,8 @@ class CurrencyController extends Controller
             
             // Loop through the currencies and do something with them
             foreach ($quotes as $currencyCode => $rate) {
-                $currency = substr($currencyCode, 3);
-                $getId = Currency::where('country_currency','=',$currency)->first();
+                $getId = Currency::where('currency','=',$currencyCode)->first();
                 $updateData = Currency::findOrFail($getId->id);
-                $updateData->currency = $currencyCode;
                 $updateData->rate = $rate;
                 $updateData->save();
             }

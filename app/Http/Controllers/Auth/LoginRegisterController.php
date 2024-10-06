@@ -344,6 +344,7 @@ class LoginRegisterController extends Controller
         $updateData->session_id = $session_id;
         $updateData->save();
         Auth::logout();
+        Session::flush();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
         return redirect()->route('login')

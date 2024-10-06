@@ -38,6 +38,7 @@ class Order extends Model
                 'users.region as region',
                 'users.community as community',
                 'users.phone_no as phone_no',
+                'users.currency as currency',
                 'orders.id as id', 
                 'orders.order_id as order_id', 
                 'orders.total_amount as total_amount', 
