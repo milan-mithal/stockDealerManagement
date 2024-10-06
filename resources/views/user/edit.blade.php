@@ -1,20 +1,18 @@
 @extends('common.layout')
-
 @section('content')
     <!--app-content open-->
     <div class="app-content main-content mt-0">
         <div class="side-app">
             <!-- CONTAINER -->
             <div class="main-container container-fluid">
-
                 <!-- PAGE-HEADER -->
                 <div class="page-header">
                     <div>
                         @if (Auth::user()->role == 'dealer')
                             Edit Sub Dealer
-                            @else
+                        @else
                             Edit User
-                            @endif
+                        @endif
                     </div>
                     <div class="ms-auto pageheader-btn">
                         <ol class="breadcrumb">
@@ -24,14 +22,10 @@
                     </div>
                 </div>
                 <!-- PAGE-HEADER END -->
-
                 <!-- row -->
                 <div class="row row-deck">
                     <div class="col-lg-12 col-md-">
                         <div class="card custom-card">
-
-
-
                             <div class="card-body">
                                 @if (Session::has('success'))
                                     <div class="card-header border-bottom">
@@ -54,7 +48,6 @@
                                     </div>
                                 @endif
                                 <p class="text-muted">Here you can edit user</p>
-
                                 <div class="d-flex flex-column">
                                     <form method="post" name="frm" id="frm"
                                         action="{{ route('user.update', $userDetails->id) }}" enctype="multipart/form-data">
@@ -121,14 +114,14 @@
                                                 @foreach ($allcurrencyList as $currency)
                                                     <option value="{{ $currency->country_currency }}"
                                                         @selected(old('currency', $userDetails->currency) == $currency->country_currency)>
-                                                        {{ $currency->country . ' - ' . $currency->country_currency }}</option>
+                                                        {{ $currency->country . ' - ' . $currency->country_currency }}
+                                                    </option>
                                                 @endforeach
                                             </select>
                                             @error('currency')
                                                 <div class="invalid-feedback block">{{ $message }}</div>
                                             @enderror
                                         </div>
-                                      
                                         @if (Auth::user()->role == 'admin')
                                             <div class="form-group">
                                                 <label for="formFile" class="form-label">Role</label>
@@ -155,44 +148,58 @@
                                             </div>
                                         @endif
                                         @if (Auth::user()->role == 'admin')
-                                        <div class="form-group subdealer-list">
-                                            <label for="formFile" class="form-label">Choose Dealer</label>
-                                            <select class="form-control" name="dealer_id" id="dealer_id">
-                                                <option value="">Choose Dealer</option>
-                                                @foreach ($allDealerList as $dealer)
-                                                    <option value="{{ $dealer->id }}" @selected(old('dealer_id', $userDetails->dealer_id) == $dealer->id)>
-                                                        {{ $dealer->dealer_name }}</option>
-                                                @endforeach
-                                            </select>
-                                            @error('dealer_id')
-                                                <div class="invalid-feedback block">{{ $message }}</div>
-                                            @enderror
-                                        </div>
+                                            <div class="form-group subdealer-list">
+                                                <label for="formFile" class="form-label">Choose Dealer</label>
+                                                <select class="form-control" name="dealer_id" id="dealer_id">
+                                                    <option value="">Choose Dealer</option>
+                                                    @foreach ($allDealerList as $dealer)
+                                                        <option value="{{ $dealer->id }}" @selected(old('dealer_id', $userDetails->dealer_id) == $dealer->id)>
+                                                            {{ $dealer->dealer_name }}</option>
+                                                    @endforeach
+                                                </select>
+                                                @error('dealer_id')
+                                                    <div class="invalid-feedback block">{{ $message }}</div>
+                                                @enderror
+                                            </div>
                                         @else
-                                        <div class="form-group">
-                                            <label for="formFile" class="form-label">Dealer Details</label>
-                                            <select class="form-control" name="dealer_id" id="dealer_id">
-                                                <option value="{{ Auth::user()->id }}">{{ Auth::user()->dealer_name }}</option>
-                                            </select>
-                                            @error('dealer_id')
-                                                <div class="invalid-feedback block">{{ $message }}</div>
-                                            @enderror
-                                        </div>
-                                    @endif
-
-                                    <div class="form-group subdealer-percentage">
-                                        <label for="formFile" class="form-label">Dealer Percentage</label>
-                                        <input class="form-control" type="text" name="percentage" maxlength="2"
-                                            id="percentage" value="{{ old('percentage',$percentage) }}">
-                                        @error('percentage')
-                                            <div class="invalid-feedback block">{{ $message }}</div>
-                                        @enderror
-                                    </div>
-                                        
+                                            <div class="form-group">
+                                                <label for="formFile" class="form-label">Dealer Details</label>
+                                                <select class="form-control" name="dealer_id" id="dealer_id">
+                                                    <option value="{{ Auth::user()->id }}">
+                                                        {{ Auth::user()->dealer_name }}</option>
+                                                </select>
+                                                @error('dealer_id')
+                                                    <div class="invalid-feedback block">{{ $message }}</div>
+                                                @enderror
+                                            </div>
+                                        @endif
+                                        @if (Auth::user()->role == 'admin')
+                                            <div class="form-group">
+                                                <label for="formFile" class="form-label">Dealer Percentage</label>
+                                                <input class="form-control" type="text" name="percentage"
+                                                    maxlength="2" id="percentage"
+                                                    value="{{ old('percentage', $percentage) }}">
+                                                @error('percentage')
+                                                    <div class="invalid-feedback block">{{ $message }}</div>
+                                                @enderror
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="formFile" class="form-label">Increase/Decrease</label>
+                                                <select class="form-control" name="inc_dec" id="inc_dec">
+                                                    <option value="">Choose</option>
+                                                    <option value="+" @selected(old('inc_dec', $incDec) == '+')>+</option>
+                                                    <option value="-" @selected(old('inc_dec', $incDec) == '-')>-</option>
+                                                </select>
+                                                @error('inc_dec')
+                                                    <div class="invalid-feedback block">{{ $message }}</div>
+                                                @enderror
+                                            </div>
+                                        @endif
                                         <div class="form-group">
                                             <label for="formFile" class="form-label">VAT No.</label>
                                             <input class="form-control" type="text" name="identification_no"
-                                                id="identification_no" value="{{ old('identification_no', $userDetails->identification_no) }}">
+                                                id="identification_no"
+                                                value="{{ old('identification_no', $userDetails->identification_no) }}">
                                             @error('identification_no')
                                                 <div class="invalid-feedback block">{{ $message }}</div>
                                             @enderror
@@ -217,14 +224,8 @@
                             </div>
                         </div>
                     </div>
-
                 </div>
                 <!-- /row -->
-
-
-
-
-
             </div>
         </div>
     </div>
@@ -233,7 +234,6 @@
 @section('script')
     <script>
         $(function() {
-           
             $('#role').on('change', function() {
                 let roleStatus = this.value;
                 if (roleStatus == 'subdealer') {

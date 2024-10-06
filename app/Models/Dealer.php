@@ -9,6 +9,7 @@ use App\Enums\MainCategoryEnums;
 use App\Enums\CommonStatusEnums;
 use App\Models\Stock;
 use App\Models\OrderList;
+use App\Helpers\CommonHelper;
 use Auth;
 
 class Dealer extends Model
@@ -91,14 +92,16 @@ class Dealer extends Model
                  $cmb = round($lwh*$totalBoxes,3);
 
                  $box_dimension = $row->length."X".$row->width."X".$row->height;
-
+                 
+                $set_price = CommonHelper::calculatePrice($row->product_price);
                 DB::table('order_list')->insert([
                     'order_id' => $order_id,
                     'product_code' => $row->product_code,
                     'product_name' => $row->product_name,
                     'product_category' => $row->product_category,
                     'product_size' => $row->product_size,
-                    'product_price' => $row->product_price,
+                    'original_price' => $row->product_price,
+                    'product_price' => $set_price,
                     'order_quantity' => $row->order_quantity,
                     'total_boxes' => $totalBoxes,
                     'weight_per_box' => $row->weight_per_box,
@@ -117,7 +120,7 @@ class Dealer extends Model
                                         'stock_sold_qty' => $stock_sold_qty,
                                     ]);
                 
-                $totalAmount += $row->product_price * $row->order_quantity;
+                $totalAmount += $set_price * $row->order_quantity;
                  
 
             }
