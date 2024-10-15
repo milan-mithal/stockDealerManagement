@@ -185,6 +185,7 @@ class UserController extends Controller
         if($userDetails->role == 'subdealer'){
             $percentage = DealerPercentage::where('sub_dealer_id',$id)->first();
             $percentageData = 0;
+            $incDec = '';
             if($percentage) {
                 $percentageData = $percentage->percentage;
             }

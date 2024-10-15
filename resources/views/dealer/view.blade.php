@@ -45,7 +45,7 @@
                             <div class="card-body">
                                 <div class="table-responsive">
                                     <div>
-                                        <p><strong>To add all products in cart, enter Quanity & Click on Add All Product
+                                        <p><strong>To add all products in cart, enter Quantity & Click on Add All Product
                                                 Button.
                                                 This will delete all previous added product(s) from cart.</strong></p>
                                         <form name="allproduct" action="{{ route('dealer.create') }}" method="post">
@@ -145,8 +145,18 @@
                                                                     {{-- <td class="wd-sm-10p">
                                                                         {{ $productDetails->catName }}/<br />
                                                                         {{ $productDetails->product_name }}</td> --}}
-                                                                    <td class="wd-md-50p"><img class="wpx-250 hpx-200"
+                                                                    <td class="wd-md-50p" data-bs-toggle="modal"
+                                                                        data-bs-target="#imageModal"
+                                                                        onClick="showImageModal('{{ url($productDetails->product_image) }}')">
+                                                                        <img class="wpx-250 hpx-200"
                                                                             src="{{ url($productDetails->product_image) }}" />
+                                                                        <p class="text-center">
+                                                                            <a href="javascript:void(0);"
+                                                                                data-bs-toggle="modal"
+                                                                                data-bs-target="#imageModal"
+                                                                                onClick="showImageModal('{{ url($productDetails->product_image) }}')"><strong>Click
+                                                                                    to zoom</strong></a>
+                                                                        </p>
                                                                     </td>
                                                                     <td class="wd-sm-10p text-center">
                                                                         {{ Helper::calculatePrice($productDetails->product_price) }}
@@ -249,8 +259,18 @@
                                                                     {{-- <td class="wd-sm-10p">
                                                                         {{ $productDetailsEssential->catName }}/<br />
                                                                         {{ $productDetailsEssential->product_name }}</td> --}}
-                                                                    <td class="wd-md-50p"><img class="wpx-250 hpx-200"
+                                                                    <td class="wd-md-50p " data-bs-toggle="modal"
+                                                                        data-bs-target="#imageModal"
+                                                                        onClick="showImageModal('{{ url($productDetailsEssential->product_image) }}')">
+                                                                        <img class="wpx-250 hpx-200"
                                                                             src="{{ url($productDetailsEssential->product_image) }}" />
+                                                                        <p class="text-center">
+                                                                            <a href="javascript:void(0);"
+                                                                                data-bs-toggle="modal"
+                                                                                data-bs-target="#imageModal"
+                                                                                onClick="showImageModal('{{ url($productDetails->product_image) }}')"><strong>Click
+                                                                                    to zoom</strong></a>
+                                                                        </p>
                                                                     </td>
                                                                     <td class="wd-sm-10p text-center">
                                                                         {{ Helper::calculatePrice($productDetailsEssential->product_price) }}
@@ -305,4 +325,27 @@
         </div>
     </div>
     <!-- CONTAINER CLOSED -->
+    <!-- Creates the bootstrap modal where the image will appear -->
+    <div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="imageModalLabel">Image Preview</h5>
+                    <button type="button" class="btn-close icon icon-close" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <img id="modalImage" src="" alt="Modal Image" class="img-fluid">
+                </div>
+            </div>
+        </div>
+    </div>
+@endsection
+@section('script')
+    <script>
+        // Function to set the modal image source dynamically
+        function showImageModal(imageSrc) {
+            document.getElementById('modalImage').src = imageSrc;
+        }
+    </script>
 @endsection

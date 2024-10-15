@@ -141,7 +141,7 @@ class SubDealerOrderController extends Controller
     {
         $order_id = strip_tags($id);
         $orderDetails = SubDealer::orderDetails($order_id);
-        $allorderProductList = SubOrderList::where('order_id', '=' , $order_id)->get();
+        $allorderProductList = SubOrderList::productList($order_id);
 
         return view('subdealerorder.vieworder',  ['orderDetails' => $orderDetails, 'allorderProductList' => $allorderProductList]); 
     }
