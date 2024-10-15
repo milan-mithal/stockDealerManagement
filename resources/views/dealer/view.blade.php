@@ -71,7 +71,7 @@
                                                     </a>
                                                     <a class="nav-link border border-bottom-0 br-sm-5 me-2"
                                                         data-bs-toggle="tab" href="#tab26">
-                                                        <img src="{{ url('/images/essentials.jpeg') }}" class="hpx-60"
+                                                        <img src="{{ url('/images/essentials.jpeg?v=2.0') }}" class="hpx-80"
                                                             alt="Essentials Image">
                                                     </a>
                                                 </nav>
