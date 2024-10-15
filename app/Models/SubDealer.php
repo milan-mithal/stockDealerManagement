@@ -26,12 +26,13 @@ class SubDealer extends Model
     public static function productList() {
         $currentuserid = Auth::user()->id;
         $data = DB::table('products')
+            ->join('product_category', 'products.product_category', '=', 'product_category.id')
             ->join('stocks', 'products.product_code', '=', 'stocks.product_code')
             ->leftJoin('temp_order_list', function ($join) use ($currentuserid) {
                 $join->on('products.id', '=', 'temp_order_list.product_id')
                      ->where('temp_order_list.user_id', '=', $currentuserid);
             })
-            ->select('products.*','stocks.stock_qty as total_stock_qty', 'stocks.coming_soon as coming_soon','stocks.stock_coming_soon as stock_coming_soon','stocks.stock_sold_qty as total_stock_sold_qty', 'temp_order_list.order_quantity as ordered_qty')
+            ->select('products.*','product_category.category_name as catName','stocks.stock_qty as total_stock_qty', 'stocks.coming_soon as coming_soon','stocks.stock_coming_soon as stock_coming_soon','stocks.stock_sold_qty as total_stock_sold_qty', 'temp_order_list.order_quantity as ordered_qty')
             ->where('products.status', CommonStatusEnums::Active)
             ->get();
 
