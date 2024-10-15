@@ -1,5 +1,4 @@
 <?php
-
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginRegisterController;
 use App\Http\Controllers\User\UserController;
@@ -23,11 +22,9 @@ use App\Http\Controllers\Reports\ReportController;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
-
 // Route::get('/', function () {
 //     return view('welcome');
 // });
-
 // User Authentication Routes
 Route::controller(LoginRegisterController::class)->group(function() {
     Route::get('/forgotpassword', 'forgotpassword')->name('forgotpassword');
@@ -36,26 +33,20 @@ Route::controller(LoginRegisterController::class)->group(function() {
     Route::get('/', 'login')->name('login');
     Route::post('/authenticate', 'authenticate')->name('authenticate');
 });
-
 // User Authentication Routes
 Route::group(['middleware' => ['auth', 'checkSessionId']], function () {
-
     // User Authentication Routes
     Route::controller(LoginRegisterController::class)->group(function() {
         Route::get('/dashboard', 'dashboard')->name('dashboard');
         Route::post('/logout', 'logout')->name('logout');
     });
-
     //Common Controller Routes
-
     Route::controller(CommonController::class)->group(function() {
         Route::get('/common/allneworders', 'index')->name('common.index');
         Route::get('/common/checkoutofstock', 'checkoutofstock')->name('common.checkoutofstock');
         Route::get('/newpasswordpage', 'newpasswordpage')->name('newpasswordpage');
         Route::post('/storenewpassword', 'storenewpassword')->name('storenewpassword');
     });
-
-
     Route::controller(UserController::class)->group(function() {
         Route::get('/user/list', 'index')->name('user.index');
         Route::get('/user/create', 'create')->name('user.create');
@@ -66,11 +57,8 @@ Route::group(['middleware' => ['auth', 'checkSessionId']], function () {
         Route::get('/user/subdealer/{id}', 'subdealer')->name('user.subdealer');
         Route::get('/user/viewsubdelear', 'viewsubdelear')->name('user.viewsubdelear');
     });
-
     //Product Category Routes
-
     Route::resource('productcategory', ProductCategoryController::class);
-
     // Product Routes
     Route::controller(ProductController::class)->group(function() {
         Route::get('/product/list', 'index')->name('product.index');
@@ -80,7 +68,6 @@ Route::group(['middleware' => ['auth', 'checkSessionId']], function () {
         Route::post('/product/update/{id}', 'update')->name('product.update');
         Route::delete('/product/destroy/{id}', 'destroy')->name('product.destroy');
     });
-
     // Stock Routes
     Route::controller(StockController::class)->group(function() {
         Route::get('/stock/list', 'index')->name('stock.index');
@@ -89,17 +76,16 @@ Route::group(['middleware' => ['auth', 'checkSessionId']], function () {
         Route::get('/stock/edit/{id}', 'edit')->name('stock.edit');
         Route::post('/stock/update/{id}', 'update')->name('stock.update');
     });
-
     // Dealer Routes
     Route::controller(DealerController::class)->group(function() {
         Route::get('/dealer/list', 'index')->name('dealer.index');
         Route::post('/dealer/addAllProducts', 'create')->name('dealer.create');
     });
-
     // Dealer Order Routes
     Route::controller(DealerOrderController::class)->group(function() {
         Route::post('/dealerorder/store', 'store')->name('dealerorder.store');
         Route::post('/dealerorder/destroy', 'destroy')->name('dealerorder.destroy');
+        Route::get('/dealerorder/emptycart', 'emptycart')->name('dealerorder.emptycart');
         Route::get('/dealerorder/orderlist', 'index')->name('dealerorder.index');
         Route::post('/dealerorder/placeorder', 'create')->name('dealerorder.create');
         Route::get('/dealerorder/allorderslist', 'show')->name('dealerorder.show');
@@ -109,10 +95,7 @@ Route::group(['middleware' => ['auth', 'checkSessionId']], function () {
         Route::get('/dealerorder/subdealerorderacceptedstatus/{id}', 'subdealerorderacceptedstatus')->name('dealerorder.subdealerorderacceptedstatus');
         Route::get('/dealerorder/subdealerordercancelstatus/{id}', 'subdealerordercancelstatus')->name('dealerorder.subdealerordercancelstatus');
         Route::get('/dealerorder/subdealerplaceorder/{orderid}', 'subdealerplaceorder')->name('dealerorder.subdealerplaceorder');
-        
-        
     });
-
     // Order Routes
     Route::controller(OrderController::class)->group(function() {
         Route::get('/order/list', 'index')->name('order.index');
@@ -121,21 +104,17 @@ Route::group(['middleware' => ['auth', 'checkSessionId']], function () {
         Route::get('/suborder/orderdetails/{id}', 'subordershow')->name('suborder.show');
         Route::post('/order/update/{id}', 'update')->name('order.update');
     });
-
     // Report Routes
     Route::controller(ReportController::class)->group(function() {
         Route::get('/report/stock', 'stockreport')->name('report.stock');
         Route::get('/report/dealer', 'dealerreport')->name('report.dealer');
         Route::match(array('GET','POST'),'/report/order', 'orderreport')->name('report.order');
         Route::post('/report/orderdatasubmit', 'orderdata')->name('report.orderdata');
-        
     });
-
     // Sub Dealer Routes
     Route::controller(SubDealerController::class)->group(function() {
         Route::get('/subdealer/list', 'index')->name('subdealer.index');
     });
-
     // Sub Dealer Order Routes
     Route::controller(SubDealerOrderController::class)->group(function() {
         Route::get('/subdealerorder/orderlist', 'index')->name('subdealerorder.index');
@@ -144,8 +123,5 @@ Route::group(['middleware' => ['auth', 'checkSessionId']], function () {
         Route::post('/subdealerorder/placeorder', 'create')->name('subdealerorder.create');
         Route::get('/subdealerorder/allorderslist', 'show')->name('subdealerorder.show');
         Route::get('/subdealerorder/orderdetails/{id}', 'ordershow')->name('subdealerorder.ordershow');
-        
     });
-
-
 });

@@ -52,6 +52,8 @@
                                                 href="javascript:void(0)">Provide Pickup Details</button>
                                             <p><a href="{{ route('dealer.index') }}">Click here </a> to add more product in
                                                 order list</p>
+                                            <button class="btn btn-danger mt-2 mb-3" data-bs-toggle="modal"
+                                                data-bs-target="#smallmodal">Delete All Products In List</button>
                                         @else
                                             <p><a href="{{ route('dealer.index') }}">Click here </a> to add products in
                                                 order list</p>
@@ -194,6 +196,26 @@
                     <a href="javascript:void(0);" class="btn btn-light" data-bs-dismiss="modal">Close</a>
                 </div>
                 </form>
+            </div>
+        </div>
+    </div>
+    <div class="modal  fade" id="smallmodal" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-sm" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Empty Cart</h5>
+                    <button class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure want to delete all products in list?</p>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+                    <button class="btn btn-primary"
+                        onClick="javascript:location.href='{{ route('dealerorder.emptycart') }}'">Yes</button>
+                </div>
             </div>
         </div>
     </div>

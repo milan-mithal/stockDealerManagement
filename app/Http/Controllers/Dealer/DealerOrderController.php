@@ -1,7 +1,5 @@
 <?php
-
 namespace App\Http\Controllers\Dealer;
-
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Haruncpi\LaravelIdGenerator\IdGenerator;
@@ -17,7 +15,6 @@ use App\Models\SubOrderList;
 use Mail;
 use App\Mail\Dealer\OrderMail;
 use App\Mail\Order\OrderStatusMail;
-
 class DealerOrderController extends Controller
 {
     public function __construct()
@@ -34,13 +31,11 @@ class DealerOrderController extends Controller
         $cartList = Dealer::userCartProductList();
         return view('dealerorder.view',  ['allCartList' => $cartList]);
     }
-
     /**
      * Show the form for creating a new resource.
      */
     public function create(Request $request)
     {
-
         $request->validate([
             'delivery_by' => 'required',
             'third_party_details' => 'required_if:delivery_by,==,third_party', 
@@ -50,8 +45,6 @@ class DealerOrderController extends Controller
             'third_party_details.required_if' => 'Please enter third party details.',
             'delivery_details.required_if' => 'Please enter delivery details.'
         ]);
-
-
         $currentuserid = Auth::user()->id;
         $delivery_type = $request->delivery_by;
         $third_party_details = "";
@@ -62,7 +55,6 @@ class DealerOrderController extends Controller
         if ($request->delivery_by == 'delivery') {
             $delivery_details = $request->delivery_details;
         }
-
         $prefix = "SN-";  
         $order_id = IdGenerator::generate(['table' => 'orders','field'=>'order_id' ,'length' => 10, 'prefix' => $prefix]);
         $placeOrderId = Dealer::orderPlace($order_id,$delivery_type,$third_party_details,$delivery_details);
@@ -74,22 +66,17 @@ class DealerOrderController extends Controller
             ];
             $mail_to = explode(',', env('MAIL_TO'));
             Mail::to($mail_to)->send(new OrderMail($mailData));
-            
             return redirect()->route('dealerorder.show')->with('success', 'Order has been placed successfully.');
         } else {
             return redirect()->route('dealerorder.show')->with('error', 'Error Occured While Placing Order. Kindly try again.');
         }
-
-        
     }
-
     /**
      * Store a newly created resource in storage.
      * Also updating resource
      */
     public function store(Request $request)
     {
-        
         $request->validate([
             'product_id' => 'numeric',
             'order_quantity' => 'min:1|numeric', 
@@ -98,22 +85,17 @@ class DealerOrderController extends Controller
             'order_quantity.min' => 'Order quantity cannot be less than 1.',
             'order_quantity.numeric' => 'Order quantity should be numeric.',
         ]);
-        
         $currentuserid = Auth::user()->id;
-
         $checkActualQty = Product::join('stocks', 'products.product_code', '=' , 'stocks.product_code')
                           ->select('stocks.stock_qty', 'stocks.coming_soon')
                           ->where('products.id', '=', $request->product_id)->first();
         if (($request->order_quantity > $checkActualQty->stock_qty) && ($checkActualQty->coming_soon == '0')) {
             exit();
         }
-
-
         $getTempOrderDataCount = Dealer::where([
             ['user_id',$currentuserid],
             ['product_id',$request->product_id]
         ])->count();
-        
         if($getTempOrderDataCount == 0) {
             $insertData = new Dealer();
             $insertData->user_id = $currentuserid;
@@ -121,26 +103,20 @@ class DealerOrderController extends Controller
             $insertData->order_quantity = $request->order_quantity;
             $insertData->save();
             $getTotalProductAdded = Dealer::where('user_id',$currentuserid)->count();
-            
             return $getTotalProductAdded;
         } else {
             $getTempOrderData = Dealer::where([
                 ['user_id',$currentuserid],
                 ['product_id',$request->product_id]
             ])->first();
-            
             $id = $getTempOrderData->id;
             $updateData = Dealer::findOrFail($id);
             $updateData->order_quantity = $request->order_quantity;
             $updateData->save();
             $getTotalProductAdded = Dealer::where('user_id',$currentuserid)->count();
-            
             return $getTotalProductAdded;
-
         }
-
     }
-
     /**
      * Show Dealers Orders
      */
@@ -148,22 +124,17 @@ class DealerOrderController extends Controller
     {
         $currentuserid = Auth::user()->id;
         $allOrderList = Order::where('user_id','=',$currentuserid)->orderByDesc('order_id')->get();
-
         return view('dealerorder.orderview',  ['allOrderList' => $allOrderList]);
     }
-
     /**
      * Display All Sub Dealers Orders
      */
-
     public function showdealerorder()
     {
         $currentuserid = Auth::user()->id;
         $allOrderList = SubOrder::where('dealer_id','=',$currentuserid)->orderByDesc('order_id')->get();
-
         return view('dealerorder.subdealerorderview',  ['allOrderList' => $allOrderList]);
     }
-
     /**
      * Show the form for editing the specified resource.
      */
@@ -172,20 +143,15 @@ class DealerOrderController extends Controller
         $order_id = strip_tags($id);
         $orderDetails = Order::orderDetails($order_id);
         $allorderProductList = OrderList::productList($order_id);
-
         return view('dealerorder.vieworder',  ['orderDetails' => $orderDetails, 'allorderProductList' => $allorderProductList]); 
     }
-
     public function subdealerordershow(string $id)
     {
         $order_id = strip_tags($id);
         $orderDetails = SubOrder::orderDetails($order_id);
         $allorderProductList = SubOrderList::productList($order_id);
-
         return view('dealerorder.subdealervieworder',  ['orderDetails' => $orderDetails, 'allorderProductList' => $allorderProductList]); 
     }
-
-
     /**
      * Update the specified resource in storage.
      */
@@ -193,19 +159,16 @@ class DealerOrderController extends Controller
     {
         //
     }
-
     /**
      * Remove the specified resource from storage.
      */
     public function destroy(Request $request)
     {
         $currentuserid = Auth::user()->id;
-
         $getTempOrderData = Dealer::where([
             ['user_id',$currentuserid],
             ['product_id',$request->product_id]
         ])->first();
-
         if ($getTempOrderData) {
             Dealer::where('id', $getTempOrderData->id)->delete();
             $getTotalProductAdded = Dealer::where('user_id',$currentuserid)->count();
@@ -213,13 +176,19 @@ class DealerOrderController extends Controller
         } else {
             return 'notfound';
         }
-
     }
-
+    /**
+     * Remove all product from cart.
+     */
+    public function emptycart(Request $request)
+    {
+        $currentuserid = Auth::user()->id;
+        Dealer::where('user_id', $currentuserid)->delete();
+        return redirect()->route('dealer.index')->with('success', 'Cart is Empty!!!');
+    }
     /**
      * Update Sub Dealer Order Status
      */
-
      public function subdealerorderacceptedstatus(string $id) 
      {
         $updateData = SubOrder::findOrFail($id);
@@ -230,10 +199,8 @@ class DealerOrderController extends Controller
          * Sending Mail to Dealer and Shamsnatural
          */
         $orderDetails = SubOrder::select('order_id','order_status','dealer_id','user_id','order_remarks')->where('id',$id)->first();
-        
         $dealerId = $orderDetails->dealer_id;
         $subDealerId =  $orderDetails->user_id;
-
         $subDealerEmail = User::select('name','email')->where('id',$subDealerId)->first();
         $mailData = [
             'order_id' => $orderDetails->order_id,
@@ -248,28 +215,22 @@ class DealerOrderController extends Controller
         ];
         $mail_to = explode(',', env('MAIL_TO'));
         $dealer_email_to = $subDealerEmail->email;
-
         Mail::to($mail_to)->send(new OrderStatusMail($mailData));
         Mail::to($dealer_email_to)->send(new OrderStatusMail($mailData));
-
         return redirect()->route('dealerorder.showdealerorder')->with('success', 'Order status changed successfully.');
      }
-
      public function subdealerordercancelstatus(string $id) 
      {
         $updateData = SubOrder::findOrFail($id);
         $updateData->order_status = "cancelled";
         $updateData->order_remarks = "Order has been cancelled.";
         $updateData->save();
-
         /**
          * Sending Mail to Dealer and Shamsnatural
          */
         $orderDetails = SubOrder::select('order_id','order_status','dealer_id','user_id','order_remarks')->where('id',$id)->first();
-        
         $dealerId = $orderDetails->dealer_id;
         $subDealerId =  $orderDetails->user_id;
-
         $subDealerEmail = User::select('name','email')->where('id',$subDealerId)->first();
         $mailData = [
             'order_id' => $orderDetails->order_id,
@@ -284,13 +245,10 @@ class DealerOrderController extends Controller
         ];
         $mail_to = explode(',', env('MAIL_TO'));
         $dealer_email_to = $subDealerEmail->email;
-
         Mail::to($mail_to)->send(new OrderStatusMail($mailData));
         Mail::to($dealer_email_to)->send(new OrderStatusMail($mailData));
-
         return redirect()->route('dealerorder.showdealerorder')->with('success', 'Order status changed successfully.');
      }
-
      public function subdealerplaceorder(String $orderid)
      {
         $selectOrderList = SubOrderList::join('products', 'sub_orders_list.product_code', '=', 'products.product_code')
@@ -307,24 +265,18 @@ class DealerOrderController extends Controller
                 'order_quantity' => $orderList->orderQty,
             ];
         }
-
         $dataInsert =  Dealer::insert($dataToInsert);
         if ($dataInsert)
         {
             $recordFound = SubOrder::where('order_id', $orderid)->first();
-    
             if ($recordFound) {
                 $recordFound->update([
                     'order_placed' => 'Yes',
                 ]);
-
-    
                 return redirect()->route('dealerorder.index')->with('success', 'You can place order from here.');
             } else {
                 return redirect()->route('dealerorder.subdealerordershow',$orderid)->with('error', 'Order Not Found. Please try again.');
             }
-
         }
      }
-
 }

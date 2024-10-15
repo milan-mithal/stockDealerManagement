@@ -99,9 +99,6 @@
     <script src="{{ url('/assets/js/reply.js') }}"></script>
     <!-- bootstrap-datepicker js (Date picker Style-01) -->
     <script src="{{ url('/assets/plugins/bootstrap-datepicker/js/datepicker.js') }}"></script>
-    <!-- PERFECT SCROLLBAR JS-->
-    <script src="{{ url('/assets/plugins/p-scroll/perfect-scrollbar.js') }}"></script>
-    <script src="{{ url('/assets/plugins/p-scroll/pscroll.js') }}"></script>
     <!-- STICKY JS -->
     <script src="{{ url('/assets/js/sticky.js') }}"></script>
     <!-- COLOR THEME JS -->
@@ -117,20 +114,21 @@
         </script>
     @endif
     <script>
-        // Ensure DOM is fully loaded before running the script
-        document.addEventListener('DOMContentLoaded', function() {
-            // Select all elements with the class "page-link"
-            var pageLinks = document.querySelectorAll('.page-link');
-            // Attach the focus-to-div function on click of each page link
-            pageLinks.forEach(function(link) {
-                link.addEventListener('click', function(e) {
-                    e.preventDefault(); // Prevent default behavior of the link
-                    // Find the target div you want to focus on (in this case, a div with the class "focusable-div")
-                    var targetDiv = document.querySelector('.breadcrumb');
-                    // Focus on the target div
-                    targetDiv.focus();
-                });
-            });
+        $(document).on('click', '.page-link', function(event) {
+            event.preventDefault();
+            var pageNumber = $(this).text();
+            $('html, body').animate({
+                scrollTop: $("#global-loader").offset().top
+            }, 100);
+            if ($(this).parent().hasClass('previous')) {
+                $('html, body').animate({
+                    scrollTop: $("#global-loader").offset().top
+                }, 100);
+            } else if ($(this).parent().hasClass('next')) {
+                $('html, body').animate({
+                    scrollTop: $("#global-loader").offset().top
+                }, 100);
+            }
         });
     </script>
     @yield('script')
