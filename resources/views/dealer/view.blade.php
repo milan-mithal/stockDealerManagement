@@ -87,9 +87,9 @@
                                                             <tr>
                                                                 <th class="wd-sm-10p border-bottom-0">Code</th>
                                                                 <th class="wd-sm-10p border-bottom-0">Order Stock</th>
-                                                                {{-- <th class="wd-sm-10p border-bottom-0">Category/Name
-                                                                </th> --}}
-                                                                <th class="wd-md-50p border-bottom-0">Image</th>
+                                                                <th class="wd-sm-10p border-bottom-0">Category/Name
+                                                                </th>
+                                                                <th class="wd-md-40p border-bottom-0">Image</th>
                                                                 <th class="wd-sm-10p border-bottom-0">Price
                                                                     ({{ Auth::user()->currency }})</th>
                                                                 <th class="wd-sm-10p border-bottom-0">Total Stock Available
@@ -142,10 +142,10 @@
                                                                                 Stock</a>
                                                                         </td>
                                                                     @endif
-                                                                    {{-- <td class="wd-sm-10p">
+                                                                    <td class="wd-sm-10p">
                                                                         {{ $productDetails->catName }}/<br />
-                                                                        {{ $productDetails->product_name }}</td> --}}
-                                                                    <td class="wd-md-50p" data-bs-toggle="modal"
+                                                                        {{ $productDetails->product_name }}</td>
+                                                                    <td class="wd-md-40p" data-bs-toggle="modal"
                                                                         data-bs-target="#imageModal"
                                                                         onClick="showImageModal('{{ url($productDetails->product_image) }}')">
                                                                         <img class="wpx-250 hpx-200"
@@ -202,8 +202,8 @@
                                                             <tr>
                                                                 <th class="wd-sm-10p border-bottom-0">Code</th>
                                                                 <th class="wd-sm-10p border-bottom-0">Order Stock</th>
-                                                                {{-- <th class="wd-sm-10p border-bottom-0">Category/Name
-                                                                </th> --}}
+                                                                <th class="wd-sm-10p border-bottom-0">Category/Name
+                                                                </th>
                                                                 <th class="wd-md-50p border-bottom-0">Image</th>
                                                                 <th class="wd-sm-10p border-bottom-0">Price (AED)</th>
                                                                 <th class="wd-sm-10p border-bottom-0">Total Stock Available
@@ -256,9 +256,9 @@
                                                                                 Stock</a>
                                                                         </td>
                                                                     @endif
-                                                                    {{-- <td class="wd-sm-10p">
+                                                                    <td class="wd-sm-10p">
                                                                         {{ $productDetailsEssential->catName }}/<br />
-                                                                        {{ $productDetailsEssential->product_name }}</td> --}}
+                                                                        {{ $productDetailsEssential->product_name }}</td>
                                                                     <td class="wd-md-50p " data-bs-toggle="modal"
                                                                         data-bs-target="#imageModal"
                                                                         onClick="showImageModal('{{ url($productDetailsEssential->product_image) }}')">
