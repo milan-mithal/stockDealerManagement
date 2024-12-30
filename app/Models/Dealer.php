@@ -1,7 +1,5 @@
 <?php
-
 namespace App\Models;
-
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
@@ -11,18 +9,13 @@ use App\Models\Stock;
 use App\Models\OrderList;
 use App\Helpers\CommonHelper;
 use Auth;
-
 class Dealer extends Model
 {
     use HasFactory;
-
     protected $table = 'temp_order_list';
-
     protected $fillable = [
         'id', 'user_id', 'product_id', 'order_quantity'
     ];
-
-
     public static function productListNatural() {
         $currentuserid = Auth::user()->id;
         $data = DB::table('products')
@@ -36,10 +29,8 @@ class Dealer extends Model
             ->where('products.main_category', MainCategoryEnums::Naturals)
             ->where('products.status', CommonStatusEnums::Active)
             ->get();
-
         return $data;
     }
-
     public static function productListEssentials() {
         $currentuserid = Auth::user()->id;
         $data = DB::table('products')
@@ -53,22 +44,18 @@ class Dealer extends Model
             ->where('products.main_category', MainCategoryEnums::Essentials)
             ->where('products.status', CommonStatusEnums::Active)
             ->get();
-
         return $data;
     }
-
     public static function userCartProductList() {
         $currentuserid = Auth::user()->id;
         $data = DB::table('temp_order_list')
                 ->join('products', 'temp_order_list.product_id', '=' , 'products.id')
                 ->join('stocks', 'products.product_code', '=', 'stocks.product_code')
-                ->select('products.id as id','products.product_name as product_name', 'products.product_code as product_code', 'products.product_image as product_image', 'product_price as product_price', 'temp_order_list.id as temp_order_id' ,'temp_order_list.order_quantity as order_quantity','stocks.stock_qty as total_stock_qty','stocks.coming_soon as coming_soon', 'stocks.stock_coming_soon as stock_coming_soon','stocks.stock_sold_qty as total_stock_sold_qty')
+                ->select('products.id as id','products.product_name as product_name', 'products.product_code as product_code', 'products.product_image as product_image', 'product_price as product_price','percentage as percentage','main_category as main_category', 'temp_order_list.id as temp_order_id' ,'temp_order_list.order_quantity as order_quantity','stocks.stock_qty as total_stock_qty','stocks.coming_soon as coming_soon', 'stocks.stock_coming_soon as stock_coming_soon','stocks.stock_sold_qty as total_stock_sold_qty')
                 ->where('temp_order_list.user_id', '=', $currentuserid)
                 ->get();
-
         return $data;
     }
-
     public static function orderPlace($order_id,$delivery_type,$third_party_details,$delivery_details) {
         $currentuserid = Auth::user()->id;
         $totalAmount = 0;
@@ -90,10 +77,8 @@ class Dealer extends Model
                  //CBM
                  $lwh = ($row->length*$row->width*$row->height)/1000000;
                  $cmb = round($lwh*$totalBoxes,3);
-
                  $box_dimension = $row->length."X".$row->width."X".$row->height;
-                 
-                $set_price = CommonHelper::calculatePrice($row->product_price);
+                $set_price = CommonHelper::calculatePrice($row->product_price, $row->percentage, $row->main_category);
                 DB::table('order_list')->insert([
                     'order_id' => $order_id,
                     'product_code' => $row->product_code,
@@ -119,12 +104,8 @@ class Dealer extends Model
                                         'stock_qty' => $stock_qty,
                                         'stock_sold_qty' => $stock_sold_qty,
                                     ]);
-                
                 $totalAmount += $set_price * $row->order_quantity;
-                 
-
             }
-            
         }
         $orderListExist_2 = OrderList::where([['order_id',$order_id]])->count();
         if ($orderListExist_2 > 0)
@@ -146,14 +127,11 @@ class Dealer extends Model
                 'created_at' => \Carbon\Carbon::now(),
                 'updated_at' => \Carbon\Carbon::now()
             ]);
-    
             return true;
         } else {
             return false;
         }
-        
     }
-
     public static function orderDetails($order_id) {
         $data = DB::table('orders')
                 ->join('users', 'orders.user_id', '=' , 'users.id')
@@ -161,7 +139,6 @@ class Dealer extends Model
                 'users.region as region','users.community as community','users.phone_no as phone_no','orders.id as id', 'orders.order_id as order_id', 'orders.total_amount as total_amount','orders.delivery_type as delivery_type','orders.third_party_details as third_party_details', 'orders.order_status as order_status' ,'orders.order_remarks as order_remarks','orders.order_date as order_date')
                 ->where('orders.order_id', '=', $order_id)
                 ->first();
-
         return $data;
     }
 }

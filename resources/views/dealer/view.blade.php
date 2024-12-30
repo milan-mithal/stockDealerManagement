@@ -159,7 +159,7 @@
                                                                         </p>
                                                                     </td>
                                                                     <td class="wd-sm-10p text-center">
-                                                                        {{ Helper::calculatePrice($productDetails->product_price) }}
+                                                                        {{ Helper::calculatePrice($productDetails->product_price, $productDetails->percentage, $productDetails->main_category) }}
                                                                     </td>
                                                                     <td class="wd-sm-10p">
                                                                         @if ($productDetails->coming_soon == '1' && $productDetails->total_stock_qty - $productDetails->stock_coming_soon > 0)
@@ -273,7 +273,7 @@
                                                                         </p>
                                                                     </td>
                                                                     <td class="wd-sm-10p text-center">
-                                                                        {{ Helper::calculatePrice($productDetailsEssential->product_price) }}
+                                                                        {{ Helper::calculatePrice($productDetailsEssential->product_price, $productDetailsEssential->percentage, $productDetailsEssential->main_category) }}
                                                                     </td>
                                                                     <td class="wd-sm-10p">
                                                                         @if (

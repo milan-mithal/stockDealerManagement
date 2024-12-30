@@ -76,7 +76,8 @@
                                                     <td>{{ $productDetails->product_name }}</td>
                                                     <td><img class="hpx-100"
                                                             src="{{ url($productDetails->product_image) }}" /></td>
-                                                    <td>{{ Helper::calculatePrice($productDetails->product_price) }}</td>
+                                                    <td>{{ Helper::calculatePrice($productDetails->product_price, $productDetails->percentage, $productDetails->main_category) }}
+                                                    </td>
                                                     <td>
                                                         @if ($productDetails->coming_soon == '1' && $productDetails->total_stock_qty - $productDetails->stock_coming_soon > 0)
                                                             <h3 class="tag tag-blue">In Stock:&nbsp;

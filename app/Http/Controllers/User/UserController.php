@@ -1,7 +1,5 @@
 <?php
-
 namespace App\Http\Controllers\User;
-
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rules\Enum;
@@ -18,10 +16,8 @@ use App\Enums\UserRolesEnums;
 use App\Enums\UserStatusEnums;
 use App\Enums\DeleteStatusEnums;
 use App\Mail\User\UserRegisterMail;
-
 class UserController extends Controller
 {
-
     public function __construct()
     {
         $this->middleware('auth');
@@ -43,10 +39,8 @@ class UserController extends Controller
             ->where('users.id', '!=', 1)
             ->get();
         }
-
         return view('user.view',  ['allUserList' => $userList]);
     }
-
     public function viewsubdelear()
     {
         $userList = User::leftJoin('sub_dealer_pricing', 'users.id', '=', 'sub_dealer_pricing.sub_dealer_id')
@@ -57,7 +51,6 @@ class UserController extends Controller
             ->get();
         return view('user.viewsubdealer',  ['allUserList' => $userList]);
     }
-
     public function subdealer(string $id)
     {
         $userList = User::leftJoin('sub_dealer_pricing', 'users.id', '=', 'sub_dealer_pricing.sub_dealer_id')
@@ -66,7 +59,6 @@ class UserController extends Controller
         ->get();
         return view('user.subdealerview',  ['allUserList' => $userList]);
     }
-
     /**
      * Show the form for creating a new resource.
      */
@@ -76,7 +68,6 @@ class UserController extends Controller
         $currencyList = Currency::all();
         return view('user.add',  ['allDealerList' => $dealerList, 'allcurrencyList' => $currencyList]);
     }
-
     /**
      * Store a newly created resource in storage.
      */
@@ -114,7 +105,6 @@ class UserController extends Controller
             'dealer_id.required_if' => 'Please select dealer.',
             'status.required' => 'Please select user status.'
         ]);
-
         $prefix = "SD";  
         $user_code = IdGenerator::generate(['table' => 'users','field'=>'user_code' ,'length' => 7, 'prefix' => $prefix]);
         $password = Str::password(10);
@@ -147,16 +137,12 @@ class UserController extends Controller
         $insertData->modified_by = Auth::user()->id;
         $insertData->new_user = 'newuser';
         $insertData->save();
-        
-
         $mailData = [
             'name' => $request->name,
             'useremail' => $request->email,
             'password' => $password
         ];
-         
         Mail::to($request->email)->send(new UserRegisterMail($mailData));
-    
         if ($request->role == 'subdealer') {
             Mail::to('info@shamsnaturals.com')->send(new UserRegisterMail($mailData));
             return redirect()->route('user.edit',$insertData->id)->with('success', 'Sub Dealer created successfully. Kindly Update Subdealer Percentage.');
@@ -166,7 +152,6 @@ class UserController extends Controller
         }
         return redirect()->route('user.create')->with('success', 'User created successfully.');
     }
-
     /**
      * Display the specified resource.
      */
@@ -174,7 +159,6 @@ class UserController extends Controller
     {
         //
     }
-
     /**
      * Show the form for editing the specified resource.
      */
@@ -186,26 +170,33 @@ class UserController extends Controller
             $percentage = DealerPercentage::where('sub_dealer_id',$id)->first();
             $percentageData = 0;
             $incDec = '';
+            $percentageOption = '';
             if($percentage) {
                 $percentageData = $percentage->percentage;
             }
         } elseif ($userDetails->role == 'dealer') {
             $percentage = MainDealerPercentage::where('dealer_id',$id)->first();
-            $percentageData = 0;
-            $incDec = '';
             if($percentage) {
-                $percentageData = $percentage->percentage;
-                $incDec= $percentage->inc_dec;
+                $percentageOption = $percentage->discount_option;
+                $percentageData = 0;
+                $incDec = '';
+                if($percentage) {
+                    $percentageData = $percentage->percentage;
+                    $incDec = $percentage->inc_dec;
+                }
+            } else {
+                $percentageData = 0;
+                $incDec = '';
+                $percentageOption= 0;
             }
         } else {
             $percentageData = 0;
             $incDec = '';
+            $percentageOption= 0;
         }
-        
         $dealerList = User::where([['role', '=', 'dealer'],['status', '=', 'active']])->get();
-        return view('user.edit',  ['allDealerList' => $dealerList, 'allcurrencyList' => $currencyList, 'userDetails'=> $userDetails, 'percentage'=> $percentageData, 'incDec' => $incDec]);
+        return view('user.edit',  ['allDealerList' => $dealerList, 'allcurrencyList' => $currencyList, 'userDetails'=> $userDetails, 'percentage'=> $percentageData, 'incDec' => $incDec, 'percentageOption' => $percentageOption]);
     }
-
     /**
      * Update the specified resource in storage.
      */
@@ -223,6 +214,7 @@ class UserController extends Controller
             'identification_no' => 'required|string|max:250|unique:users,identification_no,'.$id,
             'role' => ['required', new Enum(UserRolesEnums::class)],
             'dealer_id' => 'required_if:role,subdealer',
+            'discount_option' => 'required',
             'percentage' => 'required_if:role,subdealer|numeric',
             'status' => ['required', new Enum(UserStatusEnums::class)]
         ], [
@@ -242,6 +234,7 @@ class UserController extends Controller
             'identification_no.unique' => 'This dealer identification no. already exists.',
             'role.required' => 'Please select user role.',
             'dealer_id.required_if' => 'Please select dealer.',
+            'discount_option.required' => 'Please select percentage option',
             'percentage.required_if' => 'Please enter pecentage.',
             'status.required' => 'Please select user status.'
         ]);
@@ -268,7 +261,6 @@ class UserController extends Controller
         $updateData->token = $token;
         $updateData->modified_by = Auth::user()->id;
         $updateData->save();
-
         if ($request->role == 'subdealer') {
             $percentage = DealerPercentage::where('sub_dealer_id',$id)->first();
             if ($percentage) {
@@ -284,26 +276,25 @@ class UserController extends Controller
                 $insertData->save();
             }
         }
-
         if ($request->role == 'dealer') {
             $percentage = MainDealerPercentage::where('dealer_id',$id)->first();
             if ($percentage) {
                 $perUpdateData = MainDealerPercentage::findOrFail($percentage->id);
                 $perUpdateData->percentage = $request->percentage;
                 $perUpdateData->inc_dec = $request->inc_dec;
+                $perUpdateData->discount_option = $request->discount_option;
                 $perUpdateData->save();
             } else {
                 $insertData = new MainDealerPercentage();
                 $insertData->dealer_id = $id;
                 $insertData->percentage = $request->percentage;
                 $insertData->inc_dec = $request->inc_dec;
+                $insertData->discount_option = $request->discount_option;
                 $insertData->save();
             }
         }
-    
         return redirect()->route('user.index')->with('success', 'User updated successfully.');
     }
-
     /**
      * Remove the specified resource from storage.
      */

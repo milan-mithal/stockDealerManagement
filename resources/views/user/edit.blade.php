@@ -175,6 +175,29 @@
                                         @endif
                                         @if (Auth::user()->role == 'admin')
                                             <div class="form-group">
+                                                <label for="formFile" class="form-label">Choose Percentage Option</label>
+                                                <select class="form-control" name="discount_option" id="discount_option">
+                                                    <option value="">Choose</option>
+                                                    <option value="0" @selected(old('discount_option', $percentageOption) == '0')>No Percentage
+                                                    </option>
+                                                    <option value="1" @selected(old('discount_option', $percentageOption) == '1')>Dealer Percentage -
+                                                        All
+                                                    </option>
+                                                    <option value="2" @selected(old('discount_option', $percentageOption) == '2')>Dealer Percentage -
+                                                        Natural
+                                                    </option>
+                                                    <option value="3" @selected(old('discount_option', $percentageOption) == '3')>Dealer Percentage -
+                                                        Essential
+                                                    </option>
+                                                    <option value="4" @selected(old('discount_option', $percentageOption) == '4')>Product wise
+                                                        Percentage
+                                                    </option>
+                                                </select>
+                                                @error('discount_option')
+                                                    <div class="invalid-feedback block">{{ $message }}</div>
+                                                @enderror
+                                            </div>
+                                            <div class="form-group">
                                                 <label for="formFile" class="form-label">Dealer Percentage</label>
                                                 <input class="form-control" type="text" name="percentage"
                                                     maxlength="2" id="percentage"

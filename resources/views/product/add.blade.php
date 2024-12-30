@@ -118,6 +118,14 @@
                                                 <div class="invalid-feedback block">{{ $message }}</div>
                                             @enderror
                                         </div>
+                                        <div class="form-group">
+                                            <label for="formFile" class="form-label">Product Percentage</label>
+                                            <input class="form-control" type="number" value="0" name="percentage"
+                                                id="percentage" value="{{ old('percentage') }}">
+                                            @error('percentage')
+                                                <div class="invalid-feedback block">{{ $message }}</div>
+                                            @enderror
+                                        </div>
                                         <div class="form-group input-group align-items-center">
                                             <label for="formFile" class="form-label me-4">Box Dimension</label>
                                             <input type="number" name="length" id="length" class="form-control"

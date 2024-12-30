@@ -1,7 +1,5 @@
 <?php
-
 namespace App\Http\Controllers\Product;
-
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -12,8 +10,6 @@ use File;
 use App\Enums\CommonStatusEnums;
 use App\Enums\DeleteStatusEnums;
 use Illuminate\Validation\Rules\Enum;
-
-
 class ProductController extends Controller
 {
     public function __construct()
@@ -21,9 +17,7 @@ class ProductController extends Controller
         $this->middleware('auth');
         $this->middleware('checknewuser');
         $this->middleware('checkrole');
-        
     }
-
     /**
      * Display a listing of the resource.
      */
@@ -32,7 +26,6 @@ class ProductController extends Controller
         $productList = Product::productList();
         return view('product.view',  ['allProductList' => $productList]);
     }
-
     /**
      * Show the form for creating a new resource.
      */
@@ -41,7 +34,6 @@ class ProductController extends Controller
         $productCategoryList = ProductCategory::where('status', '!=', DeleteStatusEnums::Deleted)->get();
         return view('product.add',  ['allProductCategoryList' => $productCategoryList]);
     }
-
     /**
      * Store a newly created resource in storage.
      */
@@ -54,6 +46,7 @@ class ProductController extends Controller
             'product_name' => 'required',
             'product_image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
             'product_price' => 'required|numeric',
+            'percentage' => 'required|min:0|numeric',
             'product_size' => 'required',
             'length' => 'required|min:1|numeric',
             'width' => 'required|min:1|numeric',
@@ -73,6 +66,9 @@ class ProductController extends Controller
             'product_image.max' => 'The uploaded image must not exceed 2MB.',
             'product_price.required' => 'Please enter product price.',
             'product_price.numeric' => 'Product price should be numeric.',
+            'percentage.required' => 'Please enter percentage.',
+            'percentage.numeric' => 'Percentage should be numeric.',
+            'percentage.min' => 'Percentage should be 0 or more.',
             'product_size.required' => 'Please enter product size.',
             'length.required' => 'Please enter length.',
             'length.min' => 'Length cannot be less than 1.',
@@ -98,7 +94,6 @@ class ProductController extends Controller
             $request->product_image->move(public_path($path), $imageName);
             $imageNamePath = $path.$imageName;
         }
-
         // Insert data into the database
         $insertData = new Product();
         $insertData->main_category = $request->main_category;
@@ -107,6 +102,7 @@ class ProductController extends Controller
         $insertData->product_name = $request->product_name;
         $insertData->product_image = $imageNamePath;
         $insertData->product_price = $request->product_price;
+        $insertData->percentage = $request->percentage;
         $insertData->product_size = $request->product_size;
         $insertData->length = $request->length;
         $insertData->width = $request->width;
@@ -117,10 +113,8 @@ class ProductController extends Controller
         $insertData->created_by = Auth::user()->id;
         $insertData->modified_by = Auth::user()->id;
         $insertData->save();
-    
         return redirect()->route('product.create')->with('success', 'Product created successfully.');
     }
-
     /**
      * Display the specified resource.
      */
@@ -128,7 +122,6 @@ class ProductController extends Controller
     {
         //
     }
-
     /**
      * Show the form for editing the specified resource.
      */
@@ -138,7 +131,6 @@ class ProductController extends Controller
         $allProductCategoryList = ProductCategory::where('status', '!=', DeleteStatusEnums::Deleted)->get();
         return view('product.edit', compact('productDetail', 'allProductCategoryList'));
     }
-
     /**
      * Update the specified resource in storage.
      */
@@ -151,6 +143,7 @@ class ProductController extends Controller
             'product_name' => 'required',
             'product_image' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
             'product_price' => 'required|numeric',
+            'percentage' => 'required|min:0|numeric',
             'product_size' => 'required',
             'length' => 'required|min:1|numeric',
             'width' => 'required|min:1|numeric',
@@ -169,6 +162,9 @@ class ProductController extends Controller
             'product_image.max' => 'The uploaded image must not exceed 2MB.',
             'product_price.required' => 'Please enter product price.',
             'product_price.numeric' => 'Product price should be numeric.',
+            'percentage.required' => 'Please enter percentage.',
+            'percentage.numeric' => 'Percentage should be numeric.',
+            'percentage.min' => 'Percentage should be 0 or more.',
             'product_size.required' => 'Please enter product size.',
             'length.min' => 'Length cannot be less than 1.',
             'length.numeric' => 'Length should be numeric.',
@@ -197,7 +193,6 @@ class ProductController extends Controller
                 unlink($file_path);
              }
         }
-
         $updateData = Product::findOrFail($id);
         $updateData->main_category = $request->main_category;
         $updateData->product_category = $request->product_category;
@@ -205,6 +200,7 @@ class ProductController extends Controller
         $updateData->product_name = $request->product_name;
         $updateData->product_image = $imageNamePath;
         $updateData->product_price = $request->product_price;
+        $updateData->percentage = $request->percentage;
         $updateData->product_size = $request->product_size;
         $updateData->length = $request->length;
         $updateData->width = $request->width;
@@ -214,10 +210,8 @@ class ProductController extends Controller
         $updateData->status = $request->status;
         $updateData->modified_by = Auth::user()->id;
         $updateData->save();
-    
         return redirect()->route('product.index')->with('success', 'Product updated successfully.');
     }
-
     /**
      * Remove the specified resource from storage.
      */
@@ -227,7 +221,6 @@ class ProductController extends Controller
         $deleteData->modified_by = Auth::user()->id;
         $deleteData->status = DeleteStatusEnums::Deleted;
         $deleteData->save();
-
         return redirect()->route('product.index')->with('success', 'Product deleted successfully.');
     }
 }
